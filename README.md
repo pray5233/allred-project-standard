@@ -18,6 +18,8 @@ allred长期任务
 
 如果只说“长期任务”且意图不明确，Codex 会先确认是进入长期任务模式，还是只讨论方法。
 
+当前 Skill 采用轻入口结构：`SKILL.md` 负责触发、分流和关键停止规则，详细流程放在 `references/` 中。新项目启动看 `references/新项目启动模式.md`，长期任务看 `references/长期任务模式.md`，Skill 或流程优化看 `references/Skill流程优化模式.md`。
+
 它的核心原则是：
 
 ```text
@@ -156,6 +158,12 @@ Skill 或流程长期优化也可以这样用：
 ```
 
 这类任务会把 Skill 或流程本身当作产品，先读取当前 Skill、相关参考、测试记录和发布包，再确认本轮只改什么、如何验证、是否需要同步 README 或发布版本。
+
+本地结构检查：
+
+```powershell
+pwsh -NoProfile -File .\allred-project-standard\scripts\check_skill_structure.ps1
+```
 
 ## 4. Skill 思考流程图
 

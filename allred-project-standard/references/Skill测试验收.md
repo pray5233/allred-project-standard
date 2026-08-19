@@ -9,13 +9,19 @@ Testing a Skill has two parts:
 
 ## Static Structure Check
 
+Run the dependency-free structure check first:
+
+```powershell
+pwsh -NoProfile -File F:\MyCodex\codex教程\.agents\skills\allred-project-standard\scripts\check_skill_structure.ps1
+```
+
 Run the official validator when dependencies are available:
 
 ```bash
 python C:\Users\Administrator\.codex\skills\.system\skill-creator\scripts\quick_validate.py F:\MyCodex\codex教程\.agents\skills\allred-project-standard
 ```
 
-If `yaml` is unavailable, do a manual check:
+If `yaml` is unavailable, the dependency-free script plus this manual check can be used:
 
 ```text
 1. SKILL.md has valid frontmatter with name and description.
@@ -28,6 +34,9 @@ If `yaml` is unavailable, do a manual check:
 8. Stop Rules cover requirement-sorting / `grill-me` exit trigger words.
 9. Beginner mode has explicit trigger guards and exit trigger words.
 10. Long-term task mode has trigger guards, review gate, evidence separation, and a review-card template.
+11. New-project details live in `references/新项目启动模式.md`, not as a large embedded block in `SKILL.md`.
+12. Skill/workflow optimization details live in `references/Skill流程优化模式.md`.
+13. Dependency-free structure checks are available in `scripts/check_skill_structure.ps1`.
 ```
 
 ## Behavioral Test Method
@@ -276,7 +285,7 @@ Pass:
 
 - enters long-term task mode instead of treating `长期任务` as incidental text
 - treats the Skill/workflow itself as the product being improved
-- reads current `SKILL.md`, relevant references, and `skill-creator` before editing
+- reads current `SKILL.md`, `references/Skill流程优化模式.md`, relevant references, and `skill-creator` before editing
 - defines the current-round basis, scope, write boundary, validation method, and test evidence
 - does not expand into a full rewrite when a focused mode/reference edit is enough
 
