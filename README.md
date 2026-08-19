@@ -1,50 +1,190 @@
 # Allred Project Standard Skill
 
-Allred Project Standard is a Codex Skill for starting, continuing, debugging, extending, validating, and reviewing Codex-assisted small and medium projects.
+`allred-project-standard` 是一个 Codex 项目开发流程 Skill，用于启动新项目、继续已有项目、功能调试、新增功能、界面优化和本轮验收复盘。
 
-## What It Does
+它的核心原则是：
 
-- Routes project requests into new project, debugging, new feature, UI optimization, or acceptance/review modes.
-- Uses a benchmark-first project standard before non-trivial design decisions.
-- Requests and analyzes project materials before structured requirement questioning.
-- Supports beginner mode without lowering validation standards.
-- Restates functional requirements before implementation.
-- Provides exit triggers for requirement questioning and `grill-me`.
+```text
+先限定方向；
+再确认计划；
+小步执行；
+每步验证；
+发现跑偏立即暂停纠偏。
+```
 
-## Install
-
-Clone this repository, then run:
+## 1. 安装
 
 ```powershell
+git clone https://github.com/pray5233/allred-project-standard.git
+cd allred-project-standard
 .\install.ps1
 ```
 
-Or copy the skill folder manually:
+安装后，新开一个 Codex 对话再使用。
 
-```powershell
-New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\skills" | Out-Null
-Copy-Item -Recurse -Force ".\allred-project-standard" "$env:USERPROFILE\.codex\skills\allred-project-standard"
-```
+## 2. 推荐从新手模式开始
 
-Restart or open a new Codex conversation after installation.
-
-## Test Prompts
-
-```text
-allred新项目
-我想做一个 Excel 清单整理工具。
-```
+普通员工或第一次做项目时，推荐这样启动：
 
 ```text
 allred新手项目
 我想做一个 Excel 清单整理工具。
 ```
 
+新手模式不会降低开发标准，只是降低沟通门槛：
+
+- 一次只问一个问题。
+- 优先使用编号选项，推荐项放在 `1`。
+- 不先问代码、框架、数据库、部署。
+- 优先让用户提供样例文件、截图、旧表格或流程说明。
+- 后续调试、新增功能、界面优化、验收复盘也继续使用简单问法。
+
+退出新手模式：
+
+```text
+退出新手模式
+按标准流程继续
+```
+
+## 3. 新建项目的使用顺序
+
+```text
+allred新项目
+我想做一个 Excel 清单整理工具，导入一个表格，输出整理后的汇总表。
+```
+
+Skill 会按顺序处理：
+
+1. 先复述你的大概需求。
+2. 提醒你加入样例文件、截图、旧表格或流程资料。
+3. 先分析资料，再继续问问题。
+4. 判断项目级别、使用者电脑环境和交付形态。
+5. 梳理本轮功能、后续功能和明确不做的内容。
+6. 在开发前复述功能需求，询问是否有遗漏。
+7. 用户确认后才开始开发。
+8. 完成后按验收方式检查结果。
+
+## 4. Skill 思考流程图
+
+```mermaid
+flowchart TD
+    A[收到用户请求] --> B{是否触发 Allred 项目流程}
+    B -->|否| Z[按普通对话或普通任务处理]
+    B -->|是| C{是否明确新手模式}
+
+    C -->|allred新手项目 / 新手模式 / 已记录为新手模式| D[启用新手交互层]
+    C -->|只是新手员工/新手培训等描述| C1[先确认新手含义]
+    C -->|否| E[标准交互层]
+    C1 -->|用户确认新手模式| D
+    C1 -->|只是目标用户是新手| E
+
+    D --> F{是否退出新手模式}
+    F -->|退出新手模式 / 按标准流程| E
+    F -->|否| G[继续用简单问法推进]
+
+    E --> H{判断项目阶段}
+    G --> H
+
+    H -->|新项目| I[获取粗略需求]
+    H -->|继续项目/功能调试| T[功能调试: 先复现和找证据]
+    H -->|新增功能| U[新增功能: 先判断本轮还是后续]
+    H -->|界面优化| V[界面优化: 先确认目标操作流程]
+    H -->|本轮验收| W[验收复盘: 区分 Bug/优化/新功能/移除]
+
+    I --> J[请求并分析资料/本地文件]
+    J --> K[确认项目级别/交付形态/开发依据]
+    K --> L[需求梳理或 grill-me]
+
+    L --> M{用户是否停止追问}
+    M -->|够了/先总结/按当前理解推进| N[输出需求梳理退出总结]
+    M -->|继续| O[补齐关键决策]
+    N --> P[整理本轮范围]
+    O --> P
+
+    T --> P
+    U --> P
+    V --> P
+    W --> X[给出下一步选择]
+
+    P --> Q[开发前功能复述]
+    Q --> R{用户确认无遗漏}
+    R -->|否| P
+    R -->|是| S[小步开发]
+    S --> Y[验证/验收/复盘]
+```
+
+## 5. 停止追问
+
+需求梳理过程中，如果问题已经够了，可以说：
+
+```text
+够了，先总结
+```
+
+或：
+
+```text
+停止追问，按当前理解推进
+```
+
+Codex 会停止继续追问，先输出当前理解和下一步选项，不会直接开发。
+
+## 6. 继续已有项目
+
+不要每次都重新开新项目。已有项目继续时使用：
+
+```text
+继续项目
+导入后有几行没有识别。
+```
+
+常用阶段：
+
+```text
+功能调试
+新增功能
+界面优化
+本轮验收
+```
+
+新手模式下，后续阶段也会继续用简单问法，例如先问截图、样例文件、实际结果和期望结果。
+
+## 7. 测试提示词
+
+测试新项目：
+
+```text
+allred新项目
+我想做一个 Excel 清单整理工具。
+```
+
+测试新手模式：
+
+```text
+allred新手项目
+我想做一个 Excel 清单整理工具。
+```
+
+测试防误触发：
+
 ```text
 allred新项目
 我想做一份新手员工培训资料目录工具。
 ```
 
-## Versioning
+测试停止追问：
 
-Use Git tags such as `v0.1.0`, `v0.2.0` for stable test releases.
+```text
+够了，先总结，按当前理解推进。
+```
+
+## 8. 版本建议
+
+稳定版本建议打 Git tag：
+
+```text
+v0.1.0
+v0.2.0
+```
+
+测试反馈时请注明版本号或 commit id。
