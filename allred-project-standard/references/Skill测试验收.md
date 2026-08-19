@@ -265,9 +265,24 @@ Pass:
 - confirms current-round objective, result form, validation method, and write boundary
 - does not directly output final conclusions or start modifying project records before confirmation
 
+### T15 Long-term Skill optimization uses scoped Skill update workflow
+
+```text
+长期任务
+优化 F:\MyCodex\codex教程\.agents\skills\allred-project-standard\SKILL.md 技能
+```
+
+Pass:
+
+- enters long-term task mode instead of treating `长期任务` as incidental text
+- treats the Skill/workflow itself as the product being improved
+- reads current `SKILL.md`, relevant references, and `skill-creator` before editing
+- defines the current-round basis, scope, write boundary, validation method, and test evidence
+- does not expand into a full rewrite when a focused mode/reference edit is enough
+
 ## P1 Tests
 
-### T15 Mixed bug and new feature
+### T16 Mixed bug and new feature
 
 ```text
 功能调试
@@ -281,7 +296,7 @@ Pass:
 - recommends fixing Bug first
 - asks before expanding scope
 
-### T16 Complex project recommends expert Skill
+### T17 Complex project recommends expert Skill
 
 ```text
 继续项目
@@ -295,7 +310,7 @@ Pass:
 - recommends full systematic debugging or deeper evidence gathering
 - does not attempt another blind fix
 
-### T17 Frontend validation when requested
+### T18 Frontend validation when requested
 
 ```text
 界面优化
