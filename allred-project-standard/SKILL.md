@@ -1,6 +1,6 @@
 ---
 name: allred-project-standard
-description: Use when the user says "allred新项目", "新项目", "启动新项目", "开始项目", "项目开发标准流程", "项目推进标准流程", "长期任务", "继续项目", "项目调试", "功能调试", "新增功能", "加功能", "界面优化", "本轮验收", or wants to start, continue, debug, extend, polish, validate, hand off, review, or standardize a Codex-assisted project or long-running technical task. Use beginner mode only when a project request explicitly says "allred新手新项目", "allred新手项目", "新手项目", "新手模式", or an active project is already recorded as beginner mode; do not infer beginner mode from incidental mentions of "新手". This skill applies the Allred project standard: route the project stage, capture the user's rough requirement first, request and analyze project materials, confirm level and strategy, confirm runtime environment and delivery mode when relevant, confirm development basis, choose requirement sorting depth, inspect existing capabilities, refine requirements with numbered choices, separate total project scope from current-round scope when needed, restate and confirm current-scope requirements before implementation or task execution, decompose tasks, define metrics, evidence levels, write boundaries, current-scope acceptance, review, checkpoints, and handoff. Do not use for trivial text edits, simple Q&A, or one-command fixes.
+description: Use when the user says "allred新项目", "新项目", "启动新项目", "开始项目", "项目开发标准流程", "项目推进标准流程", "allred长期任务", "长期任务启动", "开始长期任务", "继续长期任务", "长期任务复盘", "长期任务调试", "长期任务资料分析", "长期任务验证", "长期任务", "继续项目", "项目调试", "功能调试", "新增功能", "加功能", "界面优化", "本轮验收", or wants to start, continue, debug, extend, polish, validate, hand off, review, or standardize a Codex-assisted project or long-running technical task. Use beginner mode only when a project request explicitly says "allred新手新项目", "allred新手项目", "新手项目", "新手模式", or an active project is already recorded as beginner mode; do not infer beginner mode from incidental mentions of "新手". Use long-term task mode when the request explicitly says "allred长期任务", "长期任务启动", "开始长期任务", "继续长期任务", "长期任务复盘", "长期任务调试", "长期任务资料分析", "长期任务验证", or when an active project is already recorded as a long-term task; if "长期任务" is ambiguous, ask whether to start, continue, review, or only discuss. This skill applies the Allred project standard: route the project stage, capture the user's rough requirement first, request and analyze project materials, confirm level and strategy, confirm runtime environment and delivery mode when relevant, confirm development basis, choose requirement sorting depth, inspect existing capabilities, refine requirements with numbered choices, separate total project scope from current-round scope when needed, restate and confirm current-scope requirements before implementation or task execution, decompose tasks, define metrics, evidence levels, write boundaries, current-scope acceptance, review, checkpoints, and handoff. Do not use for trivial text edits, simple Q&A, or one-command fixes.
 ---
 
 # Allred Project Standard
@@ -36,10 +36,33 @@ allred新项目
 开始一个项目
 按项目开发标准流程
 按项目推进标准流程
-长期任务
 ```
 
 treat it as a request to start the project standard workflow.
+
+When the user says:
+
+```text
+allred长期任务
+长期任务启动
+开始长期任务
+继续长期任务
+长期任务复盘
+长期任务调试
+长期任务资料分析
+长期任务验证
+```
+
+use long-term task mode and read `references/长期任务模式.md`.
+
+Treat `长期任务` alone as a long-term task signal only when it is clearly the user's intended mode or the active project is already recorded as a long-term task. If it may be a topic, file title, training content, or general discussion, ask:
+
+```text
+这里的“长期任务”是希望进入 Allred 长期任务模式，还是只是在讨论长期任务？
+1. 进入长期任务模式，并建立或继续本轮推进（推荐）。
+2. 只是讨论长期任务方法，不进入流程。
+3. 先做长期任务复盘，再决定下一轮。
+```
 
 When the user says:
 
@@ -113,6 +136,7 @@ Before starting the full startup workflow, classify the project stage.
 | 新增功能 | `新增功能`, `加功能`, `再加一个`, `能不能支持` | `references/新增功能.md` |
 | 界面优化 | `界面优化`, `UI 优化`, `页面不好看`, `不顺手`, `布局问题` | `references/界面优化.md` |
 | 本轮验收/复盘 | `本轮验收`, `项目复盘`, `做完了`, `下一步怎么做` | `references/本轮验收与复盘.md` |
+| 长期任务推进 | `allred长期任务`, `继续长期任务`, `长期任务复盘`, `长期任务调试`, `长期任务资料分析`, `长期任务验证` | `references/长期任务模式.md` |
 
 If the user says `继续项目` or the stage is unclear, ask:
 
@@ -122,7 +146,8 @@ If the user says `继续项目` or the stage is unclear, ask:
 2. 新增功能：已有项目上增加能力，先判断是否进入本轮范围。
 3. 界面优化：功能基本可用，主要改善页面、操作流程或视觉体验。
 4. 本轮验收/复盘：检查本轮是否完成，并决定下一步。
-5. 新项目启动：还没有明确范围，需要重新启动项目流程。
+5. 长期任务推进：已有长期项目或分阶段任务，需要先回顾再确定本轮目标。
+6. 新项目启动：还没有明确范围，需要重新启动项目流程。
 
 请回复数字，也可以直接写自定义阶段。
 ```
@@ -130,6 +155,19 @@ If the user says `继续项目` or the stage is unclear, ask:
 Do not force ongoing-project requests back into the new-project startup workflow.
 
 If beginner mode is active, still route the project stage first. Then apply the beginner interaction layer to the chosen stage rather than restarting a new project.
+
+## Long-Term Task Mode
+
+Use `references/长期任务模式.md` when a project is explicitly long-running, spans multiple rounds, involves devices/systems/evidence chains, or when the user triggers a long-term task keyword.
+
+Long-term task mode is a project type and review discipline, not a separate app-building workflow. It can route into data analysis, debugging, validation, documentation, planning, acceptance, or handoff.
+
+Before each long-term task round, do a review gate:
+
+- lightweight review for normal continuation
+- full review when the context is missing, a new conversation starts, new materials appear, conclusions conflict, ownership changes, or the next step may affect a final conclusion, shared tracker, device, or system
+
+Do not start a new long-term task round until the user confirms the current-round objective, evidence basis, write boundary, result form, and validation method.
 
 ## Skill Reuse And Benchmarks
 
@@ -856,12 +894,30 @@ For ongoing-project work, output:
 建议下一步：
 ```
 
+For long-term task mode, output:
+
+```text
+长期任务状态：
+回顾类型：
+已确认结论：
+未验证假设：
+新增资料/证据：
+当前最大问题：
+本轮目标：
+本轮不做：
+成果形态：
+验证方式：
+写入边界：
+建议下一步：
+```
+
 ## Templates
 
 Use templates from `templates/` when useful:
 
 - `项目启动卡.md`
 - `项目中途推进卡.md`
+- `长期任务回顾卡.md`
 - `任务分解表.md`
 - `关键指标表.md`
 - `本轮验收卡.md`
@@ -878,6 +934,7 @@ Use references from `references/` when explaining:
 - `项目级别问法.md`
 - `项目类型问题库.md`
 - `运行环境与交付形态.md`
+- `长期任务模式.md`
 - `功能调试.md`
 - `新增功能.md`
 - `界面优化.md`
@@ -898,6 +955,9 @@ Stop and ask for confirmation when:
 - write boundary is not defined
 - validation method is missing
 - current development/task scope has not been confirmed
+- long-term task round starts without lightweight or full review, unless no previous context exists and the user confirms this is a fresh start
+- long-term task assumptions are presented as confirmed conclusions
+- long-term task final conclusions, shared trackers, device/system actions, or handoff records would change without explicit confirmation
 - implementation or task execution starts before restating the current-scope requirements and asking whether anything changed or was missed
 - the user asks to stop, exit, pause, summarize, or proceed from current understanding during requirement sorting or `grill-me`
 - non-trivial new project enters `grill-me`, implementation, or task execution before requesting and analyzing relevant project materials, unless the user confirms no materials are available
