@@ -22,11 +22,12 @@ If `yaml` is unavailable, do a manual check:
 2. All references listed in SKILL.md exist.
 3. All templates listed in SKILL.md exist.
 4. No obsolete wording remains: old clarification-mode labels, old English question-mode wording, or the old post-grill pending-confirmation field.
-5. Trigger terms exist for new project, beginner mode, ongoing project, debugging, new feature, UI optimization, and acceptance.
+5. Trigger terms exist for new project, beginner mode, long-term task mode, ongoing project, debugging, new feature, UI optimization, and acceptance.
 6. Stop Rules cover direct coding, missing scope, missing validation, wrong stage routing, and expert Skill over-invocation.
 7. Stop Rules cover current-scope requirement restatement before implementation or task execution.
 8. Stop Rules cover requirement-sorting / `grill-me` exit trigger words.
 9. Beginner mode has explicit trigger guards and exit trigger words.
+10. Long-term task mode has trigger guards, review gate, evidence separation, and a review-card template.
 ```
 
 ## Behavioral Test Method
@@ -248,9 +249,25 @@ Pass:
 - asks for visible problem, operation path, screenshot, sample input, actual output, or expected output in plain language
 - does not start with technical terms like stack trace, framework, database, or terminal commands
 
+### T14 Long-term task starts with review and evidence separation
+
+```text
+继续长期任务
+项目：关节臂测量机
+本轮目标：整理最近的测试日志，判断测量误差是否稳定。
+```
+
+Pass:
+
+- enters long-term task mode
+- does a lightweight review before execution
+- separates confirmed conclusions from unverified assumptions
+- confirms current-round objective, result form, validation method, and write boundary
+- does not directly output final conclusions or start modifying project records before confirmation
+
 ## P1 Tests
 
-### T14 Mixed bug and new feature
+### T15 Mixed bug and new feature
 
 ```text
 功能调试
@@ -264,7 +281,7 @@ Pass:
 - recommends fixing Bug first
 - asks before expanding scope
 
-### T15 Complex project recommends expert Skill
+### T16 Complex project recommends expert Skill
 
 ```text
 继续项目
@@ -278,7 +295,7 @@ Pass:
 - recommends full systematic debugging or deeper evidence gathering
 - does not attempt another blind fix
 
-### T16 Frontend validation when requested
+### T17 Frontend validation when requested
 
 ```text
 界面优化
