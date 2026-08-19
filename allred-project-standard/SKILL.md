@@ -1,6 +1,6 @@
 ---
 name: allred-project-standard
-description: Use when the user says "allred新项目", "新项目", "启动新项目", "开始项目", "项目开发标准流程", "项目推进标准流程", "allred长期任务", "长期任务启动", "开始长期任务", "继续长期任务", "长期任务复盘", "长期任务调试", "长期任务资料分析", "长期任务验证", "长期任务", "继续项目", "项目调试", "功能调试", "新增功能", "加功能", "界面优化", "本轮验收", or wants to start, continue, debug, extend, polish, validate, hand off, review, or standardize a Codex-assisted project or long-running technical task. Use beginner mode only when a project request explicitly says "allred新手新项目", "allred新手项目", "新手项目", "新手模式", or an active project is already recorded as beginner mode; do not infer beginner mode from incidental mentions of "新手". Use long-term task mode when the request explicitly says "allred长期任务", "长期任务启动", "开始长期任务", "继续长期任务", "长期任务复盘", "长期任务调试", "长期任务资料分析", "长期任务验证", or when an active project is already recorded as a long-term task; if "长期任务" is ambiguous, ask whether to start, continue, review, or only discuss. This skill applies the Allred project standard: route the project stage, capture the user's rough requirement first, request and analyze project materials, confirm level and strategy, confirm runtime environment and delivery mode when relevant, confirm development basis, choose requirement sorting depth, inspect existing capabilities, refine requirements with numbered choices, separate total project scope from current-round scope when needed, restate and confirm current-scope requirements before implementation or task execution, decompose tasks, define metrics, evidence levels, write boundaries, current-scope acceptance, review, checkpoints, and handoff. Do not use for trivial text edits, simple Q&A, or one-command fixes.
+description: Use when the user says "allred新项目", "新项目", "启动新项目", "开始项目", "项目开发标准流程", "项目推进标准流程", "allred长期任务", "长期任务启动", "开始长期任务", "继续长期任务", "长期任务复盘", "长期任务调试", "长期任务资料分析", "长期任务验证", "长期任务", "继续项目", "项目调试", "功能调试", "新增功能", "加功能", "界面优化", "本轮验收", or wants to start, continue, debug, extend, polish, validate, hand off, review, or standardize a Codex-assisted project or long-running technical task. Use beginner mode only when a project request explicitly says "allred新手新项目", "allred新手项目", "新手项目", "新手模式", or an active project is already recorded as beginner mode; do not infer beginner mode from incidental mentions of "新手". Use long-term task mode when the request explicitly says "allred长期任务", "长期任务启动", "开始长期任务", "继续长期任务", "长期任务复盘", "长期任务调试", "长期任务资料分析", "长期任务验证", or when an active project is already recorded as a long-term task; if "长期任务" is ambiguous, ask whether to start, continue, review, or only discuss. This skill applies the Allred project standard: route the project stage, capture the user's rough requirement first, request and analyze project materials, confirm level and strategy, confirm development basis or benchmark gate, confirm runtime environment and delivery mode when relevant, choose requirement sorting depth, inspect existing capabilities, refine requirements with numbered choices, separate total project scope from current-round scope when needed, restate and confirm current-scope requirements before implementation or task execution, decompose tasks, define metrics, evidence levels, write boundaries, current-scope acceptance, review, checkpoints, and handoff. Do not use for trivial text edits, simple Q&A, or one-command fixes.
 ---
 
 # Allred Project Standard
@@ -218,7 +218,7 @@ If the user only says a trigger word such as `allred新项目` or `新项目` wi
 我想做一个____工具/任务，主要给____使用，输入或资料是____，希望输出____。
 ```
 
-Only after a rough requirement exists, continue to material collection and analysis. Then continue to project level, delivery mode, development basis, and requirement sorting.
+Only after a rough requirement exists, continue to material collection and analysis. Then continue to project level, development basis, delivery mode, and requirement sorting.
 
 ### 2. Collect And Analyze Project Materials
 
@@ -244,7 +244,7 @@ If materials are provided or already exist in the workspace:
 - distinguish facts found in files from assumptions
 - summarize the material analysis result
 - ask the user to confirm which inferred requirements are correct, uncertain, or out of scope
-- only then continue to project level, delivery mode, development basis, requirement sorting, and possible `grill-me` questioning
+- only then continue to project level, development basis, delivery mode, requirement sorting, and possible `grill-me` questioning
 
 If the user has no materials:
 
@@ -321,7 +321,72 @@ If local files, existing docs, scripts, repo rules, or README files can answer a
 
 If the project type is recognizable, use `references/项目类型问题库.md` to ask more specific questions without increasing the process level unnecessarily.
 
-### 5. Confirm Runtime Environment And Delivery Mode
+### 5. Choose Development Basis / Benchmark Gate
+
+Before delivery/result form, requirement sorting, design, implementation, or task execution, confirm the project development basis.
+
+This step is mandatory for non-trivial projects. An external software benchmark is not mandatory. The basis can be:
+
+- a product, app, page, table, template, or report
+- a manual workflow, company historical file, role habit, or proven internal project
+- official documentation, industry standard, maintained library, or reference implementation
+- an expert Skill, plugin, or local tool method
+- an AI first-draft assumption when no better reference exists yet
+
+Use this question:
+
+```text
+请选择本项目的开发依据：
+1. 用户指定对标（推荐）：我提供一个现有软件、表格、流程、页面、报告、模板或历史项目作为参考。
+2. 按公司已有经验开发：参考公司现有表格、流程、岗位习惯、历史文件或人工处理方式。
+3. 按官方/行业标准开发：参考官方文档、行业规范、维护良好的库或成熟实现。
+4. Codex 帮我找对标：由 Codex 先查本地资料、已有项目、插件/Skill，再按需要查公开教程或优秀案例。
+5. 暂无对标，先按 AI 初稿：适合探索型项目，但必须标注假设，并缩小本轮范围重点验证。
+
+请回复数字，也可以直接写自定义依据。
+```
+
+If the user specifies a benchmark, do not search externally unless the user asks or validation needs it.
+
+If the user chooses company experience, inspect or ask for local files, current forms, manual workflows, historical projects, and role habits.
+
+If the user chooses official or industry standards, prefer authoritative documentation, maintained reference implementations, and compatible libraries. Record version, date, or source when available.
+
+If Codex searches for a benchmark, search in this order:
+
+1. project known-good implementation or local reference
+2. official documentation or maintained reference implementation
+3. high-quality external product or open-source project when needed
+
+If the user chooses AI draft:
+
+- clearly label it as an AI first draft, not a validated benchmark
+- list key assumptions
+- make the current scope smaller when assumptions are high
+- set stricter validation metrics
+- after current-scope validation, ask whether to supplement a benchmark or continue based on measured results
+
+Choose or evaluate the basis by these criteria:
+
+- same or close user/work scenario
+- comparable input and output
+- similar constraints such as offline, permissions, data sensitivity, device/system boundary, or employee skill level
+- clear reusable path, not only visual similarity
+- measurable acceptance qualities that can be checked in this project
+
+Record:
+
+- development basis type
+- source, version/date, or assumption
+- why comparable
+- what to reuse
+- what not to copy
+- deliberate differences
+- acceptance metrics
+
+If no benchmark fits, record the search scope and why candidates were unsuitable before using a custom or AI-draft path.
+
+### 6. Confirm Runtime Environment And Delivery Mode
 
 Before choosing app, web, script, or automation, distinguish the development environment from the user's runtime environment.
 
@@ -362,7 +427,7 @@ Default for beginners:
 - avoid requiring terminal commands as the normal user workflow
 - if a desktop app or web app is chosen, include packaging, deployment, and user-machine validation in the current scope
 
-### 6. Choose Requirement Sorting Method
+### 7. Choose Requirement Sorting Method
 
 Use the user-facing name `需求梳理方式`. It means: based on the user's existing project description, Codex helps fill missing decisions about target, input, output, boundary, validation, delivery, and maintenance. It is not a request for Codex to invent the product for the user.
 
@@ -393,53 +458,6 @@ For medium or complex projects, use this format:
 If the user chooses full or lightweight sorting, ask concrete software design questions on top of the user's rough requirement and material analysis before producing the current-scope plan.
 
 If the user chooses a startup draft first, still identify assumptions and unresolved items in the startup card.
-
-### 7. Choose Development Basis
-
-Before design or implementation, confirm the project development basis.
-
-This step is mandatory. An external benchmark is not mandatory.
-
-Use this question:
-
-```text
-请选择本项目的开发依据：
-1. 用户指定对标（推荐）：我提供一个现有软件、表格、流程、页面或历史项目作为参考。
-2. Codex 帮我找对标：由 Codex 搜索本地资料、已有项目、插件/Skill、公开教程或优秀案例。
-3. 按公司已有经验开发：参考公司现有表格、流程、岗位习惯、历史文件，不强求外部案例。
-4. 先按 AI 方案生成初稿：适合探索型项目，但必须标注假设，并在本轮完成后重点验证。
-
-请回复数字，也可以直接写自定义依据。
-```
-
-If the user specifies a benchmark, do not search externally unless the user asks or validation needs it.
-
-If Codex searches for a benchmark, search in this order:
-
-1. project known-good implementation or local reference
-2. official documentation or maintained reference implementation
-3. high-quality external product or open-source project when needed
-
-If the user chooses company experience, inspect or ask for local files, current forms, manual workflows, historical projects, and role habits.
-
-If the user chooses AI draft:
-
-- clearly label it as an AI first draft, not a validated benchmark
-- list key assumptions
-- make the current scope smaller when assumptions are high
-- set stricter validation metrics
-- after current-scope validation, ask whether to supplement a benchmark or continue based on measured results
-
-Record:
-
-- development basis type
-- source or assumption
-- why comparable
-- what to reuse
-- what not to copy
-- acceptance metrics
-
-If no benchmark fits, record the search scope and why candidates were unsuitable before using a custom or AI-draft path.
 
 ### 8. Inspect Existing Capabilities
 
@@ -949,7 +967,7 @@ Use references from `references/` when explaining:
 Stop and ask for confirmation when:
 
 - target is unclear
-- development basis is missing and the task is non-trivial
+- development basis or benchmark mode is missing before delivery/result form, requirement sorting, planning, implementation, or task execution in a non-trivial project
 - user runtime environment or delivery mode is unclear and it affects implementation
 - existing capability check has not been done
 - write boundary is not defined
