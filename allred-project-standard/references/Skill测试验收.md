@@ -12,7 +12,7 @@ Testing a Skill has two parts:
 Run the official validator when dependencies are available:
 
 ```bash
-python %USERPROFILE%\.codex\skills\.system\skill-creator\scripts\quick_validate.py %USERPROFILE%\.codex\skills\allred-project-standard
+python C:\Users\Administrator\.codex\skills\.system\skill-creator\scripts\quick_validate.py F:\MyCodex\codex教程\.agents\skills\allred-project-standard
 ```
 
 If `yaml` is unavailable, do a manual check:
@@ -24,7 +24,7 @@ If `yaml` is unavailable, do a manual check:
 4. No obsolete wording remains: old clarification-mode labels, old English question-mode wording, or the old post-grill pending-confirmation field.
 5. Trigger terms exist for new project, beginner mode, ongoing project, debugging, new feature, UI optimization, and acceptance.
 6. Stop Rules cover direct coding, missing scope, missing validation, wrong stage routing, and expert Skill over-invocation.
-7. Stop Rules cover functional requirement restatement before app/tool implementation.
+7. Stop Rules cover current-scope requirement restatement before implementation or task execution.
 8. Stop Rules cover requirement-sorting / `grill-me` exit trigger words.
 9. Beginner mode has explicit trigger guards and exit trigger words.
 ```
@@ -172,7 +172,7 @@ Pass:
 - asks the user to confirm the analysis before finalizing requirement sorting
 - does not start implementation before scope confirmation
 
-### T9 Functional requirements are restated before app/tool development
+### T9 Current-scope requirements are restated before development or task execution
 
 ```text
 allred新项目
@@ -181,9 +181,9 @@ allred新项目
 
 Pass:
 
-- does not start creating app/tool files immediately
-- restates the target user, input, functions, output, delivery form, validation, non-goals, and assumptions
-- asks whether the functional requirements have changes or omissions
+- does not start creating app/tool files, analysis outputs, documentation, or project artifacts immediately
+- restates the target user, input/evidence, functions or task objectives, output, delivery/result form, validation, non-goals, and assumptions
+- asks whether the current-scope requirements have changes or omissions
 - provides numbered choices with option `1` as the recommended confirmation
 - waits for user confirmation before implementation
 

@@ -1,6 +1,6 @@
 ---
 name: allred-project-standard
-description: Use when the user says "allred新项目", "新项目", "启动新项目", "开始项目", "项目开发标准流程", "继续项目", "项目调试", "功能调试", "新增功能", "加功能", "界面优化", "本轮验收", or wants to start, continue, debug, extend, polish, validate, hand off, review, or standardize a Codex-assisted project. Use beginner mode only when a project request explicitly says "allred新手新项目", "allred新手项目", "新手项目", "新手模式", or an active project is already recorded as beginner mode; do not infer beginner mode from incidental mentions of "新手". This skill applies the Allred project standard: route the project stage, capture the user's rough requirement first, request and analyze project materials, confirm level and strategy, confirm runtime environment and delivery mode, confirm development basis, choose requirement sorting depth, inspect existing capabilities, refine requirements with numbered choices, separate total product scope from current development scope when needed, restate and confirm functional requirements before app/tool implementation, decompose tasks, define metrics, evidence levels, write boundaries, current-scope acceptance, review, checkpoints, and handoff. Do not use for trivial text edits, simple Q&A, or one-command fixes.
+description: Use when the user says "allred新项目", "新项目", "启动新项目", "开始项目", "项目开发标准流程", "项目推进标准流程", "长期任务", "继续项目", "项目调试", "功能调试", "新增功能", "加功能", "界面优化", "本轮验收", or wants to start, continue, debug, extend, polish, validate, hand off, review, or standardize a Codex-assisted project or long-running technical task. Use beginner mode only when a project request explicitly says "allred新手新项目", "allred新手项目", "新手项目", "新手模式", or an active project is already recorded as beginner mode; do not infer beginner mode from incidental mentions of "新手". This skill applies the Allred project standard: route the project stage, capture the user's rough requirement first, request and analyze project materials, confirm level and strategy, confirm runtime environment and delivery mode when relevant, confirm development basis, choose requirement sorting depth, inspect existing capabilities, refine requirements with numbered choices, separate total project scope from current-round scope when needed, restate and confirm current-scope requirements before implementation or task execution, decompose tasks, define metrics, evidence levels, write boundaries, current-scope acceptance, review, checkpoints, and handoff. Do not use for trivial text edits, simple Q&A, or one-command fixes.
 ---
 
 # Allred Project Standard
@@ -19,6 +19,12 @@ For an ongoing project, the goal is to prevent another common failure pattern:
 调试、新增、优化混在一起 -> 改动范围失控 -> 旧功能回归 -> 没有证据能说明已经变好
 ```
 
+This Skill is not limited to app or software-tool development. For long-running technical work, device troubleshooting, data analysis, documentation, knowledge-base building, or staged process improvement, treat:
+
+- `本轮功能` as `本轮任务目标` or `本轮验证目标`
+- `交付形态` as `本轮成果形态`, such as an analysis conclusion, test record, validation report, data archive, documentation index, stage plan, or runnable tool
+- `开发` as `小步执行`, which may mean coding, analysis, file organization, testing, review, documentation, or handoff
+
 ## Trigger Meaning
 
 When the user says:
@@ -29,6 +35,8 @@ allred新项目
 启动新项目
 开始一个项目
 按项目开发标准流程
+按项目推进标准流程
+长期任务
 ```
 
 treat it as a request to start the project standard workflow.
@@ -169,7 +177,7 @@ If the user only says a trigger word such as `allred新项目` or `新项目` wi
 先请你用一两句话描述一下想做什么，不需要说技术方案。
 
 可以按这个格式写：
-我想做一个____工具，主要给____使用，输入是____，希望输出____。
+我想做一个____工具/任务，主要给____使用，输入或资料是____，希望输出____。
 ```
 
 Only after a rough requirement exists, continue to material collection and analysis. Then continue to project level, delivery mode, development basis, and requirement sorting.
@@ -213,15 +221,15 @@ Classify the project:
 
 | Level | Meaning | Required Process |
 | --- | --- | --- |
-| Small | One tool, one workflow, one clear output | lightweight startup card + direct implementation of all clear functions |
-| Medium | Multiple files/modules, repeatable use | choose strategy + startup card + metrics + task breakdown |
-| Complex | Long-running, multiple owners, devices/systems, evidence chain | first version first + full standard + handoff + checkpoints |
+| Small | One tool/task, one workflow, one clear output | lightweight startup card + direct implementation or execution of all clear work |
+| Medium | Multiple files/modules/steps, repeatable use | choose strategy + startup card + metrics + task breakdown |
+| Complex | Long-running, multiple owners, devices/systems, evidence chain | first version or current-round objective first + full standard + handoff + checkpoints |
 
 If the level is unclear, ask:
 
 ```text
 这个项目按哪个级别启动？
-1. 小项目（推荐）：一个工具、一个流程、一个明确输出，本轮可直接做完明确功能。
+1. 小项目（推荐）：一个工具/任务、一个流程、一个明确输出，本轮可直接做完明确功能或明确行动。
 2. 中型项目：多个文件/模块，后续会反复使用，需要任务分解和关键指标。
 3. 复杂项目：涉及多人、设备、系统、真实业务流程或较强证据链，需要完整计划、交接和检查点。
 
@@ -236,7 +244,7 @@ Use level-specific depth:
 | --- | --- | --- |
 | Small | ask only must-decide questions | compact startup card + current-scope confirmation |
 | Medium | standard questions and task breakdown | startup card + strategy choice + metrics + task table + validation plan |
-| Complex | full questions, risk, owner, evidence, checkpoints | first-version plan + full standard + handoff card + checkpoint plan |
+| Complex | full questions, risk, owner, evidence, checkpoints | first-version/current-round plan + full standard + handoff card + checkpoint plan |
 
 For detailed question sets, read `references/项目级别问法.md` when the level is unclear or when drafting the startup conversation.
 
@@ -244,7 +252,7 @@ Set development strategy by level:
 
 | Level | Default Strategy |
 | --- | --- |
-| Small | directly implement all clear, low-risk functions in the current scope |
+| Small | directly implement or execute all clear, low-risk work in the current scope |
 | Medium | ask the user to choose direct full implementation, first-version iteration, or plan-only |
 | Complex | require a first version before expanding into the full scope |
 
@@ -252,8 +260,8 @@ For medium projects or ambiguous scope, ask:
 
 ```text
 本项目采用哪种开发策略？
-1. 直接实现全部明确功能（推荐用于小项目或低风险中型项目）：本轮范围就是已确认的完整需求。
-2. 先做第一版，再逐步迭代（推荐用于复杂项目或需求不确定时）：先跑通最小闭环，再做后续功能。
+1. 直接实现全部明确功能/行动（推荐用于小项目或低风险中型项目）：本轮范围就是已确认的完整需求。
+2. 先做第一版/本轮验证，再逐步迭代（推荐用于复杂项目或需求不确定时）：先跑通最小闭环，再做后续功能或任务。
 3. 先整理完整方案，暂不开发：适合需求还没定、需要先评审的项目。
 
 请回复数字，也可以直接写自定义策略。
@@ -298,12 +306,13 @@ Ask:
 Then ask when the delivery form affects implementation:
 
 ```text
-工具最终希望以什么形式交付？
-1. 免安装文件工具（推荐给新手/办公电脑）：例如单个 HTML、本地文件夹工具、Excel/模板，尽量双击或浏览器打开。
+本轮成果最终希望以什么形式交付？
+1. 免安装文件工具/普通文件成果（推荐给新手/办公电脑）：例如单个 HTML、本地文件夹工具、Excel/模板、整理后的表格、报告或目录，尽量双击或用 Office/浏览器打开。
 2. 桌面 App/可执行文件：适合频繁处理本地文件、离线使用或需要窗口界面，但需要打包和杀毒/权限验证。
 3. 网页版工具：适合多人共享、统一更新、权限和数据同步，但需要服务器、部署、账号和维护。
 4. 脚本/命令行工具：适合熟练用户或批处理，不适合完全新手直接使用。
-5. 暂不确定：先按最少安装、最容易验收的方式做本轮。
+5. 阶段性分析/验证成果：适合长期任务，交付分析结论、测试记录、日志归档、问题清单、阶段计划或验收报告。
+6. 暂不确定：先按最少安装、最容易验收的方式做本轮。
 
 请回复数字，也可以直接写自定义交付方式。
 ```
@@ -435,7 +444,7 @@ While in requirement sorting or `grill-me`, honor exit trigger words. Exit trigg
 
 Treat the single word `停止` as a requirement-sorting exit trigger only when the user is clearly responding inside an active requirement-sorting or `grill-me` sequence. If `停止` is ambiguous, ask whether the user wants to stop questioning, pause the whole task, or cancel implementation.
 
-When an exit trigger appears, stop asking new requirement questions. Do not start implementation. Instead, produce a requirement-sorting exit summary and ask for the next step.
+When an exit trigger appears, stop asking new requirement questions. Do not start implementation or task execution. Instead, produce a requirement-sorting exit summary and ask for the next step.
 
 Use this format:
 
@@ -443,14 +452,14 @@ Use this format:
 需求梳理退出总结：
 已确认：
 仍然基于假设：
-本轮功能：
+本轮功能/任务：
 本轮暂不做但后续保留：
 明确不做：
 主要风险：
 验收方式：
 
 下一步怎么处理？
-1. 进入开发前功能复述（推荐）：先复述功能清单，确认无遗漏后再开发。
+1. 进入执行前功能/任务复述（推荐）：先复述功能或任务清单，确认无遗漏后再开发/执行。
 2. 继续追问一个关键问题：只补最影响结果的一项。
 3. 先出启动草案：暂不开发，只整理项目启动卡。
 4. 暂停：先不继续推进。
@@ -476,7 +485,7 @@ The goal is to improve and verify the user's requirement, not to replace the use
 - allow the user to reply with only a number
 - allow custom text when the listed choices do not fit
 - state what the choice affects, such as scope, data, UI, validation, delivery, or maintenance
-- do not start implementation until the user confirms the shared understanding
+- do not start implementation or task execution until the user confirms the shared understanding
 
 Question budget by level:
 
@@ -488,8 +497,8 @@ Use this pattern:
 
 ```text
 这个项目第一步更适合按哪种方式推进？
-1. 先做最小可运行工具（推荐）：先跑通输入、处理、输出和验证。
-2. 先整理完整功能蓝图：适合需求还比较分散、涉及多人协作的项目。
+1. 先做最小可运行工具/本轮验证（推荐）：先跑通输入、处理、输出和验证。
+2. 先整理完整功能/目标蓝图：适合需求还比较分散、涉及多人协作或长期任务的项目。
 3. 先做技术和对标评估：适合不确定技术路线或数据来源的项目。
 
 请回复数字，也可以直接写自定义要求。
@@ -572,11 +581,11 @@ Default rule:
 Before producing the plan, separate scope according to the project strategy:
 
 - total product scope: what the project may eventually include
-- current development scope: what will be implemented or delivered in this round
-- reserved future scope: features that remain part of the total goal but are not built in this round
+- current development/task scope: what will be implemented, analyzed, validated, organized, or delivered in this round
+- reserved future scope: features or tasks that remain part of the total goal but are not built or executed in this round
 - removed scope: features the user confirms should not remain in the project
 
-For small projects, the current development scope may equal the total product scope. Do not force a first-version split when all functions are clear, low-risk, and can be validated in one pass.
+For small projects, the current development/task scope may equal the total product scope. Do not force a first-version split when all functions or actions are clear, low-risk, and can be validated in one pass.
 
 For medium projects, use the user's strategy choice:
 
@@ -584,7 +593,7 @@ For medium projects, use the user's strategy choice:
 - first-version iteration: current scope is the first version and future features go to the roadmap
 - plan-only: current scope is the plan deliverable, not implementation
 
-For complex projects, the current development scope must be a first version. Do not implement the full product scope in one pass.
+For complex projects, the current development/task scope must be a first version or current-round objective. Do not implement or execute the full product/project scope in one pass.
 
 Do not use current-scope limits to permanently limit the whole project.
 
@@ -592,24 +601,24 @@ Explain the difference with a scope ladder:
 
 | Layer | Meaning | User-facing wording |
 | --- | --- | --- |
-| 总功能地图 | The full product direction and possible final capability | 以后这个工具/项目可能完整做到什么程度 |
-| 本轮开发范围 | The work to implement or deliver now | 这一次确认要做、要验收的内容；小项目可等于全部功能 |
-| 后续开发路线图 | Useful features reserved after the current round | 本轮先不做但没有放弃，等当前范围跑通后再排期 |
+| 总功能/目标地图 | The full product or project direction and possible final capability | 以后这个工具/项目/长期任务可能完整做到什么程度 |
+| 本轮范围 | The work to implement, execute, or deliver now | 这一次确认要做、要验收的内容；小项目可等于全部功能或全部明确行动 |
+| 后续路线图 | Useful features or tasks reserved after the current round | 本轮先不做但没有放弃，等当前范围跑通后再排期 |
 | 明确移除 | Features that should not be part of the project | 当前和后续都不作为默认目标 |
 
 When showing future features, use a roadmap table:
 
-| 后续功能 | 为什么不放入本轮开发 | 触发开发条件 | 预计验证方式 |
+| 后续功能/任务 | 为什么不放入本轮 | 触发开发条件 | 预计验证方式 |
 | --- | --- | --- | --- |
 
-When saying "本轮不做", write it as "本轮暂不开发，但是否保留为总功能" unless the user explicitly removes the feature.
+When saying "本轮不做", write it as "本轮暂不开发/暂不执行，但是否保留为总功能或总目标" unless the user explicitly removes the feature.
 
 Ask a numbered clarification when the boundary is ambiguous:
 
 ```text
 这个功能如何处理？
 1. 按当前开发策略处理（推荐）：小项目可放入本轮；复杂项目默认先放后续。
-2. 放入本轮开发：本轮必须实现，并进入验收范围。
+2. 放入本轮范围：本轮必须实现或执行，并进入验收范围。
 3. 从项目中移除：后续也不作为默认目标。
 
 请回复数字，也可以直接写自定义要求。
@@ -617,38 +626,38 @@ Ask a numbered clarification when the boundary is ambiguous:
 
 ### 15. Produce Current-Scope Plan
 
-Before implementation, first produce a plain-language functional requirement restatement. This is mandatory before creating or modifying app, web, script, automation, or tool files.
+Before implementation or task execution, first produce a plain-language current-scope requirement restatement. This is mandatory before creating or modifying app, web, script, automation, tool files, analysis outputs, documentation, project records, or long-running task artifacts.
 
 The restatement must include:
 
 - target user
 - input materials and data rules
-- current-scope functions to build
+- current-scope functions or task objectives
 - output/result
-- delivery form
+- delivery/result form
 - validation method
-- functions not built in this round but reserved for later
+- functions or tasks not done in this round but reserved for later
 - explicit non-goals
 - assumptions that still need confirmation
 
 Use this format before the plan:
 
 ```text
-开发前我先复述本轮功能需求：
+执行前我先复述本轮功能/任务需求：
 1. 使用对象：
-2. 输入资料：
-3. 本轮要做的功能：
+2. 输入资料/现有证据：
+3. 本轮要做的功能/任务：
 4. 输出结果：
-5. 交付形态：
+5. 交付/成果形态：
 6. 验收方式：
 7. 本轮暂不做但后续保留：
 8. 明确不做：
 9. 仍然基于假设的内容：
 
-请确认功能需求是否有改动或遗漏：
-1. 没有改动，按以上功能开始开发（推荐）。
-2. 有遗漏，需要新增一个本轮必须功能。
-3. 有多余，需要删减或后移某些功能。
+请确认本轮功能/任务需求是否有改动或遗漏：
+1. 没有改动，按以上内容开始开发/执行（推荐）。
+2. 有遗漏，需要新增一个本轮必须功能或任务。
+3. 有多余，需要删减或后移某些功能/任务。
 4. 表述不准确，我直接修改说明。
 
 请回复数字，也可以直接写需要修改的内容。
@@ -658,7 +667,7 @@ Then wait for user confirmation. If the user changes the functional requirements
 
 After the functional requirement restatement is confirmed, produce:
 
-- current development scope
+- current development/task scope
 - files to create or edit
 - commands to run
 - validation method
@@ -670,11 +679,11 @@ After drafting the current-scope plan, ask the user to confirm whether the curre
 Use this format:
 
 ```text
-请确认本轮开发范围是否合理：
+请确认本轮范围是否合理：
 1. 合理，按这个本轮范围推进（推荐）。
-2. 需要新增一个本轮必须功能。
-3. 需要删减或后移某些本轮功能。
-4. 需要重新选择开发策略或重新区分本轮和后续功能。
+2. 需要新增一个本轮必须功能或任务。
+3. 需要删减或后移某些本轮功能/任务。
+4. 需要重新选择策略或重新区分本轮和后续内容。
 
 请回复数字，也可以直接写自定义调整。
 ```
@@ -722,7 +731,7 @@ Use these correction patterns:
 ```
 
 ```text
-这个需求已经超出本轮开发范围，建议放入后续开发路线图。
+这个需求已经超出本轮范围，建议放入后续路线图。
 1. 放入后续路线图（推荐）。
 2. 加入本轮开发，但同步调整验收范围。
 3. 从总功能中移除。
@@ -751,11 +760,11 @@ For small projects, keep the output compact:
 输出：
 资料/本地文件：
 开发依据/对标：
-本轮开发范围：
+本轮范围：
 本轮暂不开发但总功能保留：
 关键验收指标：
 写入边界：
-开发前功能复述：
+执行前功能/任务复述：
 本轮范围确认问题：
 建议下一步：
 ```
@@ -777,7 +786,7 @@ For medium and complex projects, output the full sections:
 梳理后仍需确认：
 功能分层展示：
 总功能范围：
-本轮开发范围：
+本轮范围：
 本轮暂不开发但总功能保留：
 后续开发路线图：
 任务分解：
@@ -786,7 +795,7 @@ For medium and complex projects, output the full sections:
 写入边界：
 本轮最小闭环：
 验证方式：
-开发前功能复述：
+执行前功能/任务复述：
 检查点和交接：
 建议下一步：
 ```
@@ -823,7 +832,7 @@ For requirement-sorting or `grill-me` exit, output:
 退出触发词：
 已确认：
 仍然基于假设：
-本轮功能：
+本轮功能/任务：
 本轮暂不做但后续保留：
 明确不做：
 主要风险：
@@ -888,10 +897,10 @@ Stop and ask for confirmation when:
 - existing capability check has not been done
 - write boundary is not defined
 - validation method is missing
-- current development scope has not been confirmed
-- app/tool implementation starts before restating the functional requirements and asking whether anything changed or was missed
+- current development/task scope has not been confirmed
+- implementation or task execution starts before restating the current-scope requirements and asking whether anything changed or was missed
 - the user asks to stop, exit, pause, summarize, or proceed from current understanding during requirement sorting or `grill-me`
-- non-trivial new project enters `grill-me` or implementation before requesting and analyzing relevant project materials, unless the user confirms no materials are available
+- non-trivial new project enters `grill-me`, implementation, or task execution before requesting and analyzing relevant project materials, unless the user confirms no materials are available
 - chosen delivery mode requires tools, installation, server, or packaging that the user cannot run or has not approved
 - total scope and current scope are mixed together in a way that conflicts with the chosen strategy
 - small project flow is expanded into medium or complex depth without user confirmation
@@ -910,4 +919,4 @@ Stop and ask for confirmation when:
 - the user asks for device/system write operations
 - the next step would modify shared project trackers or final conclusions
 
-Do not start implementation until the user confirms the functional requirement restatement and the plan.
+Do not start implementation or task execution until the user confirms the current-scope requirement restatement and the plan.
