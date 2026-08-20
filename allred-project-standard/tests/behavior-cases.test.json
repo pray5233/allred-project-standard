@@ -1,0 +1,391 @@
+{
+  "schema_version": 1,
+  "instructions": "Give the test group only visible_turns and artifact_labels. Inject a named tool event only after the test group requests or performs that inspection. Do not expose the oracle file.",
+  "cases": [
+    {
+      "id": "V01",
+      "priority": "P0",
+      "modules": ["activation-routing", "new-project", "interaction-confirmation"],
+      "visible_turns": ["allred新项目"],
+      "artifact_labels": [],
+      "tool_event_ids": [],
+      "stop_condition": "rough requirement requested"
+    },
+    {
+      "id": "V02",
+      "priority": "P0",
+      "modules": ["new-project", "materials-evidence", "interaction-confirmation"],
+      "visible_turns": ["新手项目：做一个自动整理客户问题记录的离线 Windows 工具。我有两个 Excel 样例，但还没有发给你。", "文件已放到 samples/customer_1.xlsx 和 samples/customer_2.xlsx。第一版按客户和状态整理，输出新 Excel。"],
+      "post_event_turns": [{"after": "E02_READ_SAMPLES", "text": "1"}],
+      "artifact_labels": ["samples/customer_1.xlsx", "samples/customer_2.xlsx"],
+      "tool_event_ids": ["E02_READ_SAMPLES", "E02_PROJECT_PREFLIGHT"],
+      "stop_condition": "approved scope followed by a concrete start-confirmation card"
+    },
+    {
+      "id": "V03",
+      "priority": "P0",
+      "modules": ["activation-routing", "beginner", "runtime-delivery"],
+      "visible_turns": ["allred新手项目：做一个给仓库员工用的清单合并工具。"],
+      "artifact_labels": [],
+      "tool_event_ids": [],
+      "stop_condition": "beginner opening and material request"
+    },
+    {
+      "id": "V04",
+      "priority": "P0",
+      "modules": ["activation-routing", "beginner"],
+      "visible_turns": ["allred新项目：做一个给新手员工使用的资料目录。"],
+      "artifact_labels": [],
+      "tool_event_ids": [],
+      "stop_condition": "interaction mode identified"
+    },
+    {
+      "id": "V05",
+      "priority": "P0",
+      "modules": ["beginner", "interaction-confirmation", "execution-closure"],
+      "visible_turns": ["新手项目：做一个工时统计工具。", "停止询问，先总结。", "退出新手模式。"],
+      "artifact_labels": [],
+      "tool_event_ids": [],
+      "stop_condition": "questioning stopped and beginner mode exited"
+    },
+    {
+      "id": "V06",
+      "priority": "P0",
+      "modules": ["activation-routing", "interaction-confirmation"],
+      "visible_turns": ["新手项目：我要做一个清单整理工具，前面的会话全部不参考。"],
+      "artifact_labels": [],
+      "tool_event_ids": [],
+      "stop_condition": "current requirement retained"
+    },
+    {
+      "id": "V07",
+      "priority": "P0",
+      "modules": ["new-project", "classification-strategy", "runtime-delivery", "write-boundary"],
+      "visible_turns": ["新项目：做一个多人使用、涉及共享数据和多个部门的项目跟踪工具。", "三个部门各有 Excel，部门员工只能改本部门状态，项目经理看全部，IT 有内网服务器。"],
+      "artifact_labels": ["three department spreadsheets are mentioned but no paths are supplied"],
+      "tool_event_ids": [],
+      "stop_condition": "delivery and data boundary decision shown before start confirmation"
+    },
+    {
+      "id": "V08",
+      "priority": "P1",
+      "modules": ["new-project", "classification-strategy", "execution-closure"],
+      "visible_turns": ["新项目：按 rules.md 做批量文件改名工具，规则、测试副本和验收都已准备好。"],
+      "artifact_labels": ["rules.md", "samples/rename-copy"],
+      "tool_event_ids": ["E08_READ_RULES"],
+      "stop_condition": "bounded full-scope confirmation"
+    },
+    {
+      "id": "V09",
+      "priority": "P1",
+      "modules": ["classification-strategy", "materials-evidence", "new-project"],
+      "visible_turns": ["新项目：做一个单人使用的简单报表工具。", "资料里其实包含三个部门的共享数据和审批结果。"],
+      "artifact_labels": ["samples/shared-report.xlsx"],
+      "tool_event_ids": ["E09_READ_SHARED_REPORT"],
+      "stop_condition": "classification reassessed from evidence"
+    },
+    {
+      "id": "V10",
+      "priority": "P1",
+      "modules": ["benchmark-capability", "new-project"],
+      "visible_turns": ["新项目：按当前工程里已有的 Excel 导入模块，再做一个同格式的供应商清单导入。"],
+      "artifact_labels": ["existing project source"],
+      "tool_event_ids": ["E10_LOCAL_PATTERN", "E10_SUPPLIER_SAMPLE"],
+      "stop_condition": "local basis selected without unnecessary discovery"
+    },
+    {
+      "id": "V11",
+      "priority": "P1",
+      "modules": ["benchmark-capability", "interaction-confirmation"],
+      "visible_turns": ["新项目：现有工程没有 PDF 表格抽取能力，需要找一个可靠的现成 Skill 或库。"],
+      "artifact_labels": ["installed capability inventory"],
+      "tool_event_ids": ["E11_CAPABILITY_LIST", "E11_CANDIDATE_RESULTS"],
+      "stop_condition": "real gap handled with source and validation plan"
+    },
+    {
+      "id": "V12",
+      "priority": "P0",
+      "modules": ["public-monitoring", "beginner", "interaction-confirmation"],
+      "visible_turns": ["新手项目：我要做一个自动搜索行业市场动态的 App，资料还没整理，希望第一版尽快跑起来。", "1", "D1=工业机器人；其余按推荐"],
+      "artifact_labels": [],
+      "tool_event_ids": [],
+      "stop_condition": "source research announced but no unobserved result claimed"
+    },
+    {
+      "id": "V13",
+      "priority": "P0",
+      "modules": ["public-monitoring", "materials-evidence", "benchmark-capability", "execution-closure"],
+      "visible_turns": ["继续 V12 的工业机器人真实来源验证。请检查候选来源 S1 和 S2。"],
+      "artifact_labels": ["S1", "S2"],
+      "tool_event_ids": ["E13_SOURCE_RESULTS"],
+      "stop_condition": "source evidence table and narrow proof decision"
+    },
+    {
+      "id": "V14",
+      "priority": "P0",
+      "modules": ["stage-routing", "debugging", "new-feature"],
+      "visible_turns": ["继续项目：Excel 导入漏识别几行，顺便新增 PDF 导出。"],
+      "artifact_labels": [],
+      "tool_event_ids": [],
+      "stop_condition": "bug and feature separated"
+    },
+    {
+      "id": "V15",
+      "priority": "P1",
+      "modules": ["debugging", "materials-evidence"],
+      "visible_turns": ["功能调试：程序偶发崩溃，只知道有时候点保存会退出。", "没有日志，也暂时无法复现。"],
+      "artifact_labels": [],
+      "tool_event_ids": [],
+      "stop_condition": "evidence blocker or safe instrumentation plan"
+    },
+    {
+      "id": "V16",
+      "priority": "P0",
+      "modules": ["debugging", "materials-evidence", "execution-closure"],
+      "visible_turns": ["功能调试：点保存时偶发退出。先检查现有日志和代码。"],
+      "post_event_turns": [{"after": "E16_READ_DEBUG_EVIDENCE", "text": "1"}],
+      "artifact_labels": ["logs/app.log", "src/save_service.py"],
+      "tool_event_ids": ["E16_READ_DEBUG_EVIDENCE", "E16_FIX_APPLIED", "E16_TEST_RESULTS"],
+      "stop_condition": "root cause, authorized fix, and regression evidence"
+    },
+    {
+      "id": "V17",
+      "priority": "P0",
+      "modules": ["new-feature", "interaction-confirmation", "write-boundary"],
+      "visible_turns": ["新增功能：已有本地工具增加自动备份，但备份位置和覆盖规则未定。"],
+      "post_event_turns": [{"after": "E17_READ_STORAGE", "text": "1"}],
+      "artifact_labels": ["existing local tool; storage implementation not yet inspected"],
+      "tool_event_ids": ["E17_READ_STORAGE"],
+      "stop_condition": "all persistent behavior explicitly approved before start card"
+    },
+    {
+      "id": "V18",
+      "priority": "P0",
+      "modules": ["ui-optimization", "materials-evidence", "execution-closure"],
+      "visible_turns": ["界面优化：手机端表格重叠、主按钮不明显。"],
+      "artifact_labels": ["screens/mobile-390.png", "existing page source"],
+      "tool_event_ids": ["E18_UI_INSPECTION", "E18_EDIT_APPLIED", "E18_UI_AFTER"],
+      "stop_condition": "before/after rendered evidence reviewed"
+    },
+    {
+      "id": "V19",
+      "priority": "P1",
+      "modules": ["ui-optimization", "interaction-confirmation"],
+      "visible_turns": ["界面优化：把整个系统彻底重做得更现代，流程也可以一起改。", "3。先以项目列表和状态更新流程做样板，业务字段和数据含义不变。"],
+      "post_event_turns": [{"after": "E19_UI_PREFLIGHT", "text": "1"}],
+      "artifact_labels": ["existing UI"],
+      "tool_event_ids": ["E19_UI_PREFLIGHT"],
+      "stop_condition": "broad redesign direction and workflow impact confirmed"
+    },
+    {
+      "id": "V20",
+      "priority": "P0",
+      "modules": ["acceptance-review", "stage-routing"],
+      "visible_turns": ["本轮验收：负责人列没导出；导出完成提示不明显；另外想加邮件自动发送。"],
+      "artifact_labels": [],
+      "tool_event_ids": [],
+      "stop_condition": "failed promise, optimization, and new feature separated"
+    },
+    {
+      "id": "V21",
+      "priority": "P1",
+      "modules": ["long-term", "interaction-confirmation"],
+      "visible_turns": ["继续长期任务：上下文完整，证据没有变化，本轮继续整理昨天确认过的目录。"],
+      "artifact_labels": ["current task record"],
+      "tool_event_ids": ["E21_READ_TASK_RECORD"],
+      "stop_condition": "lightweight review only"
+    },
+    {
+      "id": "V22",
+      "priority": "P0",
+      "modules": ["long-term", "evidence-level", "materials-evidence", "execution-closure"],
+      "visible_turns": ["继续长期任务：项目里有历史结论，现在出现一批新日志，想判断波动原因。"],
+      "artifact_labels": ["records/conclusions.md", "logs/new.csv"],
+      "tool_event_ids": ["E22_READ_LONG_TERM"],
+      "stop_condition": "full review with evidence level and current-round boundary"
+    },
+    {
+      "id": "V23",
+      "priority": "P0",
+      "modules": ["write-boundary", "long-term", "interaction-confirmation"],
+      "visible_turns": ["长期任务：把本轮分析结论直接写回共享项目台账，并调整现场设备参数。"],
+      "artifact_labels": ["shared tracker", "device"],
+      "tool_event_ids": [],
+      "stop_condition": "authority, evidence, owner, and rollback gate"
+    },
+    {
+      "id": "V24",
+      "priority": "P0",
+      "modules": ["skill-improvement", "benchmark-capability", "execution-closure"],
+      "visible_turns": ["长期任务优化：扫描 allred-project-standard 的架构和所有内容，重构不合理的地方。"],
+      "artifact_labels": ["source Skill", "local release mirror", "skill-creator"],
+      "tool_event_ids": ["E24_SKILL_PREFLIGHT", "E24_SKILL_CREATOR_READ", "E24_EDITS_APPLIED", "E24_VALIDATION_RESULTS"],
+      "stop_condition": "preflight-backed edit, behavior validation, and release parity without inferred Git/publish"
+    },
+    {
+      "id": "V25",
+      "priority": "P1",
+      "modules": ["long-term", "execution-closure"],
+      "visible_turns": ["这个长期任务先暂停，交给另一位同事继续。", "交给张工。"],
+      "artifact_labels": ["current task record"],
+      "tool_event_ids": ["E25_READ_TASK_RECORD"],
+      "stop_condition": "handoff record produced"
+    },
+    {
+      "id": "V26",
+      "priority": "P0",
+      "modules": ["interaction-confirmation", "execution-closure", "debugging"],
+      "visible_turns": ["按刚才确认的范围，只修复日期解析兼容问题并运行对应回归测试。", "继续。"],
+      "artifact_labels": ["approved exact scope in current context"],
+      "tool_event_ids": ["E26_READ_DATE_PARSER", "E26_FIX_APPLIED", "E26_TEST_RESULTS"],
+      "stop_condition": "approved work completes with focused modification and regression evidence"
+    },
+    {
+      "id": "V27",
+      "priority": "P1",
+      "modules": ["interaction-confirmation", "benchmark-capability", "execution-closure"],
+      "visible_turns": ["新项目：为已确认的技术路线核对三个官方方案，预计需要几分钟。"],
+      "artifact_labels": ["three official sources"],
+      "tool_event_ids": ["E27_RESEARCH_PROGRESS", "E27_RESEARCH_RESULT"],
+      "stop_condition": "useful progress update and evidence-backed result"
+    },
+    {
+      "id": "V28",
+      "priority": "P0",
+      "modules": ["beginner", "runtime-delivery", "new-project"],
+      "visible_turns": ["新手项目：做一个给普通办公室员工用的工具，他们电脑没有 Python、Node、Git，也不能用命令行。"],
+      "artifact_labels": [],
+      "tool_event_ids": [],
+      "stop_condition": "feasible delivery decision before implementation"
+    },
+    {
+      "id": "V29",
+      "priority": "P0",
+      "modules": ["new-project", "beginner", "public-monitoring", "interaction-confirmation", "classification-strategy", "runtime-delivery"],
+      "visible_turns": [
+        "新手项目：我想做一个关节臂测量机的市场信息搜寻工具。",
+        "暂无资料。我的初版想法是自动搜寻，但我还没确定要搜产品资料、新闻还是价格。",
+        "D1=产品型号与技术参数；D2=全球中英文公开来源；D3=一个品牌、1-3个真实来源；D4=先在当前开发电脑验证。"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E29_SOURCE_PREFLIGHT",
+          "text": "搜索对象用以后可修改的预设品牌清单；本轮先放海克斯康。触发方式是手动点击更新；输出要可筛选列表并导出 Excel 可打开的 CSV。"
+        },
+        {
+          "after": "E29_PROJECT_PREFLIGHT",
+          "text": "1"
+        }
+      ],
+      "artifact_labels": ["empty project workspace", "candidate public sources", "local known-good proof pattern"],
+      "tool_event_ids": ["E29_SOURCE_PREFLIGHT", "E29_PROJECT_PREFLIGHT"],
+      "stop_condition": "compressed decisions, evidence-backed narrow proof, and traceable start-development card"
+    },
+    {
+      "id": "V30",
+      "priority": "P0",
+      "modules": ["new-project", "beginner", "public-monitoring", "interaction-confirmation", "benchmark-capability", "classification-strategy", "runtime-delivery"],
+      "visible_turns": [
+        "新手项目：我想做一个激光甲烷遥测仪的市场信息搜寻工具。",
+        "暂无资料。我的初步想法是从公开网页找厂家、产品型号、技术参数和价格线索，整理成可以导出的表；价格只作为线索。"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E30_SOURCE_BENCHMARK_PREFLIGHT",
+          "text": "D1=双击打开的桌面工具；D2=不能要求管理员权限；D3=允许访问公开互联网；D4=本轮先做半自动验证。"
+        },
+        {
+          "after": "E30_PROJECT_PREFLIGHT",
+          "text": "1"
+        }
+      ],
+      "artifact_labels": ["empty workspace", "public source candidates", "workflow benchmark", "technical reference"],
+      "tool_event_ids": ["E30_SOURCE_BENCHMARK_PREFLIGHT", "E30_PROJECT_PREFLIGHT"],
+      "stop_condition": "no lifecycle questionnaire; one evidence-backed decision card and one concrete start gate"
+    },
+    {
+      "id": "V31",
+      "priority": "P0",
+      "modules": ["new-project", "beginner", "materials-evidence", "interaction-confirmation", "benchmark-capability", "execution-closure"],
+      "visible_turns": [
+        "新手项目：每周把销售订单和发货记录两个 Excel 导出表合并成待跟进清单。样表已经放在当前工程的 samples 文件夹；我的想法是保留原表，只生成一个新文件。"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E31_MATERIAL_AND_PATTERN_PREFLIGHT",
+          "text": "1"
+        },
+        {
+          "after": "E31_PROJECT_PREFLIGHT",
+          "text": "1"
+        },
+        {
+          "after": "E31_IMPLEMENT_AND_TEST",
+          "text": "本轮验收。"
+        }
+      ],
+      "artifact_labels": ["two Excel samples", "existing company output template", "empty project workspace"],
+      "tool_event_ids": ["E31_MATERIAL_AND_PATTERN_PREFLIGHT", "E31_PROJECT_PREFLIGHT", "E31_IMPLEMENT_AND_TEST"],
+      "stop_condition": "bounded office tool completes without artificial benchmark, level, or runtime questionnaires"
+    },
+    {
+      "id": "V32",
+      "priority": "P0",
+      "modules": ["stage-routing", "new-feature", "interaction-confirmation", "materials-evidence", "execution-closure"],
+      "visible_turns": [
+        "新增功能：现有客户跟踪工具增加 Excel 导出，只导出当前筛选结果，其他行为不变。"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E32_EXISTING_FEATURE_PREFLIGHT",
+          "text": "1"
+        },
+        {
+          "after": "E32_FEATURE_EDIT_TEST",
+          "text": "本轮验收。"
+        }
+      ],
+      "artifact_labels": ["existing project", "current filter implementation", "existing export pattern"],
+      "tool_event_ids": ["E32_EXISTING_FEATURE_PREFLIGHT", "E32_FEATURE_EDIT_TEST"],
+      "stop_condition": "exact feature uses existing pattern, one start gate, focused edit and regression"
+    },
+    {
+      "id": "V33",
+      "priority": "P1",
+      "modules": ["long-term", "materials-evidence", "interaction-confirmation", "evidence-level", "execution-closure"],
+      "visible_turns": [
+        "allred长期任务：继续设备测试数据稳定性分析。本轮先复核最近 3 批日志，之前结论和日志都在当前工程；先只读分析，不更新共享结论。"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E33_ANALYSIS_RESULT",
+          "text": "先生成本轮复盘，不写共享记录。"
+        }
+      ],
+      "artifact_labels": ["long-term task record", "three recent log batches", "prior confirmed conclusion"],
+      "tool_event_ids": ["E33_LONG_TERM_REVIEW", "E33_ANALYSIS_RESULT"],
+      "stop_condition": "lightweight review and read-only analysis without new-project questionnaire or shared write"
+    },
+    {
+      "id": "V34",
+      "priority": "P0",
+      "modules": ["new-project", "beginner", "public-monitoring", "materials-evidence", "interaction-confirmation", "runtime-delivery"],
+      "visible_turns": [
+        "新手项目：把 sources.txt 里的三个厂商新品页面整理成每周更新表。普通 Windows 办公电脑使用，结果用 Excel 打开；先手动运行，不做后台定时。"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E34_SOURCE_AND_RUNTIME_PREFLIGHT",
+          "text": "1"
+        },
+        {
+          "after": "E34_PROJECT_PREFLIGHT",
+          "text": "1"
+        }
+      ],
+      "artifact_labels": ["sources.txt", "three user-specified pages", "ordinary Windows office runtime"],
+      "tool_event_ids": ["E34_SOURCE_AND_RUNTIME_PREFLIGHT", "E34_PROJECT_PREFLIGHT"],
+      "stop_condition": "known sources, output, runtime, and manual trigger are not asked again"
+    }
+  ]
+}
