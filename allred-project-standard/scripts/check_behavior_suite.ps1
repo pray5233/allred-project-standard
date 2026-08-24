@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$SkillRoot = (Split-Path -Parent $PSScriptRoot)
 )
 
