@@ -65,6 +65,8 @@ For substantial restructuring, use `references/开发依据与能力复用.md`. 
 
 Prefer a lightweight router plus progressive disclosure. Keep only instructions that change decisions.
 
+When adapting another workflow, extract decision-changing invariants instead of adding the external workflow as another mandatory layer. Measure user gates, duplicated ownership, verification strength, and runtime dependencies before and after the change.
+
 ## Execution Authorization
 
 A direct request such as “scan the whole Skill and refactor unreasonable parts” authorizes in-scope Skill file edits after read-only preflight. A follow-up such as “按照建议修改” authorizes the previously displayed scope.
@@ -90,6 +92,15 @@ Run:
 5. source/release parity when distributed
 
 Behavior tests should inspect decisions and side effects, not require exact prose. Add a regression case only for a demonstrated or high-risk failure.
+
+For a process-efficiency refactor, include:
+
+- clear task: zero unnecessary decision questions
+- standard task: one consolidated gate unless new evidence creates a blocker
+- exact prior authorization: no duplicate start confirmation
+- debugging: evidence and one hypothesis before a fix; architecture review after three failed hypotheses
+- completion: fresh verification evidence
+- no TDD/Red-Green execution order, Superpowers invocation, worktree, subagent, or per-task commit
 
 ## Completion
 

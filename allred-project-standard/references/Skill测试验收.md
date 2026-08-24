@@ -1,5 +1,28 @@
 # Skill 测试验收
 
+## 2026-08-24 Workflow Refactor Regression
+
+The Superpowers-lite refactor must preserve the existing suite and add these efficiency checks:
+
+| Case | Expected invariant |
+| --- | --- |
+| V36 clear local Bug | zero ceremonial questions; reproduce and root-cause evidence before a focused fix; no mandatory TDD |
+| V37 exact feature authorization | inspect internally and execute without a duplicate start gate |
+| V38 three failed hypotheses | stop speculative patching and review architecture/evidence before a fourth attempt |
+| V39 completion request | fresh verification and exact promised-item reconciliation before success language |
+| V40 local completion | no automatic `allred记忆`, `allred笔记`, Vault, or Git action |
+| V41 dependency gap | one narrow install authorization; no Git/publication scope expansion |
+| V42 exact long-term read-only review | continue after preflight with zero ceremonial start questions and zero writes |
+
+Test and review roles stay independent:
+
+- test group receives visible turns, artifact labels, and named tool events only
+- review group receives assertions and hard failures after the test output is fixed
+- reviewers inspect decisions, questions, evidence claims, side effects, and completion language rather than exact prose
+- the test fixture must not manufacture the behavior being evaluated
+
+Release acceptance requires Fast/Standard/Deep routing, product versus consequential gates, root-cause debugging, three-hypothesis stop, fresh verification, no mandatory TDD/Superpowers invocation, exact-trigger memory/notes, source-release parity, and the existing domain cases.
+
 Use this reference after changing `allred-project-standard`.
 
 Static checks prove file integrity. Behavioral tests prove whether the Skill makes sound decisions. Neither substitutes for the other.
@@ -409,7 +432,7 @@ Remaining gap:
 A Skill change is complete when:
 
 - structure check passes
-- all changed P0 behavior cases pass in a walkthrough or real fresh task
+- all changed P0 behavior cases pass in a fresh role-separated blind test and independent check; a walkthrough alone cannot close P0
 - no rule forces unrelated tasks into heavy process
 - direct user intent and permission boundaries are preserved
 - release parity is verified when applicable

@@ -1,172 +1,131 @@
 ---
 name: allred-project-standard
-description: Start or continue non-trivial Codex-assisted projects with evidence-based scope, benchmark selection, low-interruption decisions, staged execution, verification, and handoff. Use for new projects, beginner project mode, ongoing debugging/features/UI work, acceptance, long-term tasks, and Skill or workflow improvement. Do not use for simple Q&A, trivial text edits, or one-command fixes.
+description: Start or continue non-trivial Codex-assisted projects with evidence-based scope, low-interruption decisions, staged execution, root-cause debugging, fresh verification, and handoff. Use for new projects, beginner mode, existing-project features/debugging/UI, acceptance, long-term tasks, and Skill improvement. Do not use for simple Q&A, trivial text edits, or one-command fixes.
 ---
 
 # Allred Project Standard
 
-Use this Skill to keep a project aligned without turning the conversation into a questionnaire.
+Use this Skill to keep project work aligned without turning the conversation into a questionnaire or adding a second process framework.
 
 The governing loop is:
 
 ```text
-限定方向 -> 确认本轮 -> 小步执行 -> 证据验证 -> 验收复盘
+路由定界 -> 读取证据 -> 内部方案 -> 必要决策 -> 连续执行 -> 新鲜验证 -> 交付沉淀
 ```
 
-This Skill applies to apps, scripts, automation, data work, documentation, device-related investigation, knowledge organization, and reusable workflow or Skill improvement. In non-software work, interpret `开发` as `执行`, `功能` as `任务目标`, and `交付形态` as `成果形态`.
+Superpowers is a method benchmark, not a runtime dependency. Reuse its strongest disciplines internally: inspect before designing, find root cause before fixing, execute in bounded steps, stop on real blockers, and verify before claiming completion. Do not import mandatory brainstorming, per-section approval, per-task commits, worktrees, or batch feedback gates. Do not use TDD or Red-Green as the execution order.
 
-## Activation
+## Activation And Routing
 
-Use standard new-project mode for `allred新项目`, `新项目`, `启动新项目`, `开始项目`, or an explicit request to use the Allred project workflow.
+- New project: `allred新项目`, `新项目`, `启动新项目`, `开始项目`, or an explicit request for the Allred workflow.
+- Beginner interaction: `allred新手新项目`, `allred新手项目`, `新手项目`, `新手模式`, or a project already recorded in beginner mode. Incidental text such as `新手员工` does not activate it.
+- Long-term work: `allred长期任务`, `长期任务启动`, `开始长期任务`, `继续长期任务`, `长期任务复盘`, `长期任务调试`, `长期任务资料分析`, `长期任务验证`, or `长期任务优化`. If `长期任务` is only a discussion topic or quoted text, do not activate; ask only when intent remains ambiguous.
+- Existing project: route from the actual request instead of restarting project discovery.
 
-Use beginner interaction only for `allred新手新项目`, `allred新手项目`, `新手项目`, `新手模式`, or a project already recorded in beginner mode. Incidental phrases such as `新手员工`, `新手培训`, or document titles do not activate it.
-
-Use long-term mode for `allred长期任务`, `长期任务启动`, `开始长期任务`, `继续长期任务`, `长期任务复盘`, `长期任务调试`, `长期任务资料分析`, `长期任务验证`, or `长期任务优化`. If `长期任务` is only a topic and the intent is unclear, ask whether to enter the mode or only discuss it.
-
-Route an existing project by the actual request:
-
-| Signal | Stage |
+| Signal | Route |
 | --- | --- |
-| `项目调试`, `功能调试`, errors, wrong results | 功能调试 |
-| `新增功能`, `加功能`, new capability | 新增功能 |
-| `界面优化`, `UI 优化`, layout/usability issue | 界面优化 |
+| error, wrong result, failed test, `项目调试`, `功能调试` | 功能调试 |
+| `新增功能`, `加功能`, a new capability | 新增功能 |
+| `界面优化`, `UI 优化`, usability/layout problem | 界面优化 |
 | `本轮验收`, `项目复盘`, delivery review | 本轮验收/复盘 |
-| `继续项目` with unclear intent | use the routing rules below |
+| continued multi-round work or evidence accumulation | 长期任务 |
 
-Do not force an ongoing request back through new-project startup.
+If `继续项目` is unclear and project evidence cannot resolve the route, ask one compact routing question. Beginner mode changes explanation style, not complexity, scope, or engineering rigor.
 
 ## Required Reading
 
-Read only the references needed for the routed request:
+Always read `references/核心执行流程.md` for an activated workflow. Read only the additional references needed by the route:
 
 | Situation | Read |
 | --- | --- |
-| Any activated workflow that may ask decisions or mutate files | `references/交互与确认规则.md` |
-| New project | `references/新项目启动模式.md` |
-| Beginner interaction | `references/新手模式.md`, then the routed stage |
-| Existing project or mixed request | `references/项目阶段分流.md` |
-| Function debugging | `references/功能调试.md` |
-| New feature | `references/新增功能.md` |
+| user decision, authorization, or uncertainty | `references/交互与确认规则.md` |
+| new project | `references/新项目启动模式.md` |
+| beginner interaction | `references/新手模式.md`, then the routed stage |
+| existing/mixed request | `references/项目阶段分流.md` |
+| debugging | `references/功能调试.md` |
+| new feature | `references/新增功能.md` |
 | UI optimization | `references/界面优化.md` |
-| Acceptance or review | `references/本轮验收与复盘.md` |
-| Long-term task | `references/长期任务模式.md` |
-| Skill/workflow improvement | `references/Skill流程优化模式.md` and `references/Skill测试验收.md` |
-| Non-trivial design or capability choice | `references/开发依据与能力复用.md` |
-| Project level or execution strategy is unclear | `references/项目级别问法.md` |
-| Online search, market intelligence, or public-information monitoring | `references/公开信息监测项目.md` |
+| acceptance/review | `references/本轮验收与复盘.md` |
+| long-term task | `references/长期任务模式.md` |
+| Skill/workflow improvement | `references/Skill流程优化模式.md`, `references/Skill测试验收.md` |
+| non-trivial design/capability choice | `references/开发依据与能力复用.md` |
+| complexity or delivery is genuinely unclear | `references/项目级别问法.md`, `references/运行环境与交付形态.md` |
+| public-source monitoring | `references/公开信息监测项目.md` |
 
-Use `references/首次触发示例.md` only when the opening response is unclear. Use `references/项目类型问题库.md` only after the project type is known and a domain-specific decision is actually needed.
+Use `references/资料收集与分析.md` when real files/process evidence may exist. Use `references/项目类型问题库.md` and `references/首次触发示例.md` only when a routed response needs them.
 
-## Shared Contract
+## Shared Invariants
 
-Preserve these invariants across every mode:
-
-1. Start from the user's rough requirement and existing idea; do not invent a competing product before understanding it.
-2. Request and inspect relevant local materials before asking factual questions. Treat the user's first-version idea as project material.
-3. Define the problem, users, constraints, and measurable success before choosing architecture, UI, workflow, protocol, data model, toolchain, dependency, or product behavior.
-4. Classify interaction style, full-project complexity, and current-round strategy separately. Beginner mode does not make a project small.
-5. Base classification on evidence and risk. Do not ask the user to choose a level from vague labels when Codex can assess it.
-6. Select a development basis or benchmark before non-trivial design, then inspect existing Skills, plugins, MCP servers, scripts, libraries, templates, and project patterns before adding capabilities.
-7. Separate total scope from current-round scope only when uncertainty, risk, size, or long-term work makes that useful. A bounded project may implement all clear functions in one round.
-8. Keep user-owned product decisions visible. Low interruption means compressed decisions and useful progress updates, not silent autonomy.
-9. Before a substantial new build, scope expansion, shared-data write, or long-term round, restate the current scope and obtain confirmation as defined in `references/交互与确认规则.md`.
-10. Execute in small verifiable steps; protect original data; verify the intended delivery form; report evidence, gaps, and remaining risk.
-11. Treat each approval narrowly. Confirming a route such as real-source validation does not approve topics, features, data providers, architecture, credentials, or delivery form that were not shown in that choice.
-12. Claim only evidence actually observed through user-provided content or a completed tool/read/test event. A path, expected fixture, prior conversation, or hidden test answer is not proof that material was inspected.
+1. Start from the user's rough requirement, initial idea, project files, and current state. Do not invent a competing product before inspecting them.
+2. Define the problem, users, constraints, non-goals, and measurable success before a non-trivial design decision.
+3. Search the local known-good path first, then official maintained references, then strong external examples only when a real gap remains.
+4. Inspect installed Skills, plugins, MCP servers, scripts, libraries, and project patterns before adding capabilities. Use `find-skills` only for a real gap.
+5. Classify interaction style, project complexity, and current-round strategy separately. Codex owns provisional classification; the user does not choose from vague size labels.
+6. Separate total scope from current scope only when uncertainty, size, risk, or long-term work requires it. A bounded clear project may implement all agreed functions.
+7. Keep confirmed facts, hypotheses, proposals, rejected directions, current work, and future work distinct.
+8. Protect original data and shared systems. Approval is narrow and never silently expands to installation, upload, Git, deployment, credentials, device action, or unrelated writes.
+9. Execute the exact authorized scope in small verifiable steps. Progress communication is not a new approval gate.
+10. Claim completion only from fresh verification evidence for the agreed outcome and environment. State remaining gaps and evidence level.
 
 ## Conversation Topology
 
-The lifecycle below is the order of reasoning and evidence work, not a list of questions to ask the user.
+Lifecycle stages are internal reasoning stages, not required conversation turns.
 
-For a normal new project, keep these as the default user-visible decision points:
+- Clear small or existing-project task: normally `0` decision questions; inspect, execute, verify, report.
+- Non-trivial new project: normally exactly `1` combined scope/start gate after all read-only preflight. If a named scope with concrete boundary has already been approved and start was explicitly authorized, do not ask again.
+- Exact safe local modification in an existing project: normally `0` gates.
+- Complex or consequential task: normally `1` consolidated scope gate; add another gate only for new evidence, a true conflict, or external/irreversible authorization.
+- A visible card contains `1-4` user-owned decisions. Method selection, benchmark search, capability inspection, file discovery, technical planning, and routine verification stay Codex-owned.
 
-1. one opening checkpoint for available materials and the user's initial idea, when they are not already provided
-2. one consolidated decision card after the available read-only inspection and internal analysis
-3. one prominent start-development or start-execution confirmation after concrete preflight
+Codex owns the default work of searching and selecting a comparable benchmark, checking capabilities, preparing a technical path, and choosing narrow verification. Do not ask whether Codex should perform those steps.
 
-Research progress, evidence summaries, benchmark records, and implementation updates are communication, not new approval rounds. Add another decision card only when new evidence creates a user-owned blocker, an answer conflicts with an earlier decision, or a consequence could not reasonably have been known before. State which new evidence caused it.
+If the user already authorized the exact displayed scope with `继续`, `按照建议修改`, `开始开发`, or equivalent wording, do not ask again. Combine scope approval and start authorization when nothing material changes during preflight.
 
-For a bounded normal task, keep the consolidated card to 1-4 user-owned decisions. Put the complete proposed fields, states, rules, and acceptance behavior in a stable named draft such as `范围草案 V1`, and make one decision approve or change that draft. Text outside the approved card or named draft is not authorized. Lifecycle stages, technical checks, and every proposed business rule must not become separate questions.
+## Execution And Debugging
 
-Codex owns the default work of searching and selecting a comparable benchmark, inspecting installed capabilities, resolving implementation-path mismatches, drafting provisional complexity/current-round strategy, and preparing a technical plan. Do not ask whether Codex should perform those steps. Ask the user only when a choice changes product behavior, evidence meaning, delivery experience, cost, permissions, external actions, write boundaries, or acceptance.
+Use the lane and phase rules in `references/核心执行流程.md`.
 
-## New-Project Lifecycle
+For debugging:
 
 ```text
-粗略需求
--> 用户资料和初版想法
--> 资料分析
--> 问题、约束和成功标准
--> 风险分级与本轮策略
--> 开发依据/对标
--> 已有能力检查
--> 交付环境（需要时）
--> 需求草案与关键决策
--> 总范围和本轮范围
--> 执行前确认
--> 小步实现
--> 验证
--> 验收复盘
+稳定复现 -> 收集证据 -> 定位边界 -> 单一根因假设 -> 最小实验/修复 -> 回归验证
 ```
 
-Do not turn each lifecycle arrow into a conversation turn. Several internal stages may complete between the material checkpoint and the consolidated decision card.
+Do not guess a cause or bundle unrelated refactors. Do not use TDD or Red-Green as the execution order. Analyze and locate the root cause first, implement the smallest fix, then add or run targeted verification and regression checks according to risk. After three failed root-cause hypotheses, stop patching and review the architecture, assumptions, and evidence boundary.
 
-The order matters: benchmark and tool choices come after the problem is defined, and implementation comes after the current-round meaning is confirmed.
+## Verification And Closure
 
-## Existing And Long-Term Work
+Completion means the promised behavior was verified, not merely that code ran, a package existed, or an agent reported success.
 
-For an existing project, first classify Bug, optimization, new feature, UI issue, acceptance item, or long-term continuation. If several are mixed, recommend the order based on failed commitments and risk; normally fix current-scope Bugs before adding features.
+- Run the narrowest relevant verification first; broaden for shared logic, releases, or high-risk changes.
+- Compare with the selected benchmark's measurable qualities when a benchmark shaped the design.
+- Report `已验证`, `仍未验证`, residual risk, and the exact next action.
+- Git commit, push, merge, publication, installation, deployment, external write, and device/system action require explicit scope or authorization.
 
-Every long-term round begins with a lightweight review. Use a full review only when context is missing, evidence changed, conclusions conflict, ownership changed, or the next action affects a final conclusion, shared tracker, device, system, or handoff.
+Use `references/证据等级说明.md` when a conclusion depends on static/offline/live evidence. Use `references/写入边界说明.md` when original data, shared records, devices, systems, or final conclusions may be modified.
 
-Keep confirmed conclusions, unverified assumptions, rejected directions, current-round goals, and future work distinct.
+Templates are optional durable records, not mandatory workflow steps. Use `templates/项目启动卡.md`, `templates/项目中途推进卡.md`, `templates/长期任务回顾卡.md`, `templates/任务分解表.md`, `templates/关键指标表.md`, `templates/本轮验收卡.md`, or `templates/交接卡.md` only when they remove ambiguity or support handoff.
 
-## Benchmark And Capability Gate
+## Memory And Notes Boundary
 
-For non-trivial design, follow `references/开发依据与能力复用.md`:
+Project execution does not automatically trigger project memory or Obsidian work.
 
-- search local known-good work first, then official maintained sources, then strong external examples when needed
-- record why the benchmark is comparable, what is reused, deliberate differences, and acceptance metrics
-- check installed capabilities before adding tools or dependencies
-- use `find-skills` when a real capability gap exists, not as ceremony
-- do not invoke a heavy expert Skill merely because it is available; explicit user requests and higher-priority environment rules win
+- `allred记忆` or explicit invocation routes to `allred-project-memory` after the execution state is verified.
+- `allred笔记` or explicit invocation routes to `allred-obsidian-notes`; when both are requested, memory runs first and notes presents the resulting state.
+- Ordinary completion does not create a personal Vault, install Obsidian, or copy a benchmark knowledge base.
 
-An external product benchmark is optional. A stated development basis is not.
+## Stop Conditions
 
-## Execution And Evidence
+Pause only when continuing requires a user-owned or unsafe assumption:
 
-Use `references/证据等级说明.md` when conclusions depend on evidence and `references/写入边界说明.md` when original data, devices, shared systems, trackers, or final conclusions may be modified.
-
-Completion means the agreed outcome was verified, not merely that code ran or a package was created. Verify against the selected benchmark's relevant qualities when a benchmark was used.
-
-## Templates
-
-Use templates only when the result benefits from a durable project record:
-
-- `templates/项目启动卡.md`: medium, complex, uncertain, or shared projects
-- `templates/项目中途推进卡.md`: scoped work in an existing project
-- `templates/长期任务回顾卡.md`: long-term review and round control
-- `templates/任务分解表.md`: multiple dependent tasks
-- `templates/关键指标表.md`: measurable acceptance needs
-- `templates/本轮验收卡.md`: current-round closure
-- `templates/交接卡.md`: ownership transfer or pause
-- `templates/Skill测试验收记录.md`: Skill behavior testing
-
-Do not fill every template for a small task.
-
-## Global Stop Conditions
-
-Pause and ask only when continuing would require a user-owned decision or unsafe assumption, including:
-
-- real versus simulated capability, delivery form, validation meaning, data-source credibility, or a material scope change
-- destructive or shared writes, device/system actions, sensitive data, credentials, legal/privacy exposure, or irreversible work
-- no evidence path for a conclusion that affects delivery, quality, safety, or customer commitments
-- a complex project being treated as one unbounded implementation step
-- a long-term round changing confirmed conclusions or shared records without review
+- product behavior, evidence meaning, delivery experience, material scope, owner, or acceptance remains genuinely conflicting
+- destructive/shared writes, sensitive data, credentials, cost, legal/privacy exposure, external actions, device/system operations, installation, deployment, or publication need authorization
+- no credible evidence path exists for a consequential conclusion
+- three debugging hypotheses failed and the architecture or problem definition needs review
 - the user says stop, pause, cancel, summarize, or correct direction
 
-Do not add a ceremonial question when the user's current message already clearly authorizes the exact scoped action. Do not interpret broad approval as permission for unrelated external actions, installs, commits, pushes, deployments, or device/system writes.
+Do not add a ceremonial question when the current message already authorizes the exact safe action.
 
 ## Maintenance
 
-When changing this Skill, use `skill-creator` when available, record architecture decisions in `references/调试与优化建议.md`, run `scripts/check_skill_structure.ps1`, and walk through the relevant behavior cases in `references/Skill测试验收.md`.
+When changing this Skill, use `skill-creator`, keep shared rules in one owner, record architecture decisions in `references/调试与优化建议.md`, run `scripts/check_skill_structure.ps1` and `scripts/check_behavior_suite.ps1`, validate with realistic cases from `references/Skill测试验收.md`, and synchronize an established release mirror before claiming distribution readiness.

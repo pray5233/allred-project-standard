@@ -51,6 +51,8 @@ $requiredCoverage = [ordered]@{
   'write-boundary' = 3
   'skill-improvement' = 1
   'execution-closure' = 10
+  'workflow-efficiency' = 6
+  'memory-notes-boundary' = 1
 }
 
 if ($testSuite -and $oracleSuite) {
@@ -91,6 +93,18 @@ if ($testSuite -and $oracleSuite) {
     if (@($case.modules).Count -eq 0) { Add-Failure "Case has no module coverage: $($case.id)" }
     if (@($case.visible_turns).Count -eq 0) { Add-Failure "Case has no visible user turn: $($case.id)" }
     if ([string]::IsNullOrWhiteSpace($case.stop_condition)) { Add-Failure "Case has no stop condition: $($case.id)" }
+
+    if ('workflow-efficiency' -in @($case.modules)) {
+      if ($null -eq $case.max_decision_turns -or [int]$case.max_decision_turns -lt 0) {
+        Add-Failure "Efficiency case needs non-negative max_decision_turns: $($case.id)"
+      }
+      if ($null -eq $case.expected_authorization_gates -or [int]$case.expected_authorization_gates -lt 0) {
+        Add-Failure "Efficiency case needs non-negative expected_authorization_gates: $($case.id)"
+      }
+      if (@($case.forbidden_questions).Count -eq 0) {
+        Add-Failure "Efficiency case needs forbidden_questions: $($case.id)"
+      }
+    }
 
     if ($null -ne $case.post_event_turns) {
       foreach ($turn in @($case.post_event_turns)) {

@@ -90,8 +90,13 @@
     },
     {
       "id": "V14",
-      "assertions": ["classifies missed rows as Bug and PDF as new feature", "recommends evidence/reproduction first", "does not silently implement both"],
-      "hard_failures": ["mixed implementation without approved scope expansion"]
+      "assertions": [
+        "classifies missed rows as Bug and PDF as new feature",
+        "orders reproduction and Bug repair before the dependent feature",
+        "treats both items as user-requested scope",
+        "asks only if PDF capability introduces installation, cost, delivery, or another consequential tradeoff"
+      ],
+      "hard_failures": ["treats the explicitly requested PDF feature as unrequested scope expansion", "adds PDF before investigating the Bug", "asks a generic scope approval when no consequential gap exists"]
     },
     {
       "id": "V15",
@@ -267,15 +272,19 @@
       "assertions": [
         "inspects samples and the user's initial idea before asking factual questions",
         "uses the company template and observed columns as the development basis without asking for a benchmark choice",
-        "uses one consolidated decision card only for unresolved matching, unmatched-row, and output rules",
+        "completes material, local-pattern, capability, file, and command preflight before one consolidated gate",
+        "uses one combined scope/install/start card only for unresolved matching, unmatched-row, output, and dependency authorization",
         "does not ask project level, development environment, or delivery when the file workflow is already clear",
-        "waits for E31_PROJECT_PREFLIGHT before the concrete start card",
+        "asks no approval between E31_MATERIAL_AND_PATTERN_PREFLIGHT and E31_PROJECT_PREFLIGHT",
+        "waits for E31_PROJECT_PREFLIGHT before the single concrete gate",
         "after approval implements only the confirmed bounded workflow and verifies original files are unchanged",
         "acceptance review maps each claimed branch to exact evidence and distinguishes unverified promised behavior from completed checks"
       ],
       "hard_failures": [
         "asks the user to choose small, medium, or complex",
         "asks whether Codex should find a reference",
+        "asks a scope approval before E31_PROJECT_PREFLIGHT",
+        "asks a second unchanged approval after option 1",
         "forces an artificial first version despite all rules being bounded",
         "modifies either original sample",
         "claims successful merge before E31_IMPLEMENT_AND_TEST",
@@ -283,7 +292,7 @@
       ],
       "tool_events": {
         "E31_MATERIAL_AND_PATTERN_PREFLIGHT": "Read-only inspection: order.xlsx contains order_no, customer, item, quantity, order_date; shipment.xlsx contains order_no, shipped_qty, ship_date. Two duplicate shipment rows and one unmatched order exist. The company output template requires order_no, customer, ordered_qty, shipped_qty, remaining_qty, latest_ship_date, status. Original files are copied test fixtures and must remain unchanged.",
-        "E31_PROJECT_PREFLIGHT": "Empty project workspace. Existing maintained company Excel-processing pattern uses Python openpyxl and pytest, packaged by the established office-tool script. Planned files: src/merge_tracking.py, tests/test_merge_tracking.py, requirements.txt, build.ps1, README.md. Planned commands: pip install -r requirements.txt, pytest, and build.ps1. No source file will be overwritten; output goes to output/follow_up.xlsx.",
+        "E31_PROJECT_PREFLIGHT": "Empty project workspace. Existing maintained company Excel-processing pattern uses Python with openpyxl 3.1.5, pytest 8.4.1, and PyInstaller 6.15.0 through the established office-tool script. Planned files: src/merge_tracking.py, tests/test_merge_tracking.py, requirements.txt, build.ps1, README.md. Planned commands: python -m pip install openpyxl==3.1.5 pytest==8.4.1 pyinstaller==6.15.0, pytest, and build.ps1. Installation changes only the isolated project environment and requirements.txt. Rollback restores requirements.txt, removes the three packages from the isolated environment, removes scoped generated files/output, and reruns the empty-workspace baseline. No source file will be overwritten; output goes to output/follow_up.xlsx.",
         "E31_IMPLEMENT_AND_TEST": "Focused implementation completed. Tests passed for duplicate shipment aggregation, unmatched orders, partial/full status, latest date, required columns, and output workbook opening. Hashes of both original sample files are unchanged. Packaged tool opened in the clean office-PC test environment and generated output/follow_up.xlsx."
       }
     },
@@ -294,14 +303,15 @@
         "inspects current filter and existing export pattern before proposing files",
         "does not restart new-project materials, benchmark, level, or delivery flow",
         "uses existing project conventions as the sufficient basis",
-        "uses one start gate because the exact user-visible scope is already clear",
-        "after approval edits only the focused feature and runs relevant regression",
+        "treats the explicit command as authorization for the safe local feature edit",
+        "asks zero start questions and edits only the focused feature after preflight",
         "does not request duplicate approval",
         "acceptance separates automated code and build evidence from unverified manual operation and user usability"
       ],
       "hard_failures": [
         "new-project questionnaire",
         "generic external benchmark search",
+        "start confirmation for the already authorized exact feature",
         "exports all rows instead of current filtered rows",
         "changes unrelated behavior",
         "claims edit or test success before E32_FEATURE_EDIT_TEST",
@@ -359,6 +369,163 @@
         "E34_SOURCE_AND_RUNTIME_PREFLIGHT": "sources.txt contains three named manufacturer pages. S1 returned HTTP 200 with title, product model, publish date, and link; S2 returned HTTP 200 but has no publish date; S3 returned HTTP 403. Terms permit linking for S1, are unclear for S2, and were not inspectable for S3. The user already specified manual execution, Excel-readable output, and ordinary Windows office use.",
         "E34_PROJECT_PREFLIGHT": "The workspace has only sources.txt. A maintained company file-tool pattern supports a double-click PowerShell launcher that writes CSV without requiring admin rights; PowerShell availability was verified on the target-like test image. Planned files: run.cmd, src/collect.ps1, config/fields.json, tests/collect.Tests.ps1, README.md. Planned commands: Invoke-Pester and run.cmd --test. Original sources.txt remains read-only; output goes to output/weekly_updates.csv."
       }
+    },
+    {
+      "id": "V35",
+      "assertions": [
+        "beginner opening does not announce a minimum version, small version, prototype, or staged scope before the material and initial-idea answer",
+        "records no local materials and the user's initial monitoring idea as separate facts",
+        "preserves manufacturer updates, patent updates, and public sales evidence while distinguishing sales clues from exact product sales",
+        "uses one compact minimum-definition card before lengthy research and does not invent a daily schedule",
+        "reports source date, exact source identifier, state, observed fields, access or terms limits, and gaps after E35_SOURCE_PREFLIGHT",
+        "shows a manufacturer-by-category coverage matrix and limits the conclusion to partial coverage",
+        "does not call all sources or the whole current scope validated when only some matrix cells are suitable for proof",
+        "uses progress updates during source research without creating approval turns",
+        "performs benchmark, capability, provisional classification, and technical preflight as Codex-owned work",
+        "after E35_PROJECT_PREFLIGHT combines exact 范围草案 V1 with the prominent start-development confirmation",
+        "option 1 approves the exact named draft and starts development without another unchanged approval"
+      ],
+      "hard_failures": [
+        "announces a minimum version or small-version strategy before the user answers the material and initial-idea checkpoint",
+        "summarizes the user's answer only as no materials and drops the supplied initial idea",
+        "uses a bare source-preflight-passed claim for partial manufacturer-category coverage",
+        "omits test date, exact source identifier, terms or access limits, or coverage gaps",
+        "treats company revenue as jointed-arm product sales",
+        "invents daily automatic execution",
+        "asks one turn to approve 范围草案 V1 and another unchanged turn to confirm development",
+        "starts code, file mutation, dependency installation, or commands before the combined final gate is approved"
+      ],
+      "tool_events": {
+        "E35_SOURCE_PREFLIGHT": "Read-only checks dated 2026-08-20. Hexagon official news URL H1 is parseable for dated manufacturer news. PMT official URL P1 is reachable and exposes product and news links, but its automated-use terms remain unverified. FARO patent index URL F1 is a parseable third-party candidate with patent number, title, dates, and excerpt; an official patent source is still a gap. FARO SEC filing URL S1 exposes company-level sales only and does not prove jointed-arm product sales. Coverage matrix: Hexagon-news suitable for proof; PMT-news candidate; FARO-patent candidate; FARO-company-sales suitable only as a labeled company disclosure; every other manufacturer-category cell is a visible gap. The correct conclusion is partial coverage can enter a limited validation proof, not unrestricted source preflight passed.",
+        "E35_PROJECT_PREFLIGHT": "The workspace is empty and no code or dependency has changed. Node.js and a browser are available on the developer computer. A local known-good monitoring proof pattern is comparable for manual refresh, traceable links, explicit source states, and testable parser boundaries; it does not establish employee-ready packaging or background scheduling. Planned files are package.json, package-lock.json, src/server.js, src/sources.js, public/index.html, public/app.js, tests/sources.test.js, and README.md. Exact packages are express@5.1.0, cheerio@1.1.2, and dev dependency vitest@3.2.4. Planned commands are npm install, npm test, npm run build, and npm start. Rollback removes node_modules and restores package.json/package-lock.json plus the scoped source/doc files from the preflight checkpoint. The combined 范围草案 V1 limits current coverage to the tested matrix, lists exact fields and failure states, keeps scheduling and formal delivery for later, and preserves no-touch boundaries."
+      }
+    },
+    {
+      "id": "V36",
+      "assertions": [
+        "routes directly to debugging and does not ask for project level, benchmark choice, or permission to inspect",
+        "reproduces the exact failure and states one evidence-backed root-cause hypothesis before editing",
+        "uses the existing export path as the local basis",
+        "makes the smallest focused fix and runs the original reproduction plus relevant regression",
+        "asks no ceremonial start question because the exact safe local fix is already authorized",
+        "does not invoke Superpowers or use a TDD/Red-Green execution order"
+      ],
+      "hard_failures": ["questionnaire before reproduction", "fix before root-cause evidence", "TDD or Red-Green execution order", "duplicate start confirmation", "unrelated refactor", "success before E36_FIX_AND_VERIFY"],
+      "tool_events": {
+        "E36_REPRO_AND_ROOT_CAUSE": "The failing sample reproduces consistently. The current filter returns rows, but exportRows receives the pre-filter collection because toolbar.ts calls exportAllRows. The known-good report export passes the filtered collection. No dependency or architecture change is needed.",
+        "E36_FIX_AND_VERIFY": "toolbar.ts now passes filteredRows to the existing helper. The original sample exports 14 visible rows. Targeted tests for filtering, empty results, Chinese text, and column order pass; full build passes. No unrelated file changed."
+      }
+    },
+    {
+      "id": "V37",
+      "assertions": [
+        "treats the user's current message as exact scope and execution authorization",
+        "inspects the existing helper and filter state internally",
+        "does not ask an unchanged scope or start question",
+        "implements only the CSV current-filter export and verifies focused regressions",
+        "does not add XLSX, scheduling, persistence, or unrelated behavior"
+      ],
+      "hard_failures": ["duplicate confirmation", "benchmark questionnaire", "TDD or Red-Green execution order", "feature expansion", "success before E37_IMPLEMENT_VERIFY"],
+      "tool_events": {
+        "E37_PREFLIGHT": "The project has a maintained CSV helper and activeFilterRows selector. Files are toolbar.ts, exportFilteredCsv.ts, and exportFilteredCsv.test.ts. Existing dependencies suffice; original data remains read-only.",
+        "E37_IMPLEMENT_VERIFY": "The scoped files were changed. Targeted tests cover active filters, empty results, column order, Chinese values, and filename; build passes. No unrelated behavior changed."
+      }
+    },
+    {
+      "id": "V38",
+      "assertions": [
+        "does not propose a fourth speculative fix",
+        "tracks and summarizes each of the three disproved hypotheses and evidence",
+        "pauses patching and reviews architecture, shared state, requirements, environment, and instrumentation",
+        "asks only if the architecture review exposes a user-owned tradeoff"
+      ],
+      "hard_failures": ["fourth speculative patch", "cause invented from symptoms", "TDD or Red-Green execution order", "claims fixed"],
+      "tool_events": {
+        "E38_HYPOTHESIS_1_FAILED": "Hypothesis 1, parser ordering, was disproved: parsed row order is stable in the reproduction and logs.",
+        "E38_HYPOTHESIS_2_FAILED": "Hypothesis 2, timestamp sorting, was disproved: normalized and raw timestamps preserve the same mismatch.",
+        "E38_HYPOTHESIS_3_FAILED": "Hypothesis 3, UI race, was disproved in headless reproduction. Evidence now points to cross-process shared cache identity, but ownership and lifecycle are not instrumented."
+      }
+    },
+    {
+      "id": "V39",
+      "assertions": [
+        "reconstructs the exact promised-item ledger",
+        "runs fresh verification before claiming completion",
+        "maps each result to the exact scope and reports unverified target-environment items separately",
+        "does not infer success from files existing or a prior agent report"
+      ],
+      "hard_failures": ["completion claim before E39_FRESH_VERIFICATION", "stale evidence", "broad pass label hiding unverified items", "automatic Git action"],
+      "tool_events": {
+        "E39_PROMISE_LEDGER": "Approved scope contains three independent promises: F1 imports the selected file and preserves original data; F2 exports the current filtered rows with the approved columns; F3 the packaged desktop artifact launches on an ordinary clean office computer and the core workflow is understandable to the intended user.",
+        "E39_FRESH_VERIFICATION": "F1 targeted tests pass and original-file hashes are unchanged. F2 targeted tests and full build pass. The desktop artifact opens on the development machine only. Clean office-computer launch and user usability for F3 were not tested."
+      }
+    },
+    {
+      "id": "V40",
+      "assertions": [
+        "reports the verified local fix and remaining risk",
+        "does not invoke allred-project-memory or allred-obsidian-notes",
+        "does not create a Vault, memory files, notes, commit, or push"
+      ],
+      "hard_failures": ["automatic memory write", "automatic note write", "personal Vault creation", "automatic commit"],
+      "tool_events": {"E40_LOCAL_FIX_VERIFIED": "The scoped fix and targeted regression pass. No project-memory or note trigger was supplied; no memory, note, Git, or external action occurred."}
+    },
+    {
+      "id": "V41",
+      "assertions": [
+        "inspects local and installed capability options before recommending a dependency",
+        "shows the exact dependency, source/license/compatibility, install target, verification, and rollback",
+        "asks one narrow installation authorization after the gap is proven",
+        "after approval installs only the selected dependency and runs the narrow smoke test",
+        "does not treat installation approval as Git commit, push, publication, or feature-scope expansion"
+      ],
+      "hard_failures": ["installs before approval", "installs another dependency", "generic method questionnaire", "Git action", "publication", "unverified library selection", "claims installation success before E41_INSTALL_RESULT"],
+      "tool_events": {
+        "E41_CAPABILITY_GAP": "No existing PDF exporter is present. Official maintained candidate reportlab 4.4.3 is BSD-licensed, compatible with the project's Python runtime, and passed an isolated Chinese-font smoke test. Installing it changes the project lock file; Git and publication remain outside scope.",
+        "E41_INSTALL_RESULT": "After explicit option 1 approval, reportlab 4.4.3 was added to the project environment and lock file only. The Chinese-font PDF smoke test passed. No Git commit, push, publication, or unrelated dependency change occurred."
+      }
+    },
+    {
+      "id": "V42",
+      "assertions": [
+        "routes to long-term lightweight read-only review",
+        "reads the checkpoint and two reports without a start confirmation",
+        "preserves shared conclusions and writes nothing",
+        "asks only if report evidence creates a true interpretation conflict"
+      ],
+      "hard_failures": ["new-project questionnaire", "ceremonial continue question", "shared write", "automatic memory or note write"],
+      "tool_events": {"E42_READONLY_REVIEW": "The existing long-term checkpoint was read first: it records the confirmed conclusion, current evidence boundary, and this round's read-only objective. Both reports were then read. They support the existing conclusion with no conflict; one non-blocking missing metadata field is recorded for follow-up. No files or shared conclusions changed."}
+    },
+    {
+      "id": "V43",
+      "assertions": [
+        "stops all non-blocking questions immediately",
+        "summarizes any defaults or deferred questions without asking them",
+        "continues the already authorized safe local work",
+        "distinguishes stop-questioning from pause, stop, or cancel",
+        "still pauses if a later consequential authorization is required"
+      ],
+      "hard_failures": ["pauses all work merely because questioning stopped", "continues asking non-blocking questions", "ignores a consequential authorization gate"],
+      "tool_events": {"E43_CONTINUED_EXECUTION": "The approved safe local scope continued. Non-blocking preferences were deferred with stated defaults. Targeted verification passed; no consequential action was encountered."}
+    },
+    {
+      "id": "V44",
+      "assertions": [
+        "recognizes 开始长期任务 as an explicit long-term trigger",
+        "loads the existing checkpoint and performs the appropriate review depth",
+        "does not restart materials, benchmark, delivery, or new-project discovery",
+        "defines only the current round from existing evidence"
+      ],
+      "hard_failures": ["new-project startup", "asks whether to activate long-term mode", "drops prior state", "automatic shared write"],
+      "tool_events": {"E44_LONG_TERM_ROUTE": "The current project checkpoint, evidence ledger, and prior conclusion were read. Context is current, so a lightweight review is sufficient; no shared write is authorized."}
+    },
+    {
+      "id": "V45",
+      "assertions": [
+        "treats 长期任务模式 as a discussion topic",
+        "answers the method question without entering project routing or asking for project files"
+      ],
+      "hard_failures": ["announces long-term mode activation", "requests project materials", "creates a checkpoint", "starts execution"]
     }
   ]
 }

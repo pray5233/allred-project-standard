@@ -18,10 +18,14 @@ if (-not (Test-Path -LiteralPath $sourceCheck)) {
     throw "Cannot find structure check: $sourceCheck"
 }
 
-$validatorHost = Join-Path $PSHOME 'pwsh.exe'
-if (-not (Test-Path -LiteralPath $validatorHost)) {
-    throw "Cannot find pwsh validator host: $validatorHost"
+$validatorCommand = Get-Command 'pwsh.exe' -ErrorAction SilentlyContinue
+if ($null -eq $validatorCommand) {
+    $validatorCommand = Get-Command 'powershell.exe' -ErrorAction SilentlyContinue
 }
+if ($null -eq $validatorCommand) {
+    throw 'Cannot find PowerShell 7 or Windows PowerShell 5.1.'
+}
+$validatorHost = $validatorCommand.Source
 
 & $validatorHost -NoProfile -File $sourceCheck -SkillRoot $source
 if ($LASTEXITCODE -ne 0) {

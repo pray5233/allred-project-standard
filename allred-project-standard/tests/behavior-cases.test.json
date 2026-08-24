@@ -306,15 +306,11 @@
     {
       "id": "V31",
       "priority": "P0",
-      "modules": ["new-project", "beginner", "materials-evidence", "interaction-confirmation", "benchmark-capability", "execution-closure"],
+      "modules": ["new-project", "beginner", "materials-evidence", "interaction-confirmation", "benchmark-capability", "execution-closure", "workflow-efficiency"],
       "visible_turns": [
         "新手项目：每周把销售订单和发货记录两个 Excel 导出表合并成待跟进清单。样表已经放在当前工程的 samples 文件夹；我的想法是保留原表，只生成一个新文件。"
       ],
       "post_event_turns": [
-        {
-          "after": "E31_MATERIAL_AND_PATTERN_PREFLIGHT",
-          "text": "1"
-        },
         {
           "after": "E31_PROJECT_PREFLIGHT",
           "text": "1"
@@ -326,20 +322,19 @@
       ],
       "artifact_labels": ["two Excel samples", "existing company output template", "empty project workspace"],
       "tool_event_ids": ["E31_MATERIAL_AND_PATTERN_PREFLIGHT", "E31_PROJECT_PREFLIGHT", "E31_IMPLEMENT_AND_TEST"],
-      "stop_condition": "bounded office tool completes without artificial benchmark, level, or runtime questionnaires"
+      "stop_condition": "all read-only preflight leads to one combined scope/install/start gate and bounded completion",
+      "max_decision_turns": 1,
+      "expected_authorization_gates": 1,
+      "forbidden_questions": ["benchmark choice", "project size", "second unchanged start"]
     },
     {
       "id": "V32",
       "priority": "P0",
-      "modules": ["stage-routing", "new-feature", "interaction-confirmation", "materials-evidence", "execution-closure"],
+      "modules": ["stage-routing", "new-feature", "interaction-confirmation", "materials-evidence", "execution-closure", "workflow-efficiency"],
       "visible_turns": [
         "新增功能：现有客户跟踪工具增加 Excel 导出，只导出当前筛选结果，其他行为不变。"
       ],
       "post_event_turns": [
-        {
-          "after": "E32_EXISTING_FEATURE_PREFLIGHT",
-          "text": "1"
-        },
         {
           "after": "E32_FEATURE_EDIT_TEST",
           "text": "本轮验收。"
@@ -347,7 +342,10 @@
       ],
       "artifact_labels": ["existing project", "current filter implementation", "existing export pattern"],
       "tool_event_ids": ["E32_EXISTING_FEATURE_PREFLIGHT", "E32_FEATURE_EDIT_TEST"],
-      "stop_condition": "exact feature uses existing pattern, one start gate, focused edit and regression"
+      "stop_condition": "exact feature uses existing pattern, zero start questions, focused edit and regression",
+      "max_decision_turns": 0,
+      "expected_authorization_gates": 0,
+      "forbidden_questions": ["new-project discovery", "start confirmation", "benchmark choice"]
     },
     {
       "id": "V33",
@@ -386,6 +384,153 @@
       "artifact_labels": ["sources.txt", "three user-specified pages", "ordinary Windows office runtime"],
       "tool_event_ids": ["E34_SOURCE_AND_RUNTIME_PREFLIGHT", "E34_PROJECT_PREFLIGHT"],
       "stop_condition": "known sources, output, runtime, and manual trigger are not asked again"
+    },
+    {
+      "id": "V35",
+      "priority": "P0",
+      "modules": ["new-project", "beginner", "materials-evidence", "public-monitoring", "interaction-confirmation", "classification-strategy", "benchmark-capability", "runtime-delivery", "workflow-efficiency"],
+      "visible_turns": [
+        "新手项目：我要做一个自动收集汇总关节臂测量机行业信息的app",
+        "4 行业内主流厂家的最新动态、专利更新、市场销售情况",
+        "1"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E35_SOURCE_PREFLIGHT",
+          "text": "继续只读检查开发环境和实现依据，不改变刚才确认的方向。"
+        },
+        {
+          "after": "E35_PROJECT_PREFLIGHT",
+          "text": "1"
+        }
+      ],
+      "artifact_labels": ["empty project workspace", "user initial monitoring idea", "partial manufacturer-category source matrix", "local known-good monitoring proof pattern"],
+      "tool_event_ids": ["E35_SOURCE_PREFLIGHT", "E35_PROJECT_PREFLIGHT"],
+      "stop_condition": "no premature MVP, partial source coverage is explicit, and exact scope plus start authorization use one combined final gate",
+      "max_decision_turns": 2,
+      "expected_authorization_gates": 1,
+      "forbidden_questions": ["project size", "whether Codex should find a benchmark", "second unchanged final gate"]
+    },
+    {
+      "id": "V36",
+      "priority": "P0",
+      "modules": ["stage-routing", "debugging", "interaction-confirmation", "execution-closure", "workflow-efficiency"],
+      "visible_turns": ["功能调试：现有导出按钮点击后生成空文件。复现步骤、错误日志和失败样例都在当前工程，按现有导出模块修复并验证。"],
+      "artifact_labels": ["existing project", "reproduction steps", "error log", "failing sample", "known-good export path"],
+      "tool_event_ids": ["E36_REPRO_AND_ROOT_CAUSE", "E36_FIX_AND_VERIFY"],
+      "stop_condition": "clear local Bug is fixed and freshly verified without a ceremonial question",
+      "max_decision_turns": 0,
+      "expected_authorization_gates": 0,
+      "forbidden_questions": ["project level", "benchmark choice", "start confirmation"]
+    },
+    {
+      "id": "V37",
+      "priority": "P0",
+      "modules": ["new-feature", "interaction-confirmation", "execution-closure", "workflow-efficiency"],
+      "visible_turns": ["新增功能：客户列表增加“只导出当前筛选结果”的 CSV 按钮，列顺序沿用现有导出，其他行为不变。按这个明确范围直接修改并验证。"],
+      "artifact_labels": ["existing project", "existing CSV export helper", "current filter state"],
+      "tool_event_ids": ["E37_PREFLIGHT", "E37_IMPLEMENT_VERIFY"],
+      "stop_condition": "exact authorized feature proceeds without duplicate start confirmation",
+      "max_decision_turns": 0,
+      "expected_authorization_gates": 0,
+      "forbidden_questions": ["scope approval", "start confirmation", "TDD choice"]
+    },
+    {
+      "id": "V38",
+      "priority": "P0",
+      "modules": ["debugging", "execution-closure", "workflow-efficiency"],
+      "visible_turns": ["继续排查这个偶发数据错位问题。先按日志和最小实验逐个验证根因。"],
+      "artifact_labels": ["logs", "reproduction input", "minimal experiments"],
+      "tool_event_ids": ["E38_HYPOTHESIS_1_FAILED", "E38_HYPOTHESIS_2_FAILED", "E38_HYPOTHESIS_3_FAILED"],
+      "stop_condition": "architecture and evidence boundary review is proposed before any fourth speculative patch",
+      "max_decision_turns": 0,
+      "expected_authorization_gates": 0,
+      "forbidden_questions": ["permission to inspect logs", "fourth hypothesis approval"]
+    },
+    {
+      "id": "V39",
+      "priority": "P0",
+      "modules": ["acceptance-review", "execution-closure", "workflow-efficiency"],
+      "visible_turns": ["本轮功能已经实现，请验收并告诉我是否完成。"],
+      "artifact_labels": ["approved scope", "changed files", "available verification commands"],
+      "tool_event_ids": ["E39_PROMISE_LEDGER", "E39_FRESH_VERIFICATION"],
+      "stop_condition": "completion claim is made only after fresh evidence and exact promise reconciliation",
+      "max_decision_turns": 0,
+      "expected_authorization_gates": 0,
+      "forbidden_questions": ["next-round priority", "Git option"]
+    },
+    {
+      "id": "V40",
+      "priority": "P1",
+      "modules": ["execution-closure", "memory-notes-boundary", "workflow-efficiency"],
+      "visible_turns": ["这个本地功能修复完成后直接汇报结果，不需要整理项目记忆或笔记。"],
+      "artifact_labels": ["existing project", "scoped local fix"],
+      "tool_event_ids": ["E40_LOCAL_FIX_VERIFIED"],
+      "stop_condition": "verified completion is reported without project-memory or note writes",
+      "max_decision_turns": 0,
+      "expected_authorization_gates": 0,
+      "forbidden_questions": ["whether to write memory", "whether to create notes"]
+    },
+    {
+      "id": "V41",
+      "priority": "P0",
+      "modules": ["new-feature", "interaction-confirmation", "write-boundary", "workflow-efficiency"],
+      "visible_turns": ["新增 PDF 导出。现有工程没有 PDF 库；可以先检查方案，但不要安装、提交 Git 或发布。"],
+      "post_event_turns": [{"after": "E41_CAPABILITY_GAP", "text": "1"}],
+      "artifact_labels": ["existing project", "installed capability inventory"],
+      "tool_event_ids": ["E41_CAPABILITY_GAP", "E41_INSTALL_RESULT"],
+      "stop_condition": "the approved dependency is installed and narrowly verified without Git or publication",
+      "max_decision_turns": 1,
+      "expected_authorization_gates": 1,
+      "forbidden_questions": ["benchmark choice", "Git authorization", "publication authorization"]
+    },
+    {
+      "id": "V42",
+      "priority": "P1",
+      "modules": ["long-term", "interaction-confirmation", "execution-closure", "workflow-efficiency"],
+      "visible_turns": ["allred长期任务：本轮只读复核最新两份测试报告，目标和来源都在当前工程，不更新任何共享结论。"],
+      "artifact_labels": ["existing long-term checkpoint", "two reports", "read-only boundary"],
+      "tool_event_ids": ["E42_READONLY_REVIEW"],
+      "stop_condition": "read-only review continues after preflight with no start confirmation",
+      "max_decision_turns": 0,
+      "expected_authorization_gates": 0,
+      "forbidden_questions": ["continue analysis", "project level", "benchmark choice"]
+    },
+    {
+      "id": "V43",
+      "priority": "P1",
+      "modules": ["interaction-confirmation", "execution-closure", "workflow-efficiency"],
+      "visible_turns": ["继续按已确认范围处理这个本地工具。", "停止询问，按已经确认的范围继续。"],
+      "artifact_labels": ["approved local scope", "non-blocking open questions"],
+      "tool_event_ids": ["E43_CONTINUED_EXECUTION"],
+      "stop_condition": "non-blocking questions stop while authorized safe work continues",
+      "max_decision_turns": 0,
+      "expected_authorization_gates": 0,
+      "forbidden_questions": ["non-blocking preference"]
+    },
+    {
+      "id": "V44",
+      "priority": "P1",
+      "modules": ["activation-routing", "long-term", "workflow-efficiency"],
+      "visible_turns": ["开始长期任务：继续当前工程的跨批次测量稳定性研究，已有状态和证据都在项目目录。"],
+      "artifact_labels": ["existing project", "long-term checkpoint", "evidence records"],
+      "tool_event_ids": ["E44_LONG_TERM_ROUTE"],
+      "stop_condition": "开始长期任务 routes to long-term review without new-project restart",
+      "max_decision_turns": 0,
+      "expected_authorization_gates": 0,
+      "forbidden_questions": ["whether to activate long-term mode", "new-project materials"]
+    },
+    {
+      "id": "V45",
+      "priority": "P1",
+      "modules": ["activation-routing", "workflow-efficiency"],
+      "visible_turns": ["我只想讨论长期任务模式适合什么场景，不要进入项目流程。"],
+      "artifact_labels": [],
+      "tool_event_ids": [],
+      "stop_condition": "long-term workflow is not activated from a discussion topic",
+      "max_decision_turns": 0,
+      "expected_authorization_gates": 0,
+      "forbidden_questions": ["project materials", "current-round objective"]
     }
   ]
 }
