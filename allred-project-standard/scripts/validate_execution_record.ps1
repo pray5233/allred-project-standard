@@ -13,6 +13,7 @@ if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
 }
 
 $text = Get-Content -LiteralPath $Path -Raw -Encoding UTF8
+$text = $text -replace "`r`n?", "`n"
 $failures = [System.Collections.Generic.List[string]]::new()
 
 function Require([string]$Pattern, [string]$Message) {

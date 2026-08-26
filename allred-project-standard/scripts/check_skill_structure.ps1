@@ -208,6 +208,16 @@ if (Test-Path -LiteralPath $executionTemplatePath) {
 if ((Test-Path -LiteralPath $executionValidatorPath) -and (Test-Path -LiteralPath $executionFixturePath)) {
   & $executionValidatorPath -Path $executionFixturePath | Out-Null
   if (-not $?) { Add-Failure 'Execution record validator rejected the valid fixture.' }
+
+  $crlfFixturePath = Join-Path ([System.IO.Path]::GetTempPath()) ("allred-valid-crlf-" + [guid]::NewGuid().ToString('N') + '.md')
+  try {
+    $fixtureText = (Get-Content -LiteralPath $executionFixturePath -Raw -Encoding UTF8) -replace "`r`n?", "`n"
+    [System.IO.File]::WriteAllText($crlfFixturePath, ($fixtureText -replace "`n", "`r`n"), [System.Text.UTF8Encoding]::new($false))
+    & $executionValidatorPath -Path $crlfFixturePath | Out-Null
+    if (-not $?) { Add-Failure 'Execution record validator rejected the valid CRLF fixture.' }
+  } finally {
+    Remove-Item -LiteralPath $crlfFixturePath -Force -ErrorAction SilentlyContinue
+  }
 }
 
 if ((Test-Path -LiteralPath $decisionCoverageValidatorPath) -and (Test-Path -LiteralPath $executionFixturePath)) {

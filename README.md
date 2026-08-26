@@ -1,6 +1,6 @@
 # Allred Project Standard Skill
 
-当前发布版本：`0.7.0`。安装目录中的 `VERSION` 和安装回执用于确认实验机实际加载的版本。
+当前发布版本：`0.7.1`。安装目录中的 `VERSION` 和安装回执用于确认实验机实际加载的版本。
 
 `allred-project-standard` 是一个 Codex 项目推进 Skill。它帮助用户把粗略想法变成可验证的本轮工作，同时避免两个极端：
 
@@ -17,6 +17,8 @@
 ```
 
 `0.7.0` 在自适应集中访谈上增加三项约束：用灰区地图让用户选择讨论范围；用 `Q` 区分当前事实、用 `D` 区分未来业务决定；把每项已批准决定映射到实现目标和验收证据。问题数量仍不设固定上限，重点是依赖顺序、信息覆盖、用户控制和等待体验。
+
+`0.7.1` 修复 Windows 干净克隆后 CRLF 行尾导致执行记录校验器误判的问题，并把 CRLF 有效样例加入结构回归检查。
 
 Allred 借鉴 Superpowers 中“先看上下文、先找根因、遇到真实阻塞就停、完成前重新验证”的工程纪律，但不依赖或自动调用 Superpowers，也不引入强制 brainstorming、TDD/Red-Green、逐段审批、逐任务提交、worktree 或批次等待。
 
@@ -413,4 +415,4 @@ pwsh -NoProfile -File .\allred-project-standard\scripts\run_behavior_eval.ps1 -C
 
 测试 Skill 触发和交互时建议使用独立的测试组和检查组：测试组只看 `tests/behavior-cases.test.json`，检查组再使用 `tests/behavior-cases.oracle.json` 审阅原始对话。不要把 Oracle、预期答案或旧缺陷提前提供给测试组。完整标准见 `allred-project-standard/references/Skill测试验收.md`。
 
-稳定版本应使用与 `VERSION` 一致的 Git tag，例如 `v0.7.0`。提交、打 tag 和推送需单独执行。
+稳定版本应使用与 `VERSION` 一致的 Git tag，例如 `v0.7.1`。提交、打 tag 和推送需单独执行。
