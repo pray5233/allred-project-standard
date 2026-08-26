@@ -1,0 +1,7 @@
+interface:
+  display_name: "Allred Project Standard"
+  short_description: "Evidence-driven software and internal work projects"
+  default_prompt: "Use $allred-project-standard to advance this software or document-heavy project with evidence and fresh verification."
+
+policy:
+  allow_implicit_invocation: true

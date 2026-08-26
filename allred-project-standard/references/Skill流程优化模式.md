@@ -96,7 +96,7 @@ Behavior tests should inspect decisions and side effects, not require exact pros
 For a process-efficiency refactor, include:
 
 - clear task: zero unnecessary decision questions
-- standard task: one consolidated gate unless new evidence creates a blocker
+- interaction depth follows unresolved information and decision dependencies; batch currently knowable items and reject duplicate gates
 - exact prior authorization: no duplicate start confirmation
 - debugging: evidence and one hypothesis before a fix; architecture review after three failed hypotheses
 - completion: fresh verification evidence

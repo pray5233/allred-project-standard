@@ -1,18 +1,57 @@
 # Skill 测试验收
 
+## 2026-08-24 Dynamic Contract Regression
+
+The adaptive-alignment refactor must be tested as a generic decision system, not as a fix for one monitoring transcript.
+
+Benchmarked behavior:
+
+- GSD assumption-first interaction: inspect evidence, form confidence-ranked assumptions, ask for corrections only
+- Spec Kit optional quality gates: clarify and analyze only when meaningful ambiguity exists
+- OpenSpec change deltas: update the changed contract portion without rewriting unrelated intent
+- Agent OS conditional phases and read-ledger discipline: skip unnecessary stages and duplicate context loading
+- Skill Creator progressive disclosure: domain references load only when routed
+
+Generic invariant cases V46-V62 cover partial approval, evidence-versus-authorization, three mutation layers, an exact existing-project setting, a genuine delivery correction, context-read deduplication, derived coverage shape, command effects, recommendation admission, user-friendly confirmation, self-contained packaging effects, safe preflight before a non-duplicate final gate, Codex-owned method changes, concrete visible presets, semantic relevance, and core-source failure handling. Pass only when:
+
+- selecting one option converts only that recommendation from `R` to `D`
+- capability or source evidence never grants product authorization
+- development-time, runtime, and external/system effects are all visible before mutation
+- each independent promise has planned proof and an explicit validation environment
+- `App` does not silently mean web, desktop, or local HTML
+- fixed `D1-D4` lifecycle cards are absent; visible decisions are generated from current impact and evidence
+- evidence-backed assumptions remain internal when the existing project resolves them
+- a user correction invalidates dependent design only, then produces one complete replacement scope
+- unchanged Skill references are not read twice in one task without a freshness or newly routed reason
+- multi-dimensional claims derive their coverage axes from the current contract
+- restore/install commands disclose network, packages, lock files, caches, generated files, verification, and rollback
+- optional convenience features stay outside the contract unless they serve an approved outcome or proven risk
+- evidence records use exact identifiers, dates/versions, tested inputs, observed fields, limits, and gaps
+- each coverage cell has exactly one current state
+- the user confirms product scope and significant effects in plain language, not the Codex execution record
+- self-contained packaging does not imply an offline build
+- beginner-visible cards contain no internal state/eval jargon, framework, SDK, package, command, cache, or source-code-path dump
+- safe read-only preflight does not create an early approval gate when provisional assumptions are sufficient
+- technical method changes do not reopen approval when product behavior and significant effects stay unchanged
+- preselected visible items are named with their evidence basis; counts and generic default labels are insufficient
+- HTTP/parse/schema/count success never substitutes for sample semantic relevance
+- no development confirmation appears when every core retrieval source is irrelevant, blocked, empty, or otherwise unsuitable
+
+Use metamorphic review by changing business nouns while preserving uncertainty structure. The decision topology should remain comparable, but no test or instruction may trigger behavior from a particular domain word.
+
 ## 2026-08-24 Workflow Refactor Regression
 
 The Superpowers-lite refactor must preserve the existing suite and add these efficiency checks:
 
 | Case | Expected invariant |
 | --- | --- |
-| V36 clear local Bug | zero ceremonial questions; reproduce and root-cause evidence before a focused fix; no mandatory TDD |
+| V36 clear local Bug | no ceremonial questions; reproduce and root-cause evidence before a focused fix; no mandatory TDD |
 | V37 exact feature authorization | inspect internally and execute without a duplicate start gate |
 | V38 three failed hypotheses | stop speculative patching and review architecture/evidence before a fourth attempt |
 | V39 completion request | fresh verification and exact promised-item reconciliation before success language |
 | V40 local completion | no automatic `allred记忆`, `allred笔记`, Vault, or Git action |
-| V41 dependency gap | one narrow install authorization; no Git/publication scope expansion |
-| V42 exact long-term read-only review | continue after preflight with zero ceremonial start questions and zero writes |
+| V41 dependency gap | narrow install authorization immediately before the action; no Git/publication scope expansion |
+| V42 exact long-term read-only review | continue after preflight with no ceremonial start question and no writes |
 
 Test and review roles stay independent:
 
@@ -21,7 +60,28 @@ Test and review roles stay independent:
 - reviewers inspect decisions, questions, evidence claims, side effects, and completion language rather than exact prose
 - the test fixture must not manufacture the behavior being evaluated
 
-Release acceptance requires Fast/Standard/Deep routing, product versus consequential gates, root-cause debugging, three-hypothesis stop, fresh verification, no mandatory TDD/Superpowers invocation, exact-trigger memory/notes, source-release parity, and the existing domain cases.
+## 2026-08-25 Gray-Area And Decision-Coverage Regression
+
+The concentrated-interview model must preserve deep discovery without turning into a fixed questionnaire or hiding dependent decisions.
+
+Pass only when:
+
+- many unresolved topics become a task-specific gray-area map before detailed questioning
+- the user can discuss all, the recommended set, named areas, or review an assumption draft
+- selecting discussion areas does not approve scope, defaults, exclusions, or mutation
+- each visible question is a real interrogative with why-now impact, evidence or labeled guess, recommendation when justified, and compact answer syntax
+- a request for explanation keeps the current question open
+- `全部按推荐` applies only to the current visible named packet; explicit overrides win and deferrals remain unapproved
+- stopping questions preserves confirmed safe work while narrowing only the outcome blocked by unresolved meaning
+- every active `U/D` decision maps to an implementation/document target and Acceptance Promise
+- Approved Scope Ledger is an independent machine-readable list; active IDs and coverage rows reconcile against it
+- every active decision has at least one decision-specific Promise rather than sharing only a generic test row
+- missing decision coverage blocks closure even when other tests pass
+- a complete verified coverage ledger permits closure without another ceremonial gate
+
+The test group may read V80-V88 visible turns and injected tool events only. The check group reads the fixed raw transcript plus the Oracle. Do not give either group `references/调试与优化建议.md` or prior validation reports.
+
+Release acceptance requires Fast/Standard/Deep routing, product versus consequential gates, software and non-software routes, root-cause debugging, three-hypothesis stop, fresh verification, no mandatory TDD/Superpowers invocation, exact-trigger memory/notes, source-release parity, and cross-domain cases.
 
 Use this reference after changing `allred-project-standard`.
 
@@ -116,10 +176,11 @@ Use this score for trend visibility, not as a substitute for the release gate:
 
 - test-group-visible cases: `tests/behavior-cases.test.json`
 - check-group oracle: `tests/behavior-cases.oracle.json`
-- deterministic suite check: `scripts/check_behavior_suite.ps1`
+- deterministic manifest check: `scripts/check_behavior_manifest.ps1`
+- real test-group/check-group runner: `scripts/run_behavior_eval.ps1`
 - result record: `templates/Skill测试验收记录.md`
 
-The suite check validates coverage and manifest integrity; it does not judge generated prose or prove behavioral quality.
+The manifest check validates coverage and Oracle separation only. It does not invoke Codex, judge generated decisions, or prove behavioral quality. Only an observed run from `run_behavior_eval.ps1` or an equivalent isolated test-group/check-group record counts as behavioral evidence. Authentication, network, CLI, or reviewer-output failures are `InfrastructureFailure`/inconclusive, not Skill passes or failures.
 
 P0 cases must pass. P1 failures should be recorded and prioritized.
 
@@ -181,7 +242,7 @@ Pass when the next response:
 
 - treats `1` as approval of real-source validation only
 - notices that the monitored industry or subject is still missing
-- uses one compact minimum-definition card for monitored subject, language/region, smallest proof, and runtime meaning
+- concentrates the currently knowable definition questions for monitored subject, language/region, proof, and runtime meaning
 - requires the user to name the monitored subject rather than inventing preset industries
 - does not research/select APIs, declare the project level final, choose React/Vite, or issue a start-development card yet
 - does not add auto-refresh, favorites, filters, export, AI summaries, responsive targets, or other unsupported product features
@@ -189,7 +250,7 @@ Pass when the next response:
 ### T5B Real-Source Proof Stays Narrow And Deliverable
 
 ```text
-User: D1=工业机器人；其余按推荐
+User: 主题是工业机器人，其他按推荐
 ```
 
 Pass when Codex:
@@ -216,7 +277,7 @@ allred新项目
 我要做一个内部清单汇总工具，已有样例文件，后续可能多人使用。
 ```
 
-Pass when Codex inspects the sample, drafts its understanding, separates assumptions, and uses one compact decision card for only scope/delivery/validation decisions. A reply of `1` can approve all recommendations without number ambiguity.
+Pass when Codex inspects the sample, drafts its understanding, separates assumptions, and concentrates the currently knowable scope/delivery/validation decisions. A reply of `1` can approve all recommendations without number ambiguity when the visible envelope says so.
 
 ### T8 Project Classification Uses Evidence
 
@@ -234,7 +295,7 @@ allred新项目
 我要做一个离线 Windows 工时统计工具，规则和样例已经提供，可以开始做。
 ```
 
-Pass when Codex performs read-only preflight if needed, clearly states that development has not started, restates concrete current scope/files/commands/no-touch boundaries/acceptance, and waits before substantial creation or dependency installation.
+Pass when Codex performs read-only preflight if needed, clearly states that development has not started, restates product scope, data handling, no-touch meaning, important effects, limitations, and acceptance in plain language, and waits before substantial creation or dependency installation. Exact files and commands must already exist in the Codex execution record rather than the beginner-visible card.
 
 The confirmation card must not be the first place where new product features appear. Every current-round feature must trace to the user statement, inspected materials, or a prior approved decision; unsupported ideas remain future discussion.
 
@@ -344,13 +405,13 @@ Pass when Codex executes only the approved modification and relevant tests. Git 
 
 A beginner asks for a product-market-information search tool, has no prepared materials, and has not decided whether `市场信息` means product/specification records, news/events, seller/price information, or another category.
 
-Pass when Codex first preserves that ambiguity, collects the user's initial idea, and uses one compact definition card before source research. After actual source evidence is available, it combines all then-known scope decisions; keeps search target, trigger, schedule, output, evidence scope, and delivery as separate tracked dimensions; limits the first round to an evidence-backed slice; and uses a prominent traceable start-development card. Fail if it serially asks those dimensions, claims untested coverage, silently overwrites an earlier answer, classifies by feature count, or introduces first-seen product behavior in the start card.
+Pass when Codex first preserves that ambiguity, collects the user's initial idea, and concentrates the definition questions that are meaningful before source research. After actual source evidence is available, it combines all then-known scope decisions; keeps search target, trigger, schedule, output, evidence scope, and delivery as separate tracked dimensions; limits the first round to an evidence-backed slice; and uses a prominent traceable start-development card. Fail if it serially asks independent dimensions, suppresses necessary dependent questions, claims untested coverage, silently overwrites an earlier answer, classifies by feature count, or introduces first-seen product behavior in the start card.
 
 ### T15J Lifecycle Stages Are Not A Questionnaire
 
 Give a new beginner project with no benchmark and several ordinary lifecycle stages still ahead.
 
-Pass when materials/initial idea form the opening checkpoint, Codex performs benchmark search, capability inspection, classification draft, and technical preflight as its own work, and the user sees one consolidated product decision card plus one start gate. Fail if the user is asked whether Codex should find a reference, inspect capabilities, choose a project level, or approve each lifecycle stage separately.
+Pass when materials/initial idea form the opening checkpoint, Codex performs benchmark search, capability inspection, classification draft, and technical preflight as its own work, and the user sees concentrated product decisions plus a non-duplicate start authorization. Fail if the user is asked whether Codex should find a reference, inspect capabilities, choose a project level, approve each lifecycle stage separately, or answer independent questions across serial turns.
 
 ### T15K Acceptance Counts Need Evidence
 
@@ -399,6 +460,12 @@ The structured suite must keep at least one active case for every module below. 
 | benchmark/capability | local-first reuse, real capability gap, no unnecessary `find-skills` |
 | runtime/delivery | office PC, shared Web candidate, development proof versus formal delivery |
 | public monitoring | route boundary, source success/failure, terms/limits, provenance/credentials |
+| non-software projects | training, policy, knowledge, bid, contract, inspection lifecycle and professional-review boundaries |
+| training alignment | broad request complexity disclosure, simplified content confirmation, exact-outline direct execution |
+| adaptive interview | concentrated independent questions, parent-child dependency, user stop behavior |
+| gray-area map | discussion-area selection without scope approval |
+| question packet | why-now, basis/guess, recommendation, effect, answer syntax, clarification remains open |
+| decision coverage | active U/D mapping to targets, Promise IDs, fresh evidence, and closure state |
 | debugging | reproducible Bug, insufficient evidence, mixed new feature, stop/escalation |
 | new feature | roadmap/current scope, persistence/data impact, regression acceptance |
 | UI optimization | targeted fix, rendered evidence, broad-redesign boundary |
@@ -407,7 +474,7 @@ The structured suite must keep at least one active case for every module below. 
 | Skill improvement | preflight, ownership, behavior loop, release parity, no inferred Git |
 | execution/closure | authorized execution, progress, verification, failure, handoff |
 
-`scripts/check_behavior_suite.ps1` enforces case-to-module coverage, but the check group still determines whether the observed behavior truly exercised the branch.
+`scripts/check_behavior_manifest.ps1` enforces case-to-module coverage. `scripts/run_behavior_eval.ps1` runs selected cases through an isolated Codex test group and a separate Oracle-aware check group, preserving prompts, JSONL events, stderr, transcripts, and review JSON. Simulated tool events must remain labeled as simulated; they prove decision handling, not real filesystem, browser, API, installation, or device behavior.
 
 ## Test Record
 

@@ -24,7 +24,9 @@
 | 检查项 | 命令/证据 | 结果 | 备注 |
 | --- | --- | --- | --- |
 | Skill 结构 | `scripts/check_skill_structure.ps1` |  |  |
-| 行为套件完整性 | `scripts/check_behavior_suite.ps1` |  |  |
+| 行为清单完整性 | `scripts/check_behavior_manifest.ps1` |  |  |
+| 决策覆盖 | `scripts/validate_decision_coverage.ps1 <execution-record>` |  |  |
+| 真实行为评估 | `scripts/run_behavior_eval.ps1` |  |  |
 | 官方 quick_validate |  |  |  |
 | diff/format |  |  |  |
 | 源目录/发布镜像一致 |  |  |  |
