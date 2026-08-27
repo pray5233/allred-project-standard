@@ -68,6 +68,12 @@ Require-Text $skillText 'build a gray-area map' 'entrypoint supports discussion-
 Require-Text $skillText 'Each important item states why it is needed now' 'entrypoint requires useful question context'
 Require-Text $skillText 'Every active `U/D` scope decision must map' 'entrypoint requires decision coverage'
 Require-Text $skillText 'decision tree/frontier and ownership router' 'entrypoint routes frontier and external grilling ownership'
+Require-Text $skillText 'Allred owns the top-level project workflow topology' 'explicit Allred cannot be silently replaced by another process Skill'
+Require-Text $skillText 'Do not automatically invoke or stack another general process Skill' 'implicit process Skills cannot override concentrated interaction'
+Require-Text $skillText 'Do not spend a user turn asking whether to enable a visualization' 'optional process aids do not create an early user wait'
+Require-Text $skillText 'Do not ask the user to choose a framework or toolchain' 'technical selection remains Codex-owned when consequences are settled'
+Require-Text $skillText 'Silence, a partial reply, or approval of one item never approves its siblings' 'partial replies cannot approve unanswered decisions'
+Require-Text $skillText 'cannot erase an unanswered earlier independent choice' 'later evidence cannot hide an earlier unresolved choice'
 
 $requiredLinks = @(
   'references/核心执行流程.md',
@@ -517,6 +523,11 @@ if (Test-Path -LiteralPath $newProjectPath) {
   Require-Text $newProjectText 'Do not require the user to approve files, SDKs, commands, caches' 'new-project gate stays user-friendly'
   Require-Text $newProjectText 'name them and their inclusion basis' 'new-project confirmation identifies preselected items'
   Require-Text $newProjectText 'Batch every currently knowable independent item' 'new-project questions are concentrated without a fixed count'
+  Require-Text $newProjectText 'outcome choice in the packet' 'multi-module complexity is disclosed without a separate ceremony'
+  Require-Text $newProjectText 'not as the first item in a serial questionnaire' 'materials and baseline unknowns share one packet'
+  Require-Text $newProjectText 'Do not ask the user to choose Electron' 'technical frameworks are not delegated to ordinary users'
+  Require-Text $newProjectText 'Do not ask whether to enable a visual companion' 'visual/process helpers do not create premature approval turns'
+  Require-Text $newProjectText 'a missing reply, partial reply, or approval of another item leaves that decision unresolved' 'new-project final gate reconciles unanswered decisions'
 }
 
 $startupTemplatePath = Join-Path $SkillRoot 'templates\项目启动卡.md'

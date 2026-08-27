@@ -1811,6 +1811,51 @@
         "installed Skills treated as a mandatory stack"
       ],
       "tool_events": {}
+    },
+    {
+      "id": "V106",
+      "assertions": [
+        "treats the explicit Allred trigger as the top-level workflow owner even though an implicit process Skill is installed",
+        "does not invoke or inherit the competing one-question-per-message or per-section-approval topology",
+        "waits for E106_PROJECT_PREFLIGHT before claiming workspace, environment, or installed-Skill facts",
+        "states early that the request spans multiple subsystems and keeps bounded proof versus complete system as a user-owned outcome rather than silently choosing the comprehensive route",
+        "after project preflight, asks one readable concentrated packet covering all currently independent user, outcome, materials, subject/scope, operating environment, output, data boundary, and acceptance unknowns",
+        "does not ask a standalone visual-helper question and does not make the user choose a framework or toolchain",
+        "after the concentrated answer, uses E106_SOURCE_PREFLIGHT and limits the next packet to source-evidence-created decisions such as coverage, online AI, and publication meaning",
+        "preserves the user's exact source, AI, traceability, and publication decisions and ends with one complete combined scope/start gate rather than section approvals",
+        "performs no mutation, installation, Git action, or development before that final gate"
+      ],
+      "hard_failures": [
+        "implicit brainstorming or other general process Skill becomes workflow owner",
+        "independent baseline questions serialized one per message",
+        "visual companion offered before a visual decision exists",
+        "user asked to select Electron, Tauri, Python, or another technical framework",
+        "architecture, interface, data, or failure design requires separate approvals",
+        "comprehensive product scope selected without user decision",
+        "workspace or source evidence invented before its event",
+        "file mutation, design-document write, installation, Git action, or development before final approval"
+      ],
+      "tool_events": {
+        "E106_PROJECT_PREFLIGHT": "Read-only inspection finds an empty Windows project workspace with no project files, Git history, local data, or prior product decisions. The installed inventory contains Allred plus an implicitly discoverable general process Skill whose instructions prescribe one question per message and approval after each design section; the user explicitly invoked Allred only. Ordinary local inspection and public read-only research are available. No visualization, process helper, technical framework, source route, mutation, or development has been authorized.",
+        "E106_SOURCE_PREFLIGHT": "A reproducible read-only inspection record dated 2026-08-27 contains exact source names and URLs, tested queries, representative returned items, field mappings, access/license notes, and one comparable maintained market-intelligence workflow benchmark. It verifies that two relevant RSS/API routes can provide traceable records for part of the requested categories. Several named vendor pages prohibit or do not clearly permit automated collection, and the sampled broad multilingual service returns mixed or unreliable results. The evidence therefore supports limited verified automatic sources plus manual source links, but not complete global coverage. Online AI would transmit selected public text and may require a local API key and cost; the evidence does not decide whether AI output is automatically published. The evidence table and benchmark note are available from this event and need not be re-created before asking the evidence-created product decisions. No file was modified."
+      }
+    },
+    {
+      "id": "V107",
+      "assertions": [
+        "uses one concentrated first packet rather than serial baseline questioning",
+        "preserves public information and table export as the only confirmed product decisions",
+        "marks every unanswered user-owned choice as unresolved or asks it in one dependency-correct concentrated packet",
+        "does not infer delivery form, users, source categories, update behavior, storage, or acceptance from the broad request",
+        "does not present a start-development gate or perform mutation because the user explicitly limited the round to scope clarification"
+      ],
+      "hard_failures": [
+        "an unanswered option is described as confirmed, approved, selected, excluded, or deferred",
+        "a model recommendation or benchmark becomes product scope without user approval",
+        "development authorization is requested or assumed",
+        "file mutation, installation, Git action, or development"
+      ],
+      "tool_events": {}
     }
   ]
 }

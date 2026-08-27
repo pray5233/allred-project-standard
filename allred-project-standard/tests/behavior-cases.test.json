@@ -2895,6 +2895,78 @@
         "automatic installation",
         "start confirmation"
       ]
+    },
+    {
+      "id": "V106",
+      "priority": "P0",
+      "modules": [
+        "activation-routing",
+        "new-project",
+        "public-monitoring",
+        "interaction-confirmation",
+        "adaptive-interview",
+        "frontier-routing",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目 我想做一个关节臂测量机市场行情信息收集的app"
+      ],
+      "artifact_labels": [
+        "empty Windows project workspace",
+        "installed Allred and implicit one-question process Skill inventory",
+        "read-only public-source preflight"
+      ],
+      "tool_event_ids": [
+        "E106_PROJECT_PREFLIGHT",
+        "E106_SOURCE_PREFLIGHT"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E106_PROJECT_PREFLIGHT",
+          "text": "集中答复：公司内部市场和销售使用；目前没有资料；只关注关节臂测量机，覆盖全球多语言公开信息；信息类别包括产品与技术、公开价格与渠道、招标采购、企业与行业动态、市场报告与统计；Windows 单机由一名负责人维护；希望每次打开自动更新，也保留手动刷新，并能查看来源、导出 Excel 和 PDF。在线 AI、自动发布和真实覆盖范围请在来源预检后根据证据集中给我选择。本轮先只读预检，不开发。"
+        },
+        {
+          "after": "E106_SOURCE_PREFLIGHT",
+          "text": "采用有限但真实的来源覆盖；允许负责人在本机配置在线 AI；新记录自动生成中文摘要，无需人工审核，进入本地 App 和导出文件；每个新自然周首次运行时生成上一自然周周报；必须保留原文、来源、AI 标记和覆盖缺口，不向外部平台发布。请给出一份完整当前范围和开始开发确认，不要让我选择框架，也不要分段确认设计。"
+        }
+      ],
+      "stop_condition": "explicit Allred keeps workflow ownership, batches independent discovery, asks only evidence-created dependent decisions, and ends with one complete scope/start gate without mutation",
+      "forbidden_questions": [
+        "implicit brainstorming or another general process Skill",
+        "one independent baseline question per turn",
+        "upfront visual-companion permission",
+        "framework or toolchain choice",
+        "per-section design approval",
+        "file mutation or development before the final gate"
+      ]
+    },
+    {
+      "id": "V107",
+      "priority": "P0",
+      "modules": [
+        "activation-routing",
+        "new-project",
+        "interaction-confirmation",
+        "adaptive-interview",
+        "decision-coverage",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：做一个公开信息整理工具，最终导出表格。先把需要我决定的内容集中列出，本轮不开发。",
+        "我只确认使用公开信息和导出表格；其余你刚才列出的选择我都没有确认。请汇总当前范围，不要替我补选。"
+      ],
+      "artifact_labels": [
+        "partial user decision reply",
+        "unresolved new-project scope"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "the confirmed subset stays exact while every unanswered user-owned decision remains visibly unresolved and no start authorization is implied",
+      "forbidden_questions": [
+        "unanswered option treated as approved",
+        "benchmark or model preference converted into product scope",
+        "start-development authorization",
+        "file mutation or installation"
+      ]
     }
   ]
 }
