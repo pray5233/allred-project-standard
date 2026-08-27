@@ -463,9 +463,11 @@ The structured suite must keep at least one active case for every module below. 
 | non-software projects | training, policy, knowledge, bid, contract, inspection lifecycle and professional-review boundaries |
 | training alignment | broad request complexity disclosure, simplified content confirmation, exact-outline direct execution |
 | adaptive interview | concentrated independent questions, parent-child dependency, user stop behavior |
+| frontier routing | one interview owner, internal fallback, explicit grilling handoff, stop behavior, exact-work bypass |
 | gray-area map | discussion-area selection without scope approval |
 | question packet | why-now, basis/guess, recommendation, effect, answer syntax, clarification remains open |
 | decision coverage | active U/D mapping to targets, Promise IDs, fresh evidence, and closure state |
+| Skill discovery gate | explicit search, local-capability bypass, real-gap discovery, trigger and security conflict |
 | debugging | reproducible Bug, insufficient evidence, mixed new feature, stop/escalation |
 | new feature | roadmap/current scope, persistence/data impact, regression acceptance |
 | UI optimization | targeted fix, rendered evidence, broad-redesign boundary |
@@ -475,6 +477,10 @@ The structured suite must keep at least one active case for every module below. 
 | execution/closure | authorized execution, progress, verification, failure, handoff |
 
 `scripts/check_behavior_manifest.ps1` enforces case-to-module coverage. `scripts/run_behavior_eval.ps1` runs selected cases through an isolated Codex test group and a separate Oracle-aware check group, preserving prompts, JSONL events, stderr, transcripts, and review JSON. Simulated tool events must remain labeled as simulated; they prove decision handling, not real filesystem, browser, API, installation, or device behavior.
+
+The runner ignores user config by default. When the only valid model route is defined in the local Codex config, use `-UseUserConfig`; add `-DisablePlugins` to suppress installed plugin loading while retaining the selected provider/auth route. Every run writes `run-config.json` with model, timeout, flags, and a config hash but no credentials. Use the same config hash for every A/B/C comparison group.
+
+For A/B/C comparison, keep the evaluated Skill and neutral suite independent. Pass the frozen A, B, or C directory through `-SkillRoot`, and pass the same maintained suite through `-SuiteRoot`. The runner records the Skill entrypoint, test suite, Oracle, and user config SHA-256 values in `run-config.json`. Compare only runs with the same model, suite hashes, Oracle hash, config hash, timeout, and plugin flags. Do not use a candidate-specific regression Oracle as a neutral comparison rubric.
 
 ## Test Record
 

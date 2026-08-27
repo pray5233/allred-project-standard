@@ -70,6 +70,9 @@ $requiredCoverage = [ordered]@{
   'question-packet' = 4
   'decision-coverage' = 4
   'question-decision-separation' = 3
+  'frontier-routing' = 5
+  'skill-discovery-gate' = 4
+  'optional-dependency-routing' = 5
 }
 
 if ($testSuite -and $oracleSuite) {

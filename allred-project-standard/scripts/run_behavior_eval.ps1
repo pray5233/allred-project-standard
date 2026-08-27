@@ -1,9 +1,12 @@
 param(
   [string]$SkillRoot = (Split-Path -Parent $PSScriptRoot),
+  [string]$SuiteRoot = '',
   [string[]]$CaseIds = @('V01'),
   [string]$OutputRoot = (Join-Path (Get-Location) ("behavior-eval-" + (Get-Date -Format 'yyyyMMdd-HHmmss'))),
   [string]$CodexCommand = 'codex',
   [string]$Model = '',
+  [switch]$UseUserConfig,
+  [switch]$DisablePlugins,
   [ValidateRange(10, 3600)]
   [int]$TimeoutSeconds = 180
 )
@@ -49,7 +52,11 @@ function Invoke-CodexTurn {
   if ($SessionId) {
     $args.Add('resume')
     $args.Add('--json')
-    $args.Add('--ignore-user-config')
+    if (-not $UseUserConfig) { $args.Add('--ignore-user-config') }
+    if ($DisablePlugins) {
+      $args.Add('--disable'); $args.Add('plugins')
+      $args.Add('--disable'); $args.Add('remote_plugin')
+    }
     $args.Add('--skip-git-repo-check')
     if ($Model) { $args.Add('-m'); $args.Add($Model) }
     if ($SchemaPath) { $args.Add('--output-schema'); $args.Add($SchemaPath) }
@@ -58,7 +65,11 @@ function Invoke-CodexTurn {
     $args.Add('-')
   } else {
     $args.Add('--json')
-    $args.Add('--ignore-user-config')
+    if (-not $UseUserConfig) { $args.Add('--ignore-user-config') }
+    if ($DisablePlugins) {
+      $args.Add('--disable'); $args.Add('plugins')
+      $args.Add('--disable'); $args.Add('remote_plugin')
+    }
     $args.Add('--sandbox'); $args.Add('read-only')
     $args.Add('--skip-git-repo-check')
     $args.Add('-C'); $args.Add($RunDirectory)
@@ -119,6 +130,7 @@ function Invoke-CodexTurn {
 
 function Test-InfrastructureFailure($Run) {
   if ($Run.TimedOut) { return $true }
+  if ($Run.ExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($Run.Final)) { return $false }
   $combined = (@($Run.Errors) + @($Run.Stderr)) -join "`n"
   if ($Run.ExitCode -ne 0 -and [string]::IsNullOrWhiteSpace($Run.Final)) { return $true }
   return $combined -match '401 Unauthorized|INVALID_API_KEY|authentication required|rate limit|timed out|connection|network|model.*not found'
@@ -133,13 +145,14 @@ function Get-InfrastructureReason($Run) {
 }
 
 $SkillRoot = (Resolve-Path -LiteralPath $SkillRoot).Path
+$SuiteRoot = if ([string]::IsNullOrWhiteSpace($SuiteRoot)) { $SkillRoot } else { (Resolve-Path -LiteralPath $SuiteRoot).Path }
 $OutputRoot = [System.IO.Path]::GetFullPath($OutputRoot)
-$testPath = Join-Path $SkillRoot 'tests\behavior-cases.test.json'
-$oraclePath = Join-Path $SkillRoot 'tests\behavior-cases.oracle.json'
-$schemaPath = Join-Path $SkillRoot 'tests\review-result.schema.json'
-$manifestCheck = Join-Path $SkillRoot 'scripts\check_behavior_manifest.ps1'
+$testPath = Join-Path $SuiteRoot 'tests\behavior-cases.test.json'
+$oraclePath = Join-Path $SuiteRoot 'tests\behavior-cases.oracle.json'
+$schemaPath = Join-Path $SuiteRoot 'tests\review-result.schema.json'
+$manifestCheck = Join-Path $SuiteRoot 'scripts\check_behavior_manifest.ps1'
 
-& $manifestCheck -SkillRoot $SkillRoot
+& $manifestCheck -SkillRoot $SuiteRoot
 if (-not $?) { throw 'Behavior manifest validation failed; runtime evaluation was not started.' }
 
 $testSuite = Read-Json $testPath
@@ -150,6 +163,23 @@ foreach ($id in $CaseIds) {
 }
 
 New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
+$userConfigPath = Join-Path $HOME '.codex\config.toml'
+$runConfig = [ordered]@{
+  schema_version = 1
+  generated_at_utc = [DateTime]::UtcNow.ToString('o')
+  skill_root = $SkillRoot
+  suite_root = $SuiteRoot
+  skill_md_sha256 = (Get-FileHash -LiteralPath (Join-Path $SkillRoot 'SKILL.md') -Algorithm SHA256).Hash.ToLowerInvariant()
+  test_suite_sha256 = (Get-FileHash -LiteralPath $testPath -Algorithm SHA256).Hash.ToLowerInvariant()
+  oracle_suite_sha256 = (Get-FileHash -LiteralPath $oraclePath -Algorithm SHA256).Hash.ToLowerInvariant()
+  case_ids = @($CaseIds)
+  model_override = $Model
+  timeout_seconds = $TimeoutSeconds
+  use_user_config = [bool]$UseUserConfig
+  disable_plugins = [bool]$DisablePlugins
+  user_config_sha256 = if ($UseUserConfig -and (Test-Path -LiteralPath $userConfigPath)) { (Get-FileHash -LiteralPath $userConfigPath -Algorithm SHA256).Hash.ToLowerInvariant() } else { $null }
+}
+Write-Utf8 (Join-Path $OutputRoot 'run-config.json') ($runConfig | ConvertTo-Json -Depth 5)
 $summary = [System.Collections.Generic.List[object]]::new()
 
 foreach ($case in $selected) {
@@ -163,10 +193,12 @@ foreach ($case in $selected) {
   $needsResume = @($case.visible_turns).Count + @($case.tool_event_ids).Count + @($case.post_event_turns).Count -gt 1
 
   $opening = @"
-You are the test group evaluating one installed Skill. Read and follow only this Skill source:
+You are the test group evaluating one installed Skill. Start from this Skill source:
 $SkillRoot\SKILL.md
 
-Do not read files under tests/, validation reports, release mirrors, or prior conversations. Do not modify files, install software, use Git, publish, deploy, or contact external services. Artifact labels below name only what the simulated project claims exists; do not claim their contents until a later test-tool event provides them.
+You may read only the supporting references, templates, or scripts that this SKILL.md routes to. Do not read files under tests/, validation reports, release mirrors, or prior conversations.
+
+This is a behavior simulation. Do not inspect the host machine for the simulated project's files or capabilities, and do not actually modify files, install software, use Git, publish, deploy, or contact external services. Treat later TEST TOOL EVENT messages as the result of the normal read, implementation, or verification action requested by the user. Do not expose these harness restrictions as a user permission problem, do not ask the user to lift them, and do not claim an action succeeded before its event. Artifact labels name only what the simulated project claims exists; do not claim their contents until a later event provides them.
 
 Artifact labels: $((@($case.artifact_labels) | ConvertTo-Json -Compress))
 

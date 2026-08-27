@@ -41,7 +41,7 @@ Choose one primary route for the current stage. A new training, policy, knowledg
 
 | Situation | Read |
 | --- | --- |
-| user decision, authorization, or uncertainty | `references/交互与确认规则.md` |
+| user decision, authorization, uncertainty, or explicit grilling | `references/决策前沿与Skill交接.md`, then `references/交互与确认规则.md` for visible card semantics |
 | new project | `references/新项目启动模式.md`; read `references/动态项目契约.md` when product behavior, evidence, delivery, or acceptance is not already stable |
 | beginner interaction | `references/新手模式.md`, then the routed stage |
 | existing/mixed request | `references/项目阶段分流.md` |
@@ -89,6 +89,7 @@ Use `references/资料收集与分析.md` when real files/process evidence may e
 Lifecycle stages are internal reasoning stages, not required conversation turns.
 
 - There is no fixed question or turn budget. Clear authorized work proceeds without ceremony; ambiguity uses concentrated packets and real dependency depth.
+- Use the decision tree/frontier and ownership router in `references/决策前沿与Skill交接.md`. Explicit `grill-me`/`grilling` owns visible interviewing; Allred does not duplicate it or automatically fall back in the same response. Without explicit invocation, Allred uses the same frontier method internally as a fallback.
 - For a broad ambiguous project, compile the first packet from this semantic skeleton; rename it for the domain and omit only answered/inspectable rows: `Q1 current workflow + pain`, `Q2 actual participants/current owners + final acceptance owner`, `Q3 materials/inputs + current authoritative source`, `Q4 existing sensitive data + current restrictions`, `Q5 actual operating environment + access + interruption/availability + current fallback + maintenance owner`, `D1 user-supplied parent route or intended result (dependency: None)`, `D2 future workset boundary when independent (dependency: None)`, `D3 desired observable outcome/acceptance conditions (dependency: None; recommendation may wait)`. Preserve every listed subfield when a row is open; ask target-environment constraints only when already distinct from actual operation. Express `D2` as one scope tuple with task-relevant axes such as participants/objects/channels/time, not mutually exclusive options that mix different axes. Every `D3` option works under all unresolved `D1` routes or names its exact route dependency. Normally retain later rules as children; when the user explicitly asks for a maximally concentrated interview, append only co-answerable rules that remain meaningful under every parent option and make them explicitly deferrable. A material list is not authority, tool names are not operating constraints, and business closure is not project acceptance.
 - Preserve user-supplied unresolved alternatives exactly as `D1`; its decision dependency is always `None`. Baseline `Q` IDs may defer a recommendation but never make D1 itself dependent. Do not add a third route beyond custom input. Do not add first-packet future permission, update, state, history, continuity, tool, or rollout decisions; those wait until their parent exists.
 - A child waits only when its parent determines whether it exists or makes its options meaningful. Once the route exists, batch co-answerable factual `Q` and neutral `D` items; use `recommendation deferred pending <Q IDs>` rather than serializing for recommendation evidence.

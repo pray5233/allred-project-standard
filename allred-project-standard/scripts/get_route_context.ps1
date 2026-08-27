@@ -45,10 +45,12 @@ $specs = [System.Collections.Generic.List[object]]::new()
 switch ($Stage) {
   'intake' {
     Add-Spec $specs 'references\核心执行流程.md' @('Objective', 'Execution Lanes', 'Phase 1: Route And Bound', 'Phase 2: Inspect Evidence', 'Phase 3: Build The Internal Proposal')
+    Add-Spec $specs 'references\动态项目契约.md' @('Provenance And Confidence', 'Recommendation Admission Filter')
   }
   'decision' {
     Add-Spec $specs 'references\核心执行流程.md' @('Phase 4: Open A User Gate Only When Needed', 'Phase 5: Create The Execution Contract')
-    Add-Spec $specs 'references\交互与确认规则.md' @('Adaptive Interview And Decision Flow', 'Question Packet Contract', 'Decision Ownership', 'Product Decision Gate', 'Approval Scope And Traceability', 'Consequential Authorization Gate', 'Start Confirmation Without Duplication')
+    Add-Spec $specs 'references\决策前沿与Skill交接.md' @('Ownership Router', 'Internal Frontier Model', 'Fact-Finding Queue', 'External Grilling Handoff')
+    Add-Spec $specs 'references\交互与确认规则.md' @('Question Packet Contract', 'Decision Ownership', 'Product Decision Gate', 'Approval Scope And Traceability', 'Consequential Authorization Gate', 'Start Confirmation Without Duplication')
     Add-Spec $specs 'references\动态项目契约.md' @('Gray-Area Map')
   }
   'external-read' {

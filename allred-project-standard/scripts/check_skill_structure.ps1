@@ -67,10 +67,12 @@ Require-Text $skillText 'do not also load `new-standard` merely because it is ne
 Require-Text $skillText 'build a gray-area map' 'entrypoint supports discussion-area selection'
 Require-Text $skillText 'Each important item states why it is needed now' 'entrypoint requires useful question context'
 Require-Text $skillText 'Every active `U/D` scope decision must map' 'entrypoint requires decision coverage'
+Require-Text $skillText 'decision tree/frontier and ownership router' 'entrypoint routes frontier and external grilling ownership'
 
 $requiredLinks = @(
   'references/核心执行流程.md',
   'references/交互与确认规则.md',
+  'references/决策前沿与Skill交接.md',
   'references/动态项目契约.md',
   'references/新项目启动模式.md',
   'references/新手模式.md',
@@ -121,6 +123,7 @@ foreach ($file in $resourceFiles) {
 }
 
 $sharedPath = Join-Path $SkillRoot 'references\交互与确认规则.md'
+$frontierPath = Join-Path $SkillRoot 'references\决策前沿与Skill交接.md'
 $corePath = Join-Path $SkillRoot 'references\核心执行流程.md'
 $contractPath = Join-Path $SkillRoot 'references\动态项目契约.md'
 $benchmarkPath = Join-Path $SkillRoot 'references\开发依据与能力复用.md'
@@ -147,7 +150,7 @@ $routeBudgetPath = Join-Path $SkillRoot 'scripts\check_route_context_budget.ps1'
 $versionPath = Join-Path $SkillRoot 'VERSION'
 $openAiYamlPath = Join-Path $SkillRoot 'agents\openai.yaml'
 
-foreach ($requiredPath in @($corePath, $sharedPath, $contractPath, $benchmarkPath, $levelPath, $monitoringPath, $externalSafetyPath, $runtimePath, $materialsPath, $skillFlowPath, $projectTypePath, $beginnerPath, $writeBoundaryPath, $nonSoftwarePath, $behaviorCheckPath, $behaviorRunnerPath, $reviewSchemaPath, $executionTemplatePath, $executionValidatorPath, $decisionCoverageValidatorPath, $executionFixturePath, $routeContextPath, $routeBudgetPath, $versionPath, $openAiYamlPath)) {
+foreach ($requiredPath in @($corePath, $sharedPath, $frontierPath, $contractPath, $benchmarkPath, $levelPath, $monitoringPath, $externalSafetyPath, $runtimePath, $materialsPath, $skillFlowPath, $projectTypePath, $beginnerPath, $writeBoundaryPath, $nonSoftwarePath, $behaviorCheckPath, $behaviorRunnerPath, $reviewSchemaPath, $executionTemplatePath, $executionValidatorPath, $decisionCoverageValidatorPath, $executionFixturePath, $routeContextPath, $routeBudgetPath, $versionPath, $openAiYamlPath)) {
   if (-not (Test-Path -LiteralPath $requiredPath)) {
     Add-Failure "Required architecture reference is missing: $requiredPath"
   }
@@ -194,6 +197,13 @@ if (Test-Path -LiteralPath $nonSoftwarePath) {
   Require-Text $nonSoftwareText 'Do not invent qualifications' 'bid responses require evidence'
   Require-Text $nonSoftwareText 'the complete-system route is materially more complex' 'training complexity is disclosed before selection'
   Require-Text $nonSoftwareText 'what the first phase will not teach' 'training omissions stay user-owned'
+  Require-Text $nonSoftwareText 'unmentioned topics are not deferrals' 'training handoffs may keep deferred scope empty'
+  Require-Text $nonSoftwareText 'is not a request to design a complete training system' 'bounded courses do not expand into training-system design'
+  Require-Text $nonSoftwareText 'do not announce that they are excluded, deferred, or outside the current course' 'unrequested training-system topics remain invisible'
+  Require-Text $nonSoftwareText 'established as completed by current `U/E/D` is inherited baseline' 'completed prior training is not reopened without evidence'
+  Require-Text $nonSoftwareText 'must-teach content, exercise, deliverable and format, explicit exclusions/deferrals, and acceptance proof' 'training decisions are concentrated after evidence'
+  Require-Text $nonSoftwareText 'Deferring artifact creation does not also defer' 'training scope preserves decision granularity'
+  Require-Text $nonSoftwareText 'Every settled deferral or exclusion needs exact `U/D` provenance' 'training handoffs cannot invent omissions'
   Require-Text $nonSoftwareText 'show one complete proposed directory' 'training content is confirmed before file creation'
   Require-Text $nonSoftwareText 'Structural checks such as file count' 'training acceptance checks content fit'
 }
@@ -218,6 +228,18 @@ if ((Test-Path -LiteralPath $executionValidatorPath) -and (Test-Path -LiteralPat
   } finally {
     Remove-Item -LiteralPath $crlfFixturePath -Force -ErrorAction SilentlyContinue
   }
+}
+
+if (Test-Path -LiteralPath $behaviorRunnerPath) {
+  $behaviorRunnerText = Get-Content -LiteralPath $behaviorRunnerPath -Raw -Encoding UTF8
+  Require-Text $behaviorRunnerText '[switch]$UseUserConfig' 'behavior runner can use a configured provider explicitly'
+  Require-Text $behaviorRunnerText '[switch]$DisablePlugins' 'behavior runner can suppress plugin noise'
+  Require-Text $behaviorRunnerText '[string]$SuiteRoot' 'behavior runner can compare different Skill roots against one neutral suite'
+  Require-Text $behaviorRunnerText 'test_suite_sha256' 'behavior runner records the neutral test suite identity'
+  Require-Text $behaviorRunnerText 'oracle_suite_sha256' 'behavior runner records the neutral Oracle identity'
+  Require-Text $behaviorRunnerText 'Do not expose these harness restrictions as a user permission problem' 'behavior simulation cannot create duplicate authorization gates'
+  Require-Text $behaviorRunnerText 'run-config.json' 'behavior runner records reproducible non-secret configuration'
+  Require-Text $behaviorRunnerText '$Run.ExitCode -eq 0' 'successful model output is not overridden by warning text'
 }
 
 if ((Test-Path -LiteralPath $decisionCoverageValidatorPath) -and (Test-Path -LiteralPath $executionFixturePath)) {
@@ -268,6 +290,11 @@ if (Test-Path -LiteralPath $routeBudgetPath) {
   & $routeBudgetPath -SkillRoot $SkillRoot | Out-Null
   if (-not $?) { Add-Failure 'Route context budget check failed.' }
 }
+if (Test-Path -LiteralPath $routeContextPath) {
+  $routeContextText = Get-Content -LiteralPath $routeContextPath -Raw -Encoding UTF8
+  $intakeDecisionMarker = 'Add-Spec $specs ''references\动态项目契约.md'' @(''Provenance And Confidence'', ''Recommendation Admission Filter'')'
+  Require-Text $routeContextText $intakeDecisionMarker 'every route intake receives provenance and recommendation admission rules'
+}
 if (Test-Path -LiteralPath $skillTestPath) {
   $skillTestText = Get-Content -LiteralPath $skillTestPath -Raw -Encoding UTF8
   Require-Text $skillTestText 'must not manufacture the behavior' 'test fixtures do not inject duplicate approval'
@@ -298,6 +325,7 @@ if (Test-Path -LiteralPath $sharedPath) {
   Require-Text $sharedText 'keep the same question open' 'clarification requests do not silently advance'
   Require-Text $sharedText 'compare every option against the same relevant dimensions' 'decision explanations are complete and comparable'
   Require-Text $sharedText 'every `D` choice visibly includes a custom-answer path' 'decision choices preserve user correction'
+  Require-Text $sharedText 'do not reopen completed `U/E/D` work' 'visible decisions preserve completed baseline work'
   Require-Text $sharedText 'every `D` states `dependency: None` or exact prerequisite IDs' 'decision dependencies are explicit'
   Require-Text $sharedText 'recommendation deferred pending <IDs>' 'unresolved dependencies cannot support recommendations'
   Require-Text $sharedText 'Permission mapping or role maintenance alone is not an audit explanation' 'permission comparisons include real audit consequences'
@@ -318,6 +346,18 @@ if (Test-Path -LiteralPath $sharedPath) {
   Require-Text $sharedText 'significant/consequential effects' 'start gate surfaces user-relevant side effects'
   Require-Text $sharedText 'recommendation admission filter' 'interaction filters unnecessary recommendations'
   Require-Text $sharedText 'Codex execution record rather than the user' 'technical detail is not a user approval burden'
+  Require-Text $sharedText 'every settled deferred, rejected, excluded, non-goal, or future-work item needs exact `U/D` provenance' 'visible handoffs cannot invent inactive scope'
+}
+if (Test-Path -LiteralPath $frontierPath) {
+  $frontierText = Get-Content -LiteralPath $frontierPath -Raw -Encoding UTF8
+  Require-Text $frontierText 'Choose exactly one visible interview owner' 'one interview owner prevents duplicate questionnaires'
+  Require-Text $frontierText 'current approved outcome, not the product' 'frontier excludes speculative future branches'
+  Require-Text $frontierText 'Facts are Codex-owned' 'inspectable facts leave the user frontier'
+  Require-Text $frontierText 'does not require the external Skill' 'grilling handoff has a fallback'
+  Require-Text $frontierText 'must not start its fallback in the same response' 'explicit grilling cannot trigger a duplicate Allred questionnaire'
+  Require-Text $frontierText 'confirmed, deferred, blocking/conflict, rejected, and investigating' 'frontier summaries preserve orthogonal node states'
+  Require-Text $frontierText 'A grilling conclusion is not mutation authorization' 'grilling cannot authorize execution'
+  Require-Text $frontierText 'output the complete categorized handoff in that response' 'available grilling evidence cannot be deferred to another summary turn'
 }
 if (Test-Path -LiteralPath $corePath) {
   $coreText = Get-Content -LiteralPath $corePath -Raw -Encoding UTF8
@@ -363,6 +403,10 @@ if (Test-Path -LiteralPath $contractPath) {
   Require-Text $contractText 'Approvable does not mean worth proposing' 'approval possibility does not expand scope'
   Require-Text $contractText 'exactly one current state' 'coverage cells are unambiguous'
   Require-Text $contractText 'Every active `U/D` item must survive translation' 'active decisions cannot disappear before acceptance'
+  Require-Text $contractText 'an unapproved `R` never becomes `X` automatically' 'unapproved recommendations cannot become settled inactive scope'
+  Require-Text $contractText 'never fill an empty category by inventing future work' 'final handoffs cannot manufacture deferrals or exclusions'
+  Require-Text $contractText 'Absence of approval means unresolved or omitted, not deferred' 'missing approval cannot be serialized as a deferral'
+  Require-Text $contractText 'completed as inherited baseline, not an open scope option' 'completed prerequisites cannot be reopened without new evidence'
   foreach ($obsoleteState in @('| `A` | Codex assumption', '| `H` | hypothesis or optional recommendation')) {
     if ($contractText.Contains($obsoleteState)) {
       Add-Failure "Obsolete contract state remains: $obsoleteState"
@@ -375,6 +419,10 @@ if (Test-Path -LiteralPath $benchmarkPath) {
   Require-Text $benchmarkText 'find-skills' 'capability discovery rule'
   Require-Text $benchmarkText 'Default Ownership' 'benchmark discovery is not a user questionnaire'
   Require-Text $benchmarkText 'Capability Mismatch Handling' 'implementation mismatch stays internal until consequences change'
+  Require-Text $benchmarkText 'Find-Skills Discovery Gate' 'find-skills uses a concrete capability gap gate'
+  Require-Text $benchmarkText 'Search permission is not installation permission' 'Skill search cannot authorize installation'
+  Require-Text $benchmarkText 'name/description overlap' 'Skill candidates are checked for trigger conflicts'
+  Require-Text $benchmarkText 'untrusted external evidence' 'third-party Skill content cannot authorize actions'
 }
 
 $acceptancePath = Join-Path $SkillRoot 'references\本轮验收与复盘.md'
