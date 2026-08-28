@@ -3123,6 +3123,156 @@
         "implementation success before its event",
         "Git, publication, deployment, or unrelated installation"
       ]
+    },
+    {
+      "id": "V112",
+      "priority": "P0",
+      "modules": [
+        "activation-routing",
+        "new-project",
+        "stage-routing",
+        "adaptive-interview",
+        "interaction-confirmation",
+        "decision-coverage",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：想做一个公司内部资料检索工具，能够整理多个部门的文档、按权限查找内容并生成周报。资料还没有归拢，希望先把项目方向弄清楚，不要直接开发。",
+        "主要给销售和技术人员使用。现有资料分散在共享文件夹，先实现统一检索和来源追溯；权限先沿用现有文件夹规则，周报放到后续。第一轮只需要形成一个大家看得懂、可以确认的方案。"
+      ],
+      "artifact_labels": [
+        "broad multi-capability request",
+        "natural-language intake reply without Q/D assignment syntax"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "the broad request receives a concrete non-simple impact explanation and one useful intake packet; the natural paragraph is mapped without forcing IDs, after which only genuinely unresolved material choices remain",
+      "forbidden_questions": [
+        "fixed question-count or turn-count target",
+        "request to rewrite the paragraph as Q1 or D1 assignments",
+        "hidden selection of users, permission semantics, weekly-report scope, or delivery",
+        "READY/start gate or mutation"
+      ]
+    },
+    {
+      "id": "V113",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "stage-routing",
+        "adaptive-interview",
+        "question-decision-separation",
+        "decision-coverage",
+        "frontier-routing",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：做一个个人使用的本地文字翻译工具，输入一段文字后返回译文。可以调用电脑上已经登录的翻译客户端，也可以直连在线接口，请先帮我比较并确认路线；只有选择直连接口时才需要讨论密钥保存。暂无样例，这轮只定方案，不开发。",
+        "我选直连接口，因为希望以后更容易替换服务商。请继续说明密钥保存方式。"
+      ],
+      "artifact_labels": [
+        "explicit parent route decision",
+        "credential-storage child decision conditional on direct API"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "the first packet decides only the service route; after the natural-language parent choice, a later packet may open credential storage with the exact dependency and no repeated route decision",
+      "forbidden_questions": [
+        "credential storage asked before the direct-API parent is confirmed",
+        "parent and child bundled into one option",
+        "repetition of the settled service route",
+        "development or start authorization"
+      ]
+    },
+    {
+      "id": "V114",
+      "priority": "P0",
+      "modules": [
+        "materials-evidence",
+        "stage-routing",
+        "evidence-level",
+        "adaptive-alignment",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "请只读检查我提供的文档是否适合后续做内容检索，先报告证据和限制，不要设计产品，也不要开发。"
+      ],
+      "artifact_labels": [
+        "document extraction statistics without rendered-page inspection"
+      ],
+      "tool_event_ids": [
+        "E114_EXTRACTION_ONLY"
+      ],
+      "stop_condition": "the response limits suitability to a provisional text-extraction candidate, reports the observed counts, and explicitly withholds scanned, corrupt, OCR, layout, completeness, and full-retrieval conclusions until stronger evidence exists",
+      "forbidden_questions": [
+        "low extracted text described as scanned or corrupt",
+        "OCR requirement asserted without visual or structural evidence",
+        "product scope or delivery inferred from evidence",
+        "file mutation or development"
+      ]
+    },
+    {
+      "id": "V115",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "stage-routing",
+        "benchmark-capability",
+        "evidence-level",
+        "execution-closure"
+      ],
+      "visible_turns": [
+        "allred新项目：我计划做一个本地文档查看工具。请先检查当前电脑和已有库能不能支持这个方向，只做技术可行性判断，不要开发，也不要替我确定最终功能。"
+      ],
+      "artifact_labels": [
+        "installed runtime and package metadata",
+        "isolated component smoke check without integration"
+      ],
+      "tool_event_ids": [
+        "E115_COMPONENT_EVIDENCE"
+      ],
+      "stop_condition": "the maintained path is labeled a candidate with exact evidence and remaining integration proof; package presence and a component smoke check are not called a verified product architecture",
+      "forbidden_questions": [
+        "candidate route described as confirmed or fully verified",
+        "component check presented as integrated product proof",
+        "product behavior selected from package availability",
+        "development or dependency installation"
+      ]
+    },
+    {
+      "id": "V116",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "materials-evidence",
+        "stage-routing",
+        "interaction-confirmation",
+        "decision-coverage",
+        "execution-closure",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：做一个个人使用的本地清单工具，可以导入 CSV、筛选记录并导出结果。希望双击打开，不联网。便携运行和清空本地数据按钮是否加入第一版由你根据检查结果推荐。确认完整范围后我会决定是否开始。"
+      ],
+      "artifact_labels": [
+        "empty local project",
+        "read-only capability and effects preflight"
+      ],
+      "tool_event_ids": [
+        "E116_READY_PREFLIGHT"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E116_READY_PREFLIGHT",
+          "text": "核心功能按我说的，便携运行接受你的建议，清空数据按钮放到以后；按这个范围开始。"
+        }
+      ],
+      "stop_condition": "the final envelope traces core items to the user, presents only justified optional items as prominent recommendations, maps the natural reply exactly, and starts only the approved core plus portable scope",
+      "forbidden_questions": [
+        "portable or clear-data behavior presented as already confirmed before the reply",
+        "evidence alone authorizes visible scope",
+        "the deferred clear-data control silently included or described as rejected",
+        "user required to answer with IDs",
+        "scope expansion beyond the exact approved envelope"
+      ]
     }
   ]
 }

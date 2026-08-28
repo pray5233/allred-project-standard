@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "state_id": "APS-VALID-READY",
+  "route": "new-standard",
+  "user_sources": [
+    { "id": "U1", "quote": "Build the user-approved local workflow and verify it with the supplied sample.", "meaning": "Local workflow, supplied sample, and recognizable verification are required." },
+    { "id": "U2", "quote": "Use a desktop experience and a direct API route.", "meaning": "Desktop delivery and direct API are approved." },
+    { "id": "U3", "quote": "Store the credential using operating-system protection.", "meaning": "OS-protected credential storage is approved." }
+  ],
+  "intake": {
+    "outcome": { "status": "confirmed", "source": "U1" },
+    "materials": { "status": "inspected", "source": "E1" },
+    "initial_idea": { "status": "confirmed", "source": "U1" },
+    "useful_result": { "status": "confirmed", "source": "U1" }
+  },
+  "complexity": {
+    "assessment": "non-simple",
+    "drivers": ["integrated local workflow", "external service and credential boundary", "packaging and restart verification"],
+    "communicated": true,
+    "user_impact": "The requested result spans multiple integrated capabilities, so candidate integrations must be verified before delivery."
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "claim": "The supplied sample is readable and exposes the structure needed for a focused implementation candidate.",
+      "claim_type": "observed",
+      "confidence": "verified",
+      "method": "Read-only structural and rendered-sample inspection",
+      "supports": ["feasibility"],
+      "limitations": "Integrated runtime behavior is not yet implemented."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D1",
+      "axis": "delivery-experience",
+      "status": "confirmed",
+      "choice": "desktop",
+      "depends_on": [],
+      "exposed": true,
+      "trigger": "user:U1",
+      "approval_source": "U2",
+      "recommendation": { "option": "desktop", "basis": ["U1", "E1"] }
+    },
+    {
+      "id": "D2",
+      "axis": "external-service-route",
+      "status": "confirmed",
+      "choice": "direct-api",
+      "depends_on": [],
+      "exposed": true,
+      "trigger": "baseline",
+      "approval_source": "U2",
+      "recommendation": null
+    },
+    {
+      "id": "D3",
+      "axis": "credential-storage",
+      "status": "confirmed",
+      "choice": "os-encrypted",
+      "depends_on": [
+        { "id": "D2", "choices": ["direct-api"] }
+      ],
+      "exposed": true,
+      "trigger": "decision:D2=direct-api",
+      "approval_source": "U3",
+      "recommendation": { "option": "os-encrypted", "basis": ["D2", "E1"] }
+    }
+  ],
+  "scope": [
+    {
+      "id": "S1",
+      "statement": "Deliver the user-approved local workflow.",
+      "category": "behavior",
+      "provenance": ["U1", "D1"],
+      "visible": true,
+      "approval_required": true,
+      "recommendation_prominent": false
+    },
+    {
+      "id": "S2",
+      "statement": "Use the confirmed external-service and credential boundaries.",
+      "category": "data",
+      "provenance": ["D2", "D3", "E1"],
+      "visible": true,
+      "approval_required": true,
+      "recommendation_prominent": false
+    },
+    {
+      "id": "S3",
+      "statement": "Provide a visible local clear-data control as a Codex recommendation.",
+      "category": "behavior",
+      "provenance": ["R1", "E1"],
+      "visible": true,
+      "approval_required": true,
+      "recommendation_prominent": true
+    },
+    {
+      "id": "S4",
+      "statement": "Verify the user-recognizable workflow with the supplied sample.",
+      "category": "acceptance",
+      "provenance": ["U1", "E1"],
+      "visible": true,
+      "approval_required": true,
+      "recommendation_prominent": false
+    }
+  ],
+  "technical_conclusions": [
+    {
+      "id": "T1",
+      "statement": "A maintained implementation path is available as a candidate.",
+      "status": "candidate",
+      "evidence": ["E1", "B1"],
+      "method": "Environment inspection and maintained-reference comparison",
+      "basis_source": "Maintained local implementation reference B1",
+      "version_or_date": "B1 snapshot 2026-08-28",
+      "comparable_because": "It uses the same local workflow, external-service boundary, and packaging target.",
+      "deliberate_differences": "The final framework remains unselected until the integrated spike.",
+      "limitations": "The integrated interaction, packaging, and restart behavior still require an implementation spike and fresh tests."
+    }
+  ],
+  "preflight": {
+    "status": "complete",
+    "execution_record": {
+      "status": "valid",
+      "reference": "temp://ER-VALID-READY"
+    }
+  },
+  "blocking_items": [],
+  "authorization": {
+    "envelope_id": "C1",
+    "scope_ids": ["S1", "S2", "S3", "S4"],
+    "state": "pending",
+    "starts_execution": true,
+    "approval_source": null
+  },
+  "interaction": {
+    "natural_language_reply_allowed": true,
+    "id_reply_optional": true
+  }
+}

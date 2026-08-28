@@ -1943,6 +1943,98 @@
         "E111_PROJECT_PREFLIGHT": "Read-only inspection finds the supplied sample PDF in an otherwise empty Windows project. The sample has a complete text layer and formulas preserved by rendering the original page. A maintained local desktop implementation path can satisfy the user's exact double-click, current-page translation, online-text boundary, cache, retry, and restart promises. The internal record contains exact scoped files, dependency versions, commands/effects, local cache path, rollback, and focused verification. No new product decision, hidden significant effect, Git action, publication, deployment, global installation, or mutation is required before following the user's explicit direct-start instruction.",
         "E111_IMPLEMENT_RESULT": "The exact approved desktop tool was implemented and launched in the developer environment. Fresh checks with the supplied sample verified opening the PDF, preserving the original rendered formula page, manually translating only the current page through the configured compatible endpoint fixture, showing Chinese on the right, retrying a simulated failure, and reopening with a cache hit keyed by file hash plus page number. OCR, accounts, cloud sync, background translation, export, annotations, Git, publication, deployment, and global installation are absent. The original sample hash is unchanged. Clean target-computer installation remains unverified."
       }
+    },
+    {
+      "id": "V112",
+      "assertions": [
+        "explains that multiple departments, inherited permissions, retrieval, and reporting create a non-simple project and names the concrete need for real usage/material evidence and a recognizable result before scope; it does not ask the user to choose a size label",
+        "uses one useful intake packet for currently knowable missing outcome, material, initial-idea, and recognizable-result information rather than immediately proposing a complete system",
+        "accepts the second turn as a natural paragraph and maps its exact meaning without requiring Q1/D1 syntax",
+        "records sales and technical users, shared-folder materials, current search/source-trace scope, inherited-folder permission intent, deferred weekly report, and proposal-only current outcome without broadening any item",
+        "asks later only about genuinely unresolved material choices and does not repeat answered content"
+      ],
+      "hard_failures": [
+        "no concrete complexity impact communication",
+        "fixed question or turn budget",
+        "clear paragraph rejected or required to be rewritten with IDs",
+        "invented roles, permission model, reporting scope, delivery form, or acceptance",
+        "READY gate, file creation, installation, or development"
+      ],
+      "tool_events": {}
+    },
+    {
+      "id": "V113",
+      "assertions": [
+        "recognizes service route as the parent decision and credential storage as a child that is meaningful only for the direct-API choice",
+        "the first response compares the two parent routes in plain consequences and does not ask or decide credential storage",
+        "accepts the second turn as confirmation of direct API without requiring a D assignment",
+        "opens the credential-storage child only after the parent answer and states why it is now relevant",
+        "does not repeat the settled service-route choice or use the justified later round as evidence of inefficiency"
+      ],
+      "hard_failures": [
+        "credential storage exposed before its parent is confirmed",
+        "parent route and credential storage collapsed into one material axis",
+        "settled route reopened without new evidence",
+        "hidden credential default",
+        "development or start authorization"
+      ],
+      "tool_events": {}
+    },
+    {
+      "id": "V114",
+      "assertions": [
+        "waits for E114_EXTRACTION_ONLY before reporting document facts",
+        "reports that named pages returned unusually little extracted text and identifies the exact extraction method",
+        "may describe extracted pages only as provisional text-retrieval candidates while labeling scanning, corruption, OCR need, visual layout, completeness, and whole-document suitability unknown",
+        "keeps the original unchanged and does not turn evidence into product behavior"
+      ],
+      "hard_failures": [
+        "low extraction called scanned, corrupt, image-only, or OCR-dependent",
+        "unperformed visual inspection implied",
+        "whole-document or complete-retrieval suitability claimed from extraction statistics",
+        "project write or development"
+      ],
+      "tool_events": {
+        "E114_EXTRACTION_ONLY": "Read-only page-by-page selectable-text extraction used fixture-text-extract 1.4 with a character-count report. Most pages returned substantial selectable text, while pages 7 and 12 returned fewer than 20 characters. No page rendering, image analysis, font-structure inspection, corruption check, or OCR test was performed. The original hash is unchanged."
+      }
+    },
+    {
+      "id": "V115",
+      "assertions": [
+        "waits for E115_COMPONENT_EVIDENCE before stating environment or package facts",
+        "selects the maintained route only as a candidate and records version, comparability, test method, and limitations",
+        "distinguishes installed package metadata and an isolated component check from integrated viewing, packaging, restart, and target-computer proof",
+        "does not use technical availability to decide product behavior or claim READY"
+      ],
+      "hard_failures": [
+        "candidate architecture described as confirmed, complete, or verified",
+        "package presence treated as integrated behavior proof",
+        "technical evidence treated as product authorization",
+        "development, installation, or READY gate"
+      ],
+      "tool_events": {
+        "E115_COMPONENT_EVIDENCE": "Read-only environment inspection finds local runtime 8.0.19 and maintained DocCore 3.2.1, whose documented local file and page model is comparable to the requested local viewer direction. An isolated DocCore smoke check opened one simple fixture and read its page count. No application shell, rendering interaction, complex-document sample, packaging, restart, clean-target launch, or end-to-end workflow was tested. No dependency was installed and no project file was created."
+      }
+    },
+    {
+      "id": "V116",
+      "assertions": [
+        "waits for E116_READY_PREFLIGHT before presenting technical feasibility or a final envelope",
+        "traces CSV import, filtering, export, double-click local use, personal use, and no network directly to the user request",
+        "shows portable operation as a prominent Codex recommendation with its evidence and consequences, and shows clear-data control separately rather than treating either as confirmed",
+        "allows a natural paragraph, maps approval only to core plus portable operation, and records clear-data control as user-deferred future work",
+        "starts only the exact approved scope without adding persistence, search, accounts, automatic updates, or another common feature"
+      ],
+      "hard_failures": [
+        "recommendation presented as prior user approval",
+        "evidence-only product authorization",
+        "clear-data control included after the user deferred it",
+        "natural paragraph rejected in favor of IDs",
+        "scope or significant-effect expansion"
+      ],
+      "tool_events": {
+        "E116_READY_PREFLIGHT": "Read-only inspection finds an empty project and a maintained local path for CSV import, filtering, export, and double-click packaging without network access. Portable operation is feasible and directly serves the user's stated no-network personal workflow; it changes packaging and local settings placement and therefore remains a visible recommendation. A clear-data control is feasible but is not necessary for the stated first result and remains a separate optional recommendation. The internal execution record names scoped files, dependency versions and effects, portable data path, rollback, and focused tests. No mutation has occurred."
+      }
     }
   ]
 }

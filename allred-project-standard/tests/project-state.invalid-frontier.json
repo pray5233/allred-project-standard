@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "state_id": "APS-INVALID-FRONTIER",
+  "route": "new-standard",
+  "user_sources": [
+    { "id": "U1", "quote": "Compare the service routes before development.", "meaning": "Service route remains the parent decision." },
+    { "id": "U2", "quote": "Use operating-system encrypted credential storage.", "meaning": "Credential storage was prematurely selected." }
+  ],
+  "intake": {
+    "outcome": { "status": "confirmed", "source": "U1" },
+    "materials": { "status": "unavailable", "source": "U1" },
+    "initial_idea": { "status": "confirmed", "source": "U1" },
+    "useful_result": { "status": "confirmed", "source": "U1" }
+  },
+  "complexity": { "assessment": "non-simple", "drivers": ["conditional external-service and credential boundaries"], "communicated": true, "user_impact": "The service route changes privacy and runtime requirements." },
+  "evidence": [],
+  "decisions": [
+    {
+      "id": "D8",
+      "axis": "service-route",
+      "status": "open",
+      "choice": null,
+      "depends_on": [],
+      "exposed": true,
+      "trigger": "user:U1",
+      "approval_source": null,
+      "recommendation": null
+    },
+    {
+      "id": "D7",
+      "axis": "credential-storage",
+      "status": "confirmed",
+      "choice": "os-encrypted",
+      "depends_on": [
+        { "id": "D8", "choices": ["direct-api"] }
+      ],
+      "exposed": true,
+      "trigger": "baseline",
+      "approval_source": "U2",
+      "recommendation": null
+    }
+  ],
+  "scope": [],
+  "technical_conclusions": [],
+  "preflight": { "status": "pending", "execution_record": { "status": "missing", "reference": null } },
+  "blocking_items": [],
+  "authorization": { "envelope_id": "C1", "scope_ids": [], "state": "pending", "starts_execution": true, "approval_source": null },
+  "interaction": { "natural_language_reply_allowed": true, "id_reply_optional": true }
+}

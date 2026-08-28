@@ -76,6 +76,7 @@ Require-Text $skillText 'Silence, a partial reply, or approval of one item never
 Require-Text $skillText 'cannot erase an unanswered earlier independent choice' 'later evidence cannot hide an earlier unresolved choice'
 Require-Text $skillText 'Intake and evidence are read-only' 'entrypoint enforces the new-project stage boundary'
 Require-Text $skillText 'exact READY scope' 'entrypoint limits start authorization to the final envelope'
+Require-Text $skillText 'requires the matching validator to pass in that response' 'entrypoint forbids unvalidated decision and READY packets'
 
 $requiredLinks = @(
   'references/核心执行流程.md',
@@ -96,7 +97,8 @@ $requiredLinks = @(
   'references/项目级别问法.md',
   'references/公开信息监测项目.md',
   'references/外部内容安全.md',
-  'references/非软件项目模式.md'
+  'references/非软件项目模式.md',
+  'references/阶段状态硬校验.md'
 )
 
 foreach ($relative in $requiredLinks) {
@@ -152,13 +154,22 @@ $reviewSchemaPath = Join-Path $SkillRoot 'tests\review-result.schema.json'
 $executionTemplatePath = Join-Path $SkillRoot 'templates\Codex执行记录.md'
 $executionValidatorPath = Join-Path $SkillRoot 'scripts\validate_execution_record.ps1'
 $decisionCoverageValidatorPath = Join-Path $SkillRoot 'scripts\validate_decision_coverage.ps1'
+$stateValidationCommonPath = Join-Path $SkillRoot 'scripts\state_validation_common.ps1'
+$stageTransitionValidatorPath = Join-Path $SkillRoot 'scripts\validate_stage_transition.ps1'
+$decisionFrontierValidatorPath = Join-Path $SkillRoot 'scripts\validate_decision_frontier.ps1'
+$readyScopeValidatorPath = Join-Path $SkillRoot 'scripts\validate_ready_scope.ps1'
+$stageValidationReferencePath = Join-Path $SkillRoot 'references\阶段状态硬校验.md'
 $executionFixturePath = Join-Path $SkillRoot 'tests\execution-record.valid.md'
+$validReadyStatePath = Join-Path $SkillRoot 'tests\project-state.valid-ready.json'
+$invalidStageStatePath = Join-Path $SkillRoot 'tests\project-state.invalid-stage.json'
+$invalidFrontierStatePath = Join-Path $SkillRoot 'tests\project-state.invalid-frontier.json'
+$invalidReadyStatePath = Join-Path $SkillRoot 'tests\project-state.invalid-ready.json'
 $routeContextPath = Join-Path $SkillRoot 'scripts\get_route_context.ps1'
 $routeBudgetPath = Join-Path $SkillRoot 'scripts\check_route_context_budget.ps1'
 $versionPath = Join-Path $SkillRoot 'VERSION'
 $openAiYamlPath = Join-Path $SkillRoot 'agents\openai.yaml'
 
-foreach ($requiredPath in @($corePath, $sharedPath, $frontierPath, $contractPath, $benchmarkPath, $levelPath, $monitoringPath, $externalSafetyPath, $runtimePath, $materialsPath, $skillFlowPath, $projectTypePath, $beginnerPath, $writeBoundaryPath, $nonSoftwarePath, $behaviorCheckPath, $behaviorRunnerPath, $reviewSchemaPath, $executionTemplatePath, $executionValidatorPath, $decisionCoverageValidatorPath, $executionFixturePath, $routeContextPath, $routeBudgetPath, $versionPath, $openAiYamlPath)) {
+foreach ($requiredPath in @($corePath, $sharedPath, $frontierPath, $contractPath, $benchmarkPath, $levelPath, $monitoringPath, $externalSafetyPath, $runtimePath, $materialsPath, $skillFlowPath, $projectTypePath, $beginnerPath, $writeBoundaryPath, $nonSoftwarePath, $stageValidationReferencePath, $behaviorCheckPath, $behaviorRunnerPath, $reviewSchemaPath, $executionTemplatePath, $executionValidatorPath, $decisionCoverageValidatorPath, $stateValidationCommonPath, $stageTransitionValidatorPath, $decisionFrontierValidatorPath, $readyScopeValidatorPath, $executionFixturePath, $validReadyStatePath, $invalidStageStatePath, $invalidFrontierStatePath, $invalidReadyStatePath, $routeContextPath, $routeBudgetPath, $versionPath, $openAiYamlPath)) {
   if (-not (Test-Path -LiteralPath $requiredPath)) {
     Add-Failure "Required architecture reference is missing: $requiredPath"
   }
@@ -294,6 +305,47 @@ if ((Test-Path -LiteralPath $decisionCoverageValidatorPath) -and (Test-Path -Lit
   }
 }
 
+if ((Test-Path -LiteralPath $stageTransitionValidatorPath) -and
+    (Test-Path -LiteralPath $decisionFrontierValidatorPath) -and
+    (Test-Path -LiteralPath $readyScopeValidatorPath) -and
+    (Test-Path -LiteralPath $validReadyStatePath)) {
+  & $stageTransitionValidatorPath -Path $validReadyStatePath -ToStage READY | Out-Null
+  if (-not $?) { Add-Failure 'Stage transition validator rejected the valid READY state fixture.' }
+
+  & $decisionFrontierValidatorPath -Path $validReadyStatePath | Out-Null
+  if (-not $?) { Add-Failure 'Decision frontier validator rejected the valid state fixture.' }
+
+  & $readyScopeValidatorPath -Path $validReadyStatePath | Out-Null
+  if (-not $?) { Add-Failure 'READY scope validator rejected the valid state fixture.' }
+
+  & $stageTransitionValidatorPath -Path $invalidStageStatePath -ToStage DECISION 2>&1 | Out-Null
+  if ($?) { Add-Failure 'Stage transition validator accepted an incomplete intake fixture.' }
+
+  & $decisionFrontierValidatorPath -Path $invalidFrontierStatePath 2>&1 | Out-Null
+  if ($?) { Add-Failure 'Decision frontier validator accepted an invalid parent-child fixture.' }
+
+  & $readyScopeValidatorPath -Path $invalidReadyStatePath 2>&1 | Out-Null
+  if ($?) { Add-Failure 'READY scope validator accepted invalid provenance and technical certainty.' }
+
+  $executionStatePath = Join-Path ([System.IO.Path]::GetTempPath()) ("allred-valid-execution-" + [guid]::NewGuid().ToString('N') + '.json')
+  try {
+    $executionState = Get-Content -LiteralPath $validReadyStatePath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $executionState.authorization.state = 'approved'
+    $executionState.authorization.approval_source = 'U4'
+    $executionState.user_sources += [pscustomobject]@{
+      id = 'U4'
+      quote = 'Approve the exact displayed scope and start execution.'
+      meaning = 'The READY envelope is approved and execution may start.'
+    }
+    $executionStateJson = $executionState | ConvertTo-Json -Depth 24
+    [System.IO.File]::WriteAllText($executionStatePath, $executionStateJson, [System.Text.UTF8Encoding]::new($false))
+    & $stageTransitionValidatorPath -Path $executionStatePath -ToStage EXECUTION | Out-Null
+    if (-not $?) { Add-Failure 'Stage transition validator rejected an exactly approved EXECUTION state fixture.' }
+  } finally {
+    Remove-Item -LiteralPath $executionStatePath -Force -ErrorAction SilentlyContinue
+  }
+}
+
 if (Test-Path -LiteralPath $routeBudgetPath) {
   & $routeBudgetPath -SkillRoot $SkillRoot | Out-Null
   if (-not $?) { Add-Failure 'Route context budget check failed.' }
@@ -304,6 +356,13 @@ if (Test-Path -LiteralPath $routeContextPath) {
   Require-Text $routeContextText $evidenceDecisionMarker 'every evidence stage receives provenance, readiness, and recommendation admission rules'
   Require-Text $routeContextText "[ValidateSet('intake', 'evidence', 'decision', 'external-read', 'execution', 'verification')]" 'route selector exposes the evidence stage'
   Require-Text $routeContextText 'Current internal stage: DECISION' 'route selector emits a decision-stage mutation guard'
+  Require-Text $routeContextText '[string]$StatePath' 'route selector accepts the hard-validation state path'
+  Require-Text $routeContextText 'validate_stage_transition.ps1' 'route selector enforces stage transitions'
+  Require-Text $routeContextText 'Users may answer naturally' 'route selector preserves natural-language replies'
+  Require-Text $routeContextText 'partial proxies cannot prove overall suitability' 'evidence route preserves claim granularity'
+  Require-Text $routeContextText 'Label an unintegrated path candidate' 'evidence route preserves candidate certainty'
+  Require-Text $routeContextText 'available-but-uninspected' 'intake keeps scattered materials in the same packet'
+  Require-Text $routeContextText 'Explicitly label every unsupported' 'evidence route exposes unsupported claims as unknown'
 }
 if (Test-Path -LiteralPath $skillTestPath) {
   $skillTestText = Get-Content -LiteralPath $skillTestPath -Raw -Encoding UTF8
@@ -346,7 +405,7 @@ if (Test-Path -LiteralPath $sharedPath) {
   Require-Text $sharedText 'Product Decision Gate' 'product decisions use one gate'
   Require-Text $sharedText 'Consequential Authorization Gate' 'consequential actions use a separate gate'
   Require-Text $sharedText '【开始开发前确认】' 'prominent start confirmation remains available'
-  Require-Text $sharedText 'D1=' 'unambiguous multi-decision reply'
+  Require-Text $sharedText '不必填写编号' 'natural-language replies do not require Q/D assignment syntax'
   Require-Text $sharedText 'Approval Scope And Traceability' 'current-scope provenance gate'
   Require-Text $sharedText 'number of rounds follows dependency depth and consequence' 'follow-up depth is evidence driven'
   Require-Text $sharedText 'Decision Ownership' 'user and Codex responsibilities stay separate'
@@ -358,6 +417,19 @@ if (Test-Path -LiteralPath $sharedPath) {
   Require-Text $sharedText 'recommendation admission filter' 'interaction filters unnecessary recommendations'
   Require-Text $sharedText 'Codex execution record rather than the user' 'technical detail is not a user approval burden'
   Require-Text $sharedText 'every settled deferred, rejected, excluded, non-goal, or future-work item needs exact `U/D` provenance' 'visible handoffs cannot invent inactive scope'
+  Require-Text $sharedText 'compare it now' 'a ready parent decision is not delayed by optional discovery'
+  Require-Text $sharedText 'Do not operationalize a broad phrase into extra behavior' 'restatement preserves literal behavior granularity'
+  Require-Text $sharedText 'the recommendation packet must also be the full READY envelope' 'preflight-complete recommendations do not create duplicate gates'
+}
+if (Test-Path -LiteralPath $stageValidationReferencePath) {
+  $stageValidationText = Get-Content -LiteralPath $stageValidationReferencePath -Raw -Encoding UTF8
+  Require-Text $stageValidationText '$env:TEMP\allred-project-standard' 'hard-validation state remains outside the project'
+  Require-Text $stageValidationText 'validate_stage_transition.ps1' 'stage transitions use a deterministic validator'
+  Require-Text $stageValidationText 'validate_decision_frontier.ps1' 'decision dependencies use a deterministic validator'
+  Require-Text $stageValidationText 'validate_ready_scope.ps1' 'final scope provenance uses a deterministic validator'
+  Require-Text $stageValidationText 'the validators do not count turns' 'hard validation does not reintroduce a turn quota'
+  Require-Text $stageValidationText '`user_sources`' 'hard validation preserves exact user provenance'
+  Require-Text $stageValidationText 'version/date, comparability, deliberate differences' 'technical candidates retain benchmark identity and differences'
 }
 if (Test-Path -LiteralPath $frontierPath) {
   $frontierText = Get-Content -LiteralPath $frontierPath -Raw -Encoding UTF8
@@ -464,6 +536,7 @@ if (Test-Path -LiteralPath $levelPath) {
   $levelText = Get-Content -LiteralPath $levelPath -Raw -Encoding UTF8
   Require-Text $levelText 'Evidence Dimensions' 'evidence-based project classification'
   Require-Text $levelText 'Current-round strategy' 'complexity and strategy separation'
+  Require-Text $levelText 'name the evidence-backed drivers and their concrete user impact' 'complexity notices explain operational consequences'
 }
 if (Test-Path -LiteralPath $monitoringPath) {
   $monitoringText = Get-Content -LiteralPath $monitoringPath -Raw -Encoding UTF8
@@ -516,6 +589,9 @@ if (Test-Path -LiteralPath $materialsPath) {
   $materialsText = Get-Content -LiteralPath $materialsPath -Raw -Encoding UTF8
   Require-Text $materialsText 'Track material state explicitly' 'material evidence state model'
   Require-Text $materialsText 'does not prove that Codex read the material' 'no invented file inspection'
+  Require-Text $materialsText 'Name the exact method/tool and relevant version or date' 'evidence reports retain reproducible method identity'
+  Require-Text $materialsText 'means available but uninspected' 'scattered materials remain an active intake item'
+  Require-Text $materialsText 'Explicitly mark each unsupported high-impact interpretation `unknown`' 'unsupported evidence interpretations remain unknown'
 }
 if (Test-Path -LiteralPath $skillFlowPath) {
   $skillFlowText = Get-Content -LiteralPath $skillFlowPath -Raw -Encoding UTF8
@@ -539,6 +615,9 @@ if (Test-Path -LiteralPath $newProjectPath) {
   Require-Text $newProjectText 'a missing reply, partial reply, or approval of another item leaves that decision unresolved' 'new-project final gate reconciles unanswered decisions'
   Require-Text $newProjectText 'Recommendation Readiness Gate' 'new-project route requires user and material basis before recommendations'
   Require-Text $newProjectText 'Load the `decision` route stage before showing this packet' 'new-project route cannot skip from evidence to a start gate'
+  Require-Text $newProjectText 'enter DECISION and answer that request now' 'ready parent comparisons are not delayed by optional facts'
+  Require-Text $newProjectText 'make this packet the complete READY scope/start envelope' 'recommendation resolution and start can share one gate'
+  Require-Text $newProjectText 'Do not expand `筛选`' 'common-looking behavior cannot broaden literal user scope'
 }
 
 $startupTemplatePath = Join-Path $SkillRoot 'templates\项目启动卡.md'

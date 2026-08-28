@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "state_id": "APS-INVALID-STAGE",
+  "route": "new-standard",
+  "user_sources": [
+    { "id": "U1", "quote": "Draft alternatives from the stated outcome without materials.", "meaning": "Materials are deferred and Codex may draft alternatives." }
+  ],
+  "intake": {
+    "outcome": { "status": "confirmed", "source": "U1" },
+    "materials": { "status": "deferred", "source": "U1" },
+    "initial_idea": { "status": "delegated", "source": "U1" }
+  },
+  "complexity": {
+    "assessment": "non-simple",
+    "drivers": ["unverified materials and outcome"],
+    "communicated": false,
+    "user_impact": ""
+  },
+  "evidence": [],
+  "decisions": [],
+  "scope": [],
+  "technical_conclusions": [],
+  "preflight": { "status": "pending", "execution_record": { "status": "missing", "reference": null } },
+  "blocking_items": [],
+  "authorization": { "envelope_id": "C1", "scope_ids": [], "state": "pending", "starts_execution": true, "approval_source": null },
+  "interaction": { "natural_language_reply_allowed": true, "id_reply_optional": true }
+}

@@ -7,6 +7,7 @@
   [ValidateSet('intake', 'evidence', 'decision', 'external-read', 'execution', 'verification')]
   [string]$Stage = 'intake',
   [string]$SkillRoot = (Split-Path -Parent $PSScriptRoot),
+  [string]$StatePath = '',
   [switch]$MetricsOnly
 )
 
@@ -14,6 +15,19 @@ $ErrorActionPreference = 'Stop'
 $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 [Console]::OutputEncoding = $OutputEncoding
 $SkillRoot = (Resolve-Path -LiteralPath $SkillRoot).Path
+$newProjectRoutes = @('new-standard', 'new-beginner', 'new-public', 'new-beginner-public')
+
+if (-not $MetricsOnly -and $Route -in $newProjectRoutes -and $Stage -in @('decision', 'execution')) {
+  if ([string]::IsNullOrWhiteSpace($StatePath)) {
+    throw "StatePath is required before loading the $Stage stage for a non-trivial new project. Keep the state package under an isolated session temporary directory, not the project."
+  }
+  $targetStage = if ($Stage -eq 'decision') { 'DECISION' } else { 'EXECUTION' }
+  $validator = Join-Path $PSScriptRoot 'validate_stage_transition.ps1'
+  $validationOutput = & $validator -Path $StatePath -ToStage $targetStage 2>&1
+  if (-not $?) {
+    throw "Stage transition to $targetStage was blocked:`n$($validationOutput -join [Environment]::NewLine)"
+  }
+}
 
 function Add-Spec([System.Collections.Generic.List[object]]$Specs, [string]$Path, [string[]]$Sections) {
   $Specs.Add([pscustomobject]@{ path = $Path; sections = @($Sections) }) | Out-Null
@@ -60,6 +74,7 @@ switch ($Stage) {
   }
   'execution' {
     Add-Spec $specs 'references\核心执行流程.md' @('Mandatory Internal Stage Gate', 'Phase 5: Create The Execution Contract', 'Phase 6: Execute Continuously')
+    Add-Spec $specs 'references\阶段状态硬校验.md' @('Stage Transition Gate', 'READY Scope Gate')
   }
   'verification' {
     Add-Spec $specs 'references\核心执行流程.md' @('Phase 7: Verify Before Claiming', 'Phase 8: Close Or Hand Off', 'Efficiency Acceptance')
@@ -78,7 +93,8 @@ if ($Route -in @('new-standard', 'new-beginner', 'new-public', 'new-beginner-pub
   }
   if ($Stage -eq 'decision') {
     Add-Spec $specs 'references\新项目启动模式.md' @('5. Draft Total And Current Scope', '6. Use Concentrated Interaction Without Duplicate Gates')
-    Add-Spec $specs 'references\动态项目契约.md' @('Approval Envelope', 'Contract Consistency Lint', 'Mutation Ledger', 'Acceptance Ledger', 'User Confirmation And Codex Execution Record')
+    Add-Spec $specs 'references\动态项目契约.md' @('Approval Envelope', 'Contract Consistency Lint', 'User Confirmation And Codex Execution Record')
+    Add-Spec $specs 'references\阶段状态硬校验.md' @('READY Scope Gate')
   }
   if ($Stage -eq 'execution') { Add-Spec $specs 'references\新项目启动模式.md' @('7. Execute And Verify') }
 }
@@ -126,19 +142,18 @@ switch ($Route) {
   'skill-improvement' { if ($Stage -in @('intake', 'decision', 'execution', 'verification')) { Add-Spec $specs 'references\Skill流程优化模式.md' @('Evidence', 'Preflight', 'Change Classification', 'Architecture Gate', 'Execution Authorization', 'Validation', 'Completion') } }
 }
 
-$newProjectRoutes = @('new-standard', 'new-beginner', 'new-public', 'new-beginner-public')
 $stageGuards = @{
   intake = if ($Route -in $newProjectRoutes) {
-    "## Active Stage Guard`n`nCurrent internal stage: INTAKE. Maintain the four-item recommendation-readiness ledger across turns: intended use/user, material state/inspection, user idea or explicit request for a Codex draft, and recognizable useful result. After a partial reply, carry every still-missing item into one factual/open Q packet; a request for a Codex recommendation fills only the idea/delegation item. Do not present product D alternatives, a complete product package, READY/start gate, or mutate."
+    "## Active Stage Guard`n`nCurrent internal stage: INTAKE. Keep one temporary ledger for intended use/user, material state/inspection, user idea/delegation, and recognizable useful result. Ask every missing independent item in one packet. `资料未归拢` or `有资料` means available-but-uninspected: include location/minimum sample now, not in a later intake packet. A request for a Codex draft fills only idea/delegation. IDs are optional. No product D/package/READY gate or mutation."
   } elseif ($Route -eq 'existing-debug') {
     "## Active Route Guard`n`nCurrent route: EXISTING DEBUG. Inspect and reproduce from evidence already available in the project before asking the user. Do not request files, logs, or results that the user says are already local. Ask only for evidence that cannot be obtained locally and changes the next diagnostic step. An exact safe local fix request already authorizes diagnosis, the smallest evidence-backed fix, and narrow verification."
   } else {
     "## Active Route Guard`n`nCurrent route is existing or continuing work. Inspect the current project evidence before asking factual questions. Do not restart new-project discovery or add a ceremonial start gate when the exact safe local work is already authorized."
   }
-  evidence = "## Active Stage Guard`n`nCurrent internal stage: EVIDENCE. Perform read-only inspection and report facts/feasibility only. Evidence cannot choose product behavior. Do not present a READY/start gate or mutate."
-  decision = "## Active Stage Guard`n`nCurrent internal stage: DECISION. Ask only concentrated user-owned material choices. One ID owns one axis. Do not mutate. A request for a final card does not establish READY: complete read-only technical preflight and the internal execution record first, and never show start options in the same response that initiates or awaits that preflight."
+  evidence = "## Active Stage Guard`n`nCurrent internal stage: EVIDENCE. Report only tested granularity with exact method/version; partial proxies cannot prove overall suitability. Explicitly label every unsupported scanned/corrupt/OCR/layout or integration claim unknown, not `may be`. Label an unintegrated path candidate. Evidence cannot choose product behavior. If readiness is complete, validate DECISION before choices; do not delay a requested comparison/recommendation with optional facts. Disposable outputs stay in isolated system temp. No READY gate or mutation."
+  decision = "## Active Stage Guard`n`nCurrent internal stage: DECISION. Validation passed. Ask user-owned choices with recorded triggers/dependencies. Later rounds need new evidence or dependency. Users may answer naturally. Validate READY before the final card. No mutation."
   'external-read' = "## Active Stage Guard`n`nCurrent internal stage: EXTERNAL-READ. Apply trust, privacy, and network boundaries. This stage does not approve product behavior or mutation."
-  execution = "## Active Stage Guard`n`nCurrent internal stage: EXECUTION. Proceed only inside an explicitly approved READY scope and effects envelope; return to DECISION for material scope change."
+  execution = "## Active Stage Guard`n`nCurrent internal stage: EXECUTION. Stage, frontier, READY-scope, and exact authorization validation have passed. Proceed only inside that approved scope and effects envelope; return only the affected item to DECISION for material scope change."
   verification = "## Active Stage Guard`n`nCurrent internal stage: VERIFICATION. Verify promises with fresh evidence and do not expand scope or infer release actions."
 }
 

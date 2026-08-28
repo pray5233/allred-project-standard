@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "state_id": "APS-INVALID-READY",
+  "route": "new-standard",
+  "user_sources": [
+    { "id": "U1", "quote": "Use the supplied sample to assess a local workflow.", "meaning": "The local workflow is the intended outcome." },
+    { "id": "U2", "quote": "Use a desktop delivery form.", "meaning": "Desktop delivery is approved." }
+  ],
+  "intake": {
+    "outcome": { "status": "confirmed", "source": "U1" },
+    "materials": { "status": "inspected", "source": "E1" },
+    "initial_idea": { "status": "confirmed", "source": "U1" },
+    "useful_result": { "status": "confirmed", "source": "U1" }
+  },
+  "complexity": { "assessment": "non-simple", "drivers": ["multiple unverified integrations"], "communicated": true, "user_impact": "Multiple integrations require verification." },
+  "evidence": [
+    {
+      "id": "E1",
+      "claim": "A sample can be parsed.",
+      "claim_type": "observed",
+      "confidence": "verified",
+      "method": "Read-only parser check",
+      "supports": ["feasibility"],
+      "limitations": "No product interaction was tested."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D1",
+      "axis": "delivery",
+      "status": "confirmed",
+      "choice": "desktop",
+      "depends_on": [],
+      "exposed": true,
+      "trigger": "user:U1",
+      "approval_source": "U2",
+      "recommendation": null
+    }
+  ],
+  "scope": [
+    {
+      "id": "S1",
+      "statement": "Evidence silently selects a new user-visible workflow.",
+      "category": "behavior",
+      "provenance": ["E1"],
+      "visible": true,
+      "approval_required": true,
+      "recommendation_prominent": false
+    }
+  ],
+  "technical_conclusions": [
+    {
+      "id": "T1",
+      "statement": "The complete integration is confirmed.",
+      "status": "confirmed",
+      "evidence": [],
+      "method": "",
+      "basis_source": "Unspecified",
+      "version_or_date": "Unknown",
+      "comparable_because": "Not established",
+      "deliberate_differences": "Not established",
+      "limitations": ""
+    }
+  ],
+  "preflight": { "status": "complete", "execution_record": { "status": "valid", "reference": "temp://ER-INVALID" } },
+  "blocking_items": [],
+  "authorization": { "envelope_id": "C1", "scope_ids": ["S1"], "state": "pending", "starts_execution": true, "approval_source": null },
+  "interaction": { "natural_language_reply_allowed": true, "id_reply_optional": true }
+}
