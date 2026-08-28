@@ -74,6 +74,8 @@ Require-Text $skillText 'Do not spend a user turn asking whether to enable a vis
 Require-Text $skillText 'Do not ask the user to choose a framework or toolchain' 'technical selection remains Codex-owned when consequences are settled'
 Require-Text $skillText 'Silence, a partial reply, or approval of one item never approves its siblings' 'partial replies cannot approve unanswered decisions'
 Require-Text $skillText 'cannot erase an unanswered earlier independent choice' 'later evidence cannot hide an earlier unresolved choice'
+Require-Text $skillText 'Intake and evidence are read-only' 'entrypoint enforces the new-project stage boundary'
+Require-Text $skillText 'exact READY scope' 'entrypoint limits start authorization to the final envelope'
 
 $requiredLinks = @(
   'references/核心执行流程.md',
@@ -298,8 +300,10 @@ if (Test-Path -LiteralPath $routeBudgetPath) {
 }
 if (Test-Path -LiteralPath $routeContextPath) {
   $routeContextText = Get-Content -LiteralPath $routeContextPath -Raw -Encoding UTF8
-  $intakeDecisionMarker = 'Add-Spec $specs ''references\动态项目契约.md'' @(''Provenance And Confidence'', ''Recommendation Admission Filter'')'
-  Require-Text $routeContextText $intakeDecisionMarker 'every route intake receives provenance and recommendation admission rules'
+  $evidenceDecisionMarker = 'Add-Spec $specs ''references\动态项目契约.md'' @(''Provenance And Confidence'', ''Recommendation Readiness Gate'', ''Recommendation Admission Filter'')'
+  Require-Text $routeContextText $evidenceDecisionMarker 'every evidence stage receives provenance, readiness, and recommendation admission rules'
+  Require-Text $routeContextText "[ValidateSet('intake', 'evidence', 'decision', 'external-read', 'execution', 'verification')]" 'route selector exposes the evidence stage'
+  Require-Text $routeContextText 'Current internal stage: DECISION' 'route selector emits a decision-stage mutation guard'
 }
 if (Test-Path -LiteralPath $skillTestPath) {
   $skillTestText = Get-Content -LiteralPath $skillTestPath -Raw -Encoding UTF8
@@ -331,6 +335,7 @@ if (Test-Path -LiteralPath $sharedPath) {
   Require-Text $sharedText 'keep the same question open' 'clarification requests do not silently advance'
   Require-Text $sharedText 'compare every option against the same relevant dimensions' 'decision explanations are complete and comparable'
   Require-Text $sharedText 'every `D` choice visibly includes a custom-answer path' 'decision choices preserve user correction'
+  Require-Text $sharedText 'one `D` owns one material decision axis' 'decision packets do not bundle independent meanings'
   Require-Text $sharedText 'do not reopen completed `U/E/D` work' 'visible decisions preserve completed baseline work'
   Require-Text $sharedText 'every `D` states `dependency: None` or exact prerequisite IDs' 'decision dependencies are explicit'
   Require-Text $sharedText 'recommendation deferred pending <IDs>' 'unresolved dependencies cannot support recommendations'
@@ -377,6 +382,8 @@ if (Test-Path -LiteralPath $corePath) {
   Require-Text $coreText 'promise-by-promise acceptance ledger' 'core execution contract includes acceptance ledger'
   Require-Text $coreText 'decision coverage from every active `U/D` item' 'core maps approved scope to implementation and proof'
   Require-Text $coreText 'Apply the recommendation admission filter' 'core excludes unnecessary recommendations'
+  Require-Text $coreText 'INTAKE -> EVIDENCE -> DECISION -> READY -> EXECUTION' 'core owns the mandatory internal stage gate'
+  Require-Text $coreText 'No new-project mutation begins until EXECUTION is active' 'core blocks mutation before final authorization'
   Require-Text $coreText 'label unchanged `U/D`, technical `E`, new `R`, and removed `X` separately' 'contract deltas stay explicit'
   Require-Text $coreText 'no fixed interaction or decision-count target' 'core efficiency has no hard turn quota'
 }
@@ -390,6 +397,8 @@ if (Test-Path -LiteralPath $contractPath) {
   Require-Text $contractText 'Selecting discussion areas authorizes discussion only' 'area selection cannot approve scope'
   Require-Text $contractText 'Do not use a confidence percentage' 'interview stops on coverage rather than a numeric proxy'
   Require-Text $contractText 'A visible decision must satisfy all of these' 'dynamic decision exposure filter'
+  Require-Text $contractText 'Recommendation Readiness Gate' 'dynamic contract blocks premature first-version packages'
+  Require-Text $contractText 'immediately visible named envelope' 'dynamic contract limits compact replies to the active envelope'
   Require-Text $contractText 'Contract Consistency Lint' 'pre-gate contract consistency check'
   Require-Text $contractText 'Coverage Shape' 'coverage axes are derived from the task'
   Require-Text $contractText 'complete replacement contract or scope' 'corrections produce a complete active scope'
@@ -528,6 +537,8 @@ if (Test-Path -LiteralPath $newProjectPath) {
   Require-Text $newProjectText 'Do not ask the user to choose Electron' 'technical frameworks are not delegated to ordinary users'
   Require-Text $newProjectText 'Do not ask whether to enable a visual companion' 'visual/process helpers do not create premature approval turns'
   Require-Text $newProjectText 'a missing reply, partial reply, or approval of another item leaves that decision unresolved' 'new-project final gate reconciles unanswered decisions'
+  Require-Text $newProjectText 'Recommendation Readiness Gate' 'new-project route requires user and material basis before recommendations'
+  Require-Text $newProjectText 'Load the `decision` route stage before showing this packet' 'new-project route cannot skip from evidence to a start gate'
 }
 
 $startupTemplatePath = Join-Path $SkillRoot 'templates\项目启动卡.md'

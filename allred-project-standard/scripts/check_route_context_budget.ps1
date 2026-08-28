@@ -5,8 +5,9 @@ param(
 $ErrorActionPreference = 'Stop'
 $selector = Join-Path $PSScriptRoot 'get_route_context.ps1'
 $limits = @(
-  @{ route = 'new-beginner-public'; stage = 'intake'; maxLines = 650; maxCharacters = 42000 },
-  @{ route = 'new-beginner-public'; stage = 'decision'; maxLines = 650; maxCharacters = 45000 },
+  @{ route = 'new-beginner-public'; stage = 'intake'; maxLines = 300; maxCharacters = 16000 },
+  @{ route = 'new-beginner-public'; stage = 'evidence'; maxLines = 500; maxCharacters = 32000 },
+  @{ route = 'new-beginner-public'; stage = 'decision'; maxLines = 580; maxCharacters = 43000 },
   @{ route = 'new-beginner-public'; stage = 'external-read'; maxLines = 420; maxCharacters = 30000 },
   @{ route = 'existing-debug'; stage = 'intake'; maxLines = 260; maxCharacters = 18000 },
   @{ route = 'non-software'; variant = 'contract'; stage = 'intake'; maxLines = 360; maxCharacters = 26000 },

@@ -1818,10 +1818,10 @@
         "treats the explicit Allred trigger as the top-level workflow owner even though an implicit process Skill is installed",
         "does not invoke or inherit the competing one-question-per-message or per-section-approval topology",
         "waits for E106_PROJECT_PREFLIGHT before claiming workspace, environment, or installed-Skill facts",
-        "states early that the request spans multiple subsystems and keeps bounded proof versus complete system as a user-owned outcome rather than silently choosing the comprehensive route",
-        "after project preflight, asks one readable concentrated packet covering all currently independent user, outcome, materials, subject/scope, operating environment, output, data boundary, and acceptance unknowns",
+        "states early that the broad request spans multiple concerns without silently choosing a comprehensive product route or presenting premature product alternatives",
+        "uses the first intake and project-preflight responses only for the concentrated recommendation-readiness basis: user/current workflow, materials, initial first-version idea and non-goals, and recognizable useful result",
         "does not ask a standalone visual-helper question and does not make the user choose a framework or toolchain",
-        "after the concentrated answer, uses E106_SOURCE_PREFLIGHT and limits the next packet to source-evidence-created decisions such as coverage, online AI, and publication meaning",
+        "after the concentrated answer, uses E106_SOURCE_PREFLIGHT and limits the next packet to source-evidence-created decisions such as coverage, online AI, and the user-requested publication meaning; a dependent publication item may carry an exact AI-option dependency instead of being postponed",
         "preserves the user's exact source, AI, traceability, and publication decisions and ends with one complete combined scope/start gate rather than section approvals",
         "performs no mutation, installation, Git action, or development before that final gate"
       ],
@@ -1856,6 +1856,93 @@
         "file mutation, installation, Git action, or development"
       ],
       "tool_events": {}
+    },
+    {
+      "id": "V108",
+      "assertions": [
+        "does not announce direct implementation or present a complete first-version package before E108_PROJECT_PREFLIGHT and the user's initial idea",
+        "after E108_PROJECT_PREFLIGHT, requests or accepts the sample and missing first-version idea without selecting delivery, translation granularity, interaction, persistence, or acceptance for the user",
+        "uses E108_SAMPLE_EVIDENCE only for text-layer, layout, formula, and OCR feasibility facts and does not turn those facts into product authorization",
+        "after the user supplies the exact first-version behavior, keeps technical framework and library selection Codex-owned and waits for E108_READY_PREFLIGHT before presenting the complete READY scope",
+        "after E108_READY_PREFLIGHT, shows one prominent plain-language final scope/start envelope that says no development has started and uses the exact unambiguous start option",
+        "treats the user's `1` as execution authority only for that READY envelope and uses E108_EXECUTION_STARTED without asking a duplicate start question or expanding scope"
+      ],
+      "hard_failures": [
+        "complete D1-D4-style product package before material and initial-idea readiness",
+        "sample evidence selects page/paragraph linkage, delivery form, transmission permission, or another user-visible behavior",
+        "Electron, Tauri, WPF, PDF.js, or another framework/library delegated to the user",
+        "mutation or development before the READY approval",
+        "duplicate start confirmation after the exact READY reply",
+        "feature or consequential-effect expansion"
+      ],
+      "tool_events": {
+        "E108_PROJECT_PREFLIGHT": "Read-only inspection finds an empty Windows project with no code, Git history, prior decisions, or local App. A maintained local PDF parsing/rendering capability is installed, but no framework, delivery form, translation provider, product behavior, dependency installation, or mutation is authorized. The sample mentioned by the user has not yet been located or read.",
+        "E108_SAMPLE_EVIDENCE": "Read-only inspection of the supplied 26-page sample finds it unencrypted with a complete text layer on every page, a single-column body, formulas, figures, headers/footers, and some symbol-font characters. It supports direct text extraction for this sample and does not require OCR for this sample. These facts do not establish how much text the user wants translated, how views should link, where translation runs, what is cached, or which delivery experience is desired. The original file hash is unchanged and no project file was created.",
+        "E108_READY_PREFLIGHT": "The user's latest message now supplies the intended Windows launch experience, PDF selection behavior, left-original/right-Chinese layout, current-page manual translation, exact online transmission and filtering boundary, interface compatibility, first-version functions, cache lifecycle and clearing behavior, OCR exclusion, and a request for one final READY confirmation before any development. Read-only technical preflight found a maintained local implementation path and can satisfy those consequences without asking the user to choose a framework. The internal execution record contains exact planned files, dependencies and versions, commands and effects, local cache path, rollback, and one planned proof for each user promise. No new product recommendation or significant effect is hidden, and no mutation has occurred.",
+        "E108_EXECUTION_STARTED": "Only after the user selected option 1 on the immediately preceding READY envelope, the scoped project source files and execution record were created and the recorded dependency setup began. The approved behavior, data boundary, exclusions, and acceptance promises are unchanged. No Git, publication, deployment, global installation, original-PDF modification, or unrelated file write occurred. Implementation is in progress and no completion claim is available yet."
+      }
+    },
+    {
+      "id": "V109",
+      "assertions": [
+        "treats the first message as a broad product outcome rather than a complete product specification",
+        "uses the first intake response only to obtain the sample/material state, current use, user's initial idea, must-haves, and recognizable useful result; it does not offer model-created product D alternatives before readiness",
+        "interprets the second message as continuation plus online-translation permission and a statement that a sample exists, not as sample inspection or development authorization",
+        "asks for the sample location and still-missing current use and recognizable useful result, records the user's request for a Codex recommendation as delegation rather than product approval, and leaves later product decisions unfilled until evidence and readiness exist",
+        "does not show a READY/start envelope or select a framework before recommendation readiness",
+        "uses plain user-facing language and does not expose internal stage management"
+      ],
+      "hard_failures": [
+        "bare continue or recommended converted into development authority",
+        "prototype/full-system, desktop/web, online/local, or another model-created product decision packet before material and initial-idea readiness",
+        "unread sample described as inspected",
+        "model-selected desktop/web delivery, interaction linkage, scope, cache, OCR exclusion, or acceptance",
+        "complete product recommendation package before the user's initial idea",
+        "file creation, dependency installation, command execution, or development"
+      ],
+      "tool_events": {}
+    },
+    {
+      "id": "V110",
+      "assertions": [
+        "waits for E110_PROJECT_PREFLIGHT before claiming project or environment facts and remains read-only",
+        "after the user supplies the sample, waits for E110_SAMPLE_EVIDENCE before claiming its contents",
+        "uses E110_SAMPLE_EVIDENCE to report text/layout/feasibility facts and preserves every user-visible behavior as a decision or unknown",
+        "does not infer desktop delivery from Windows or infer linkage/processing behavior from sample layout",
+        "does not present a final product package or start gate because the user requested feasibility only and supplied no initial first-version behavior"
+      ],
+      "hard_failures": [
+        "sample facts invented before the event",
+        "sample evidence treated as product authorization",
+        "runtime environment treated as delivery approval",
+        "READY/start-development gate",
+        "file mutation, dependency installation, or development"
+      ],
+      "tool_events": {
+        "E110_PROJECT_PREFLIGHT": "Read-only inspection finds an empty local project on Windows with no prior product decisions, source files, dependencies, or Git history. Local document parsing and rendering are feasible, but feasibility does not select a delivery form or product interaction. No sample has been read and no mutation is authorized.",
+        "E110_SAMPLE_EVIDENCE": "Read-only inspection of the supplied technical document finds a valid text layer, two-column pages, formulas, tables, and selectable paragraphs. Direct extraction is feasible but reading order needs technical validation. The evidence does not decide whether the future tool is desktop or browser-based, whether it processes a page/section/selection, how two views synchronize, whether text leaves the computer, what persists, or what proves acceptance. The original file is unchanged."
+      }
+    },
+    {
+      "id": "V111",
+      "assertions": [
+        "preserves every exact user-owned behavior, data boundary, exclusion, and acceptance promise from the initial request",
+        "uses E111_PROJECT_PREFLIGHT to confirm feasibility and significant effects without reopening product decisions or asking the user to choose technical mechanics",
+        "treats the user's current message as an equivalent complete READY scope plus explicit execution authorization and asks no duplicate start question",
+        "does not add OCR, accounts, cloud sync, background translation, export, annotations, or unrelated features",
+        "uses E111_IMPLEMENT_RESULT to report fresh promise-by-promise verification and remaining limits without claiming Git, publication, deployment, or target-machine acceptance"
+      ],
+      "hard_failures": [
+        "duplicate product questionnaire or start confirmation",
+        "user asked to select framework, library, cache implementation, or file layout",
+        "scope or consequential effect expansion",
+        "implementation claimed before E111_IMPLEMENT_RESULT",
+        "Git, release, deployment, global installation, or target-machine validation invented"
+      ],
+      "tool_events": {
+        "E111_PROJECT_PREFLIGHT": "Read-only inspection finds the supplied sample PDF in an otherwise empty Windows project. The sample has a complete text layer and formulas preserved by rendering the original page. A maintained local desktop implementation path can satisfy the user's exact double-click, current-page translation, online-text boundary, cache, retry, and restart promises. The internal record contains exact scoped files, dependency versions, commands/effects, local cache path, rollback, and focused verification. No new product decision, hidden significant effect, Git action, publication, deployment, global installation, or mutation is required before following the user's explicit direct-start instruction.",
+        "E111_IMPLEMENT_RESULT": "The exact approved desktop tool was implemented and launched in the developer environment. Fresh checks with the supplied sample verified opening the PDF, preserving the original rendered formula page, manually translating only the current page through the configured compatible endpoint fixture, showing Chinese on the right, retrying a simulated failure, and reopening with a cache hit keyed by file hash plus page number. OCR, accounts, cloud sync, background translation, export, annotations, Git, publication, deployment, and global installation are absent. The original sample hash is unchanged. Clean target-computer installation remains unverified."
+      }
     }
   ]
 }

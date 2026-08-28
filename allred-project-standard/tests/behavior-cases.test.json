@@ -2912,9 +2912,9 @@
         "allred新项目 我想做一个关节臂测量机市场行情信息收集的app"
       ],
       "artifact_labels": [
-        "empty Windows project workspace",
-        "installed Allred and implicit one-question process Skill inventory",
-        "read-only public-source preflight"
+        "project workspace preflight target",
+        "installed capability inventory target",
+        "public-source preflight target"
       ],
       "tool_event_ids": [
         "E106_PROJECT_PREFLIGHT",
@@ -2966,6 +2966,162 @@
         "benchmark or model preference converted into product scope",
         "start-development authorization",
         "file mutation or installation"
+      ]
+    },
+    {
+      "id": "V108",
+      "priority": "P0",
+      "modules": [
+        "activation-routing",
+        "new-project",
+        "materials-evidence",
+        "stage-routing",
+        "interaction-confirmation",
+        "adaptive-interview",
+        "decision-coverage",
+        "workflow-efficiency",
+        "execution-closure"
+      ],
+      "visible_turns": [
+        "allred新项目 我想制作一个论文查看软件，能够将本地的 PDF 文件翻译成中文，可以两边实时对照查看"
+      ],
+      "artifact_labels": [
+        "empty Windows project workspace",
+        "local sample PDF supplied after intake",
+        "installed local PDF parsing and rendering capability",
+        "read-only sample analysis",
+        "technical READY preflight",
+        "authorized execution start"
+      ],
+      "tool_event_ids": [
+        "E108_PROJECT_PREFLIGHT",
+        "E108_SAMPLE_EVIDENCE",
+        "E108_READY_PREFLIGHT",
+        "E108_EXECUTION_STARTED"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E108_PROJECT_PREFLIGHT",
+          "text": "样例 PDF 已放入当前工程，先检查样例；我还没有说明第一版具体怎么操作。"
+        },
+        {
+          "after": "E108_SAMPLE_EVIDENCE",
+          "text": "我的初步想法：在 Windows 里双击应用后选择 PDF，不关联 PDF 文件；左边原 PDF、右边中文；按当前页手动翻译；只把当前页正文和图注发送到我配置的 OpenAI chat/completions 兼容在线接口，过滤页眉页脚，公式不翻译；翻译缓存长期保存在本机，并可清除当前文档缓存。第一版能打开样例、翻译当前页、左右对照、失败重试并缓存结果，暂不支持扫描 PDF。请整理最终范围并给我最终确认卡；确认前不要开发，我会在确认卡上决定是否开始。"
+        },
+        {
+          "after": "E108_READY_PREFLIGHT",
+          "text": "1"
+        }
+      ],
+      "stop_condition": "the workflow moves from intake through sample evidence and user decisions to one explicit READY envelope, then enters execution only after the user selects the exact start option",
+      "forbidden_questions": [
+        "complete product package before materials and initial idea",
+        "sample evidence used to select user-visible interaction",
+        "framework or library selection delegated to the user",
+        "mutation before exact READY approval",
+        "duplicate start confirmation after READY approval"
+      ]
+    },
+    {
+      "id": "V109",
+      "priority": "P0",
+      "modules": [
+        "activation-routing",
+        "new-project",
+        "materials-evidence",
+        "stage-routing",
+        "interaction-confirmation",
+        "adaptive-interview",
+        "decision-coverage",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目 我想制作一个论文查看软件，能够将本地的 PDF 文件翻译成中文，可以两边实时对照查看",
+        "按推荐方案继续，允许在线翻译，有样例"
+      ],
+      "artifact_labels": [
+        "broad product request only"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "the ambiguous continuation advances intake only, preserves the exact online-translation decision, and requests the still-missing sample location and user-owned first-version meaning without a start gate",
+      "forbidden_questions": [
+        "continue or recommended interpreted as development authorization",
+        "unread sample described as inspected",
+        "delivery, interaction, scope, persistence, or acceptance selected for the user",
+        "complete READY envelope before recommendation readiness",
+        "file mutation, dependency installation, or development"
+      ]
+    },
+    {
+      "id": "V110",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "materials-evidence",
+        "stage-routing",
+        "adaptive-alignment",
+        "interaction-confirmation",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：做一个本地技术文档对照查看工具，样例稍后提供；先根据资料了解可行性，不要开发。"
+      ],
+      "artifact_labels": [
+        "empty local project",
+        "sample document supplied after project inspection",
+        "read-only document evidence"
+      ],
+      "tool_event_ids": [
+        "E110_PROJECT_PREFLIGHT",
+        "E110_SAMPLE_EVIDENCE"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E110_PROJECT_PREFLIGHT",
+          "text": "样例已经放在当前工程，请只读检查。"
+        }
+      ],
+      "stop_condition": "sample inspection reports only factual feasibility and leaves delivery, processing granularity, interaction, data transmission, current scope, and acceptance as user-owned decisions or explicit unknowns",
+      "forbidden_questions": [
+        "sample layout treated as approval of a product interaction",
+        "host operating system treated as approval of delivery form",
+        "technical feasibility described as confirmed product scope",
+        "READY or start-development gate",
+        "file mutation or dependency installation"
+      ]
+    },
+    {
+      "id": "V111",
+      "priority": "P0",
+      "modules": [
+        "activation-routing",
+        "new-project",
+        "materials-evidence",
+        "stage-routing",
+        "interaction-confirmation",
+        "execution-closure",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：为我个人的 Windows 电脑做一个双击运行的本地桌面工具。打开本地文字型 PDF，左边显示原页、右边显示中文，按当前页手动翻译；允许只把当前页提取文字发送到我配置的 OpenAI 兼容接口；本地缓存按文件哈希和页码保存，失败时可以重试。不做 OCR、账号和云同步。以提供的样例能够打开、当前页能够翻译、原页公式不被修改、关闭重开后命中缓存为验收。请按以上完整范围直接开始开发。"
+      ],
+      "artifact_labels": [
+        "complete user-owned product scope",
+        "sample PDF available in the empty Windows project",
+        "read-only project and capability preflight",
+        "focused implementation and verification result"
+      ],
+      "tool_event_ids": [
+        "E111_PROJECT_PREFLIGHT",
+        "E111_IMPLEMENT_RESULT"
+      ],
+      "stop_condition": "the complete exact request satisfies recommendation and authorization readiness, so Codex performs read-only preflight, starts without a duplicate product questionnaire, and reports only event-backed implementation and verification",
+      "forbidden_questions": [
+        "duplicate product or start confirmation",
+        "user asked to select a framework or library",
+        "feature expansion beyond the exact request",
+        "implementation success before its event",
+        "Git, publication, deployment, or unrelated installation"
       ]
     }
   ]

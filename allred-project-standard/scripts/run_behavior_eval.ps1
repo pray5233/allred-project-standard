@@ -5,6 +5,8 @@ param(
   [string]$OutputRoot = (Join-Path (Get-Location) ("behavior-eval-" + (Get-Date -Format 'yyyyMMdd-HHmmss'))),
   [string]$CodexCommand = 'codex',
   [string]$Model = '',
+  [ValidateSet('default', 'low', 'medium', 'high', 'xhigh', 'ultra', 'max')]
+  [string]$ReasoningEffort = 'default',
   [switch]$UseUserConfig,
   [switch]$DisablePlugins,
   [ValidateRange(10, 3600)]
@@ -59,6 +61,7 @@ function Invoke-CodexTurn {
     }
     $args.Add('--skip-git-repo-check')
     if ($Model) { $args.Add('-m'); $args.Add($Model) }
+    if ($ReasoningEffort -ne 'default') { $args.Add('-c'); $args.Add("model_reasoning_effort=`"$ReasoningEffort`"") }
     if ($SchemaPath) { $args.Add('--output-schema'); $args.Add($SchemaPath) }
     $args.Add('-o'); $args.Add($finalPath)
     $args.Add($SessionId)
@@ -75,6 +78,7 @@ function Invoke-CodexTurn {
     $args.Add('-C'); $args.Add($RunDirectory)
     if ($Ephemeral) { $args.Add('--ephemeral') }
     if ($Model) { $args.Add('-m'); $args.Add($Model) }
+    if ($ReasoningEffort -ne 'default') { $args.Add('-c'); $args.Add("model_reasoning_effort=`"$ReasoningEffort`"") }
     if ($SchemaPath) { $args.Add('--output-schema'); $args.Add($SchemaPath) }
     $args.Add('-o'); $args.Add($finalPath)
     $args.Add('-')
@@ -174,6 +178,7 @@ $runConfig = [ordered]@{
   oracle_suite_sha256 = (Get-FileHash -LiteralPath $oraclePath -Algorithm SHA256).Hash.ToLowerInvariant()
   case_ids = @($CaseIds)
   model_override = $Model
+  reasoning_effort_override = $ReasoningEffort
   timeout_seconds = $TimeoutSeconds
   use_user_config = [bool]$UseUserConfig
   disable_plugins = [bool]$DisablePlugins
