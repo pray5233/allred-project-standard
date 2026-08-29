@@ -56,10 +56,12 @@ foreach ($decision in $decisions) {
 $scopeById = @{}
 $visibleScopeIds = [System.Collections.Generic.List[string]]::new()
 $allowedCategories = @('behavior', 'delivery', 'data', 'effect', 'non-goal', 'acceptance', 'technical')
+$allowedRelations = @('required', 'excluded', 'recommended', 'acceptance', 'technical')
 foreach ($item in $scope) {
   $id = [string](Get-AllredProperty $item 'id')
   $statement = [string](Get-AllredProperty $item 'statement')
   $category = ([string](Get-AllredProperty $item 'category')).ToLowerInvariant()
+  $relation = ([string](Get-AllredProperty $item 'relation')).ToLowerInvariant()
   $visible = Get-AllredProperty $item 'visible'
   $approvalRequired = Get-AllredProperty $item 'approval_required'
   $prominent = Get-AllredProperty $item 'recommendation_prominent'
@@ -70,6 +72,13 @@ foreach ($item in $scope) {
   $scopeById[$id] = $item
   if ([string]::IsNullOrWhiteSpace($statement)) { Add-Failure "Scope item has no statement: $id" }
   if ($category -notin $allowedCategories) { Add-Failure "Invalid scope category for ${id}: $category" }
+  if ($relation -notin $allowedRelations) { Add-Failure "Invalid scope relation for ${id}: $relation" }
+  if ($category -eq 'non-goal' -and $relation -ne 'excluded') { Add-Failure "Non-goal scope item is not explicitly excluded: $id" }
+  if ($relation -eq 'excluded' -and $category -ne 'non-goal') { Add-Failure "Excluded scope item must use category non-goal: $id" }
+  if ($category -eq 'acceptance' -and $relation -ne 'acceptance') { Add-Failure "Acceptance scope item has the wrong relation: $id" }
+  if ($relation -eq 'acceptance' -and $category -ne 'acceptance') { Add-Failure "Acceptance relation must use category acceptance: $id" }
+  if ($category -eq 'technical' -and $relation -ne 'technical') { Add-Failure "Technical scope item has the wrong relation: $id" }
+  if ($relation -eq 'technical' -and $category -ne 'technical') { Add-Failure "Technical relation must use category technical: $id" }
   if ($null -eq $visible -or $visible -isnot [bool]) { Add-Failure "Scope visible must be boolean: $id" }
   if ($visible -eq $true) {
     $visibleScopeIds.Add($id) | Out-Null
@@ -78,6 +87,7 @@ foreach ($item in $scope) {
   if ($provenance.Count -eq 0) { Add-Failure "Scope item has no provenance: $id" }
 
   $hasProductAuthority = $false
+  $hasExplicitExclusion = $false
   $hasRecommendation = $false
   foreach ($reference in $provenance) {
     if (-not (Test-AllredReferenceId -Value $reference -Prefixes 'UEDRB')) {
@@ -86,28 +96,133 @@ foreach ($item in $scope) {
     }
     switch (Get-AllredReferencePrefix $reference) {
       'U' {
-        $hasProductAuthority = $true
-        if (-not $userSources.ContainsKey($reference)) { Add-Failure "Scope item $id references missing user source: $reference" }
+        if (-not $userSources.ContainsKey($reference)) {
+          Add-Failure "Scope item $id references missing user source: $reference"
+        } else {
+          $sourceAuthority = ([string](Get-AllredProperty $userSources[$reference] 'authority')).ToLowerInvariant()
+          if ($sourceAuthority -in @('requirement', 'constraint', 'acceptance', 'delegation')) { $hasProductAuthority = $true }
+          if ($sourceAuthority -eq 'explicit-exclusion') { $hasExplicitExclusion = $true }
+        }
       }
       'D' {
-        $hasProductAuthority = $true
         if (-not $decisionById.ContainsKey($reference) -or ([string](Get-AllredProperty $decisionById[$reference] 'status')).ToLowerInvariant() -ne 'confirmed') {
           Add-Failure "Scope item $id references unconfirmed decision: $reference"
+        } else {
+          $decisionAuthority = ([string](Get-AllredProperty $decisionById[$reference] 'authority')).ToLowerInvariant()
+          if ($decisionAuthority -notin @('required', 'explicit-exclusion', 'constraint', 'acceptance', 'recommendation-approval')) {
+            Add-Failure "Scope item $id references decision with invalid authority: $reference ($decisionAuthority)"
+          }
+          if ($decisionAuthority -in @('required', 'constraint', 'acceptance', 'recommendation-approval')) { $hasProductAuthority = $true }
+          if ($decisionAuthority -eq 'explicit-exclusion') { $hasExplicitExclusion = $true }
         }
       }
       'E' { if (-not $evidenceById.ContainsKey($reference)) { Add-Failure "Scope item $id references missing evidence: $reference" } }
       'R' { $hasProductAuthority = $true; $hasRecommendation = $true }
     }
   }
-  if ($visible -eq $true -and $category -ne 'technical' -and -not $hasProductAuthority) {
-    Add-Failure "Evidence or benchmark alone selected user-visible scope: $id"
+  switch ($relation) {
+    'required' {
+      if (-not $hasProductAuthority) { Add-Failure "Required scope lacks user or confirmed-decision authority: $id" }
+    }
+    'excluded' {
+      if (-not ($hasExplicitExclusion -or ($hasRecommendation -and $prominent -eq $true))) {
+        Add-Failure "Excluded scope lacks explicit user exclusion, confirmed decision, or prominent recommendation: $id"
+      }
+    }
+    'recommended' {
+      if (-not $hasRecommendation) { Add-Failure "Recommended scope has no R provenance: $id" }
+      if ($prominent -ne $true) { Add-Failure "Unapproved recommendation is not prominent in the final scope: $id" }
+    }
+    'acceptance' {
+      if (-not $hasProductAuthority) { Add-Failure "Acceptance scope lacks user or confirmed-decision authority: $id" }
+    }
   }
-  if ($hasRecommendation -and $prominent -ne $true) {
-    Add-Failure "Unapproved recommendation is not prominent in the final scope: $id"
+  if ($hasRecommendation -and $relation -ne 'recommended' -and $prominent -ne $true) {
+    Add-Failure "Recommendation provenance is hidden by another relation: $id"
   }
 }
 
 if ($scope.Count -eq 0) { Add-Failure 'READY scope is empty.' }
+
+$writeBoundary = if ($null -ne $state) { Get-AllredProperty $state 'write_boundary' } else { $null }
+if ($null -eq $writeBoundary) {
+  Add-Failure 'READY write boundary is missing.'
+} else {
+  $projectRoot = [string](Get-AllredProperty $writeBoundary 'project_root')
+  $projectRootStatus = ([string](Get-AllredProperty $writeBoundary 'project_root_status')).ToLowerInvariant()
+  $projectRootProvenance = @((Get-AllredArray (Get-AllredProperty $writeBoundary 'project_root_provenance')) | ForEach-Object { [string]$_ })
+  $projectRootRecommendationProminent = Get-AllredProperty $writeBoundary 'project_root_recommendation_prominent'
+  $allowedWriteRoots = @((Get-AllredArray (Get-AllredProperty $writeBoundary 'allowed_write_roots')) | ForEach-Object { [string]$_ })
+  $readOnlyInputs = @((Get-AllredArray (Get-AllredProperty $writeBoundary 'read_only_inputs')) | ForEach-Object { [string]$_ })
+  $plannedPaths = @((Get-AllredArray (Get-AllredProperty $writeBoundary 'planned_paths')) | ForEach-Object { [string]$_ })
+  $rollbackCheckpoint = [string](Get-AllredProperty $writeBoundary 'rollback_checkpoint')
+
+  if (-not (Test-AllredAbsolutePath -Path $projectRoot)) { Add-Failure 'READY project_root must be an absolute path.' }
+  if ($projectRootStatus -notin @('confirmed', 'recommended-pending')) { Add-Failure "Invalid project_root_status: $projectRootStatus" }
+  if ($projectRootProvenance.Count -eq 0) { Add-Failure 'READY project_root has no provenance.' }
+  if ((Get-AllredProperty $writeBoundary 'visible_in_ready') -ne $true) { Add-Failure 'READY write boundary is not marked visible in the approval envelope.' }
+  if ($allowedWriteRoots.Count -eq 0) { Add-Failure 'READY allowed_write_roots is empty.' }
+  if ($plannedPaths.Count -eq 0) { Add-Failure 'READY planned_paths is empty.' }
+  if ([string]::IsNullOrWhiteSpace($rollbackCheckpoint)) { Add-Failure 'READY rollback checkpoint is missing.' }
+
+  $rootHasConfirmedAuthority = $false
+  $rootHasRecommendation = $false
+  foreach ($reference in $projectRootProvenance) {
+    if (-not (Test-AllredReferenceId -Value $reference -Prefixes 'UDR')) {
+      Add-Failure "Project root has invalid provenance: $reference"
+      continue
+    }
+    switch (Get-AllredReferencePrefix $reference) {
+      'U' {
+        if (-not $userSources.ContainsKey($reference)) {
+          Add-Failure "Project root references missing user source: $reference"
+        } elseif (([string](Get-AllredProperty $userSources[$reference] 'authority')).ToLowerInvariant() -in @('requirement', 'constraint', 'delegation')) {
+          $rootHasConfirmedAuthority = $true
+        }
+      }
+      'D' {
+        if (-not $decisionById.ContainsKey($reference) -or ([string](Get-AllredProperty $decisionById[$reference] 'status')).ToLowerInvariant() -ne 'confirmed') {
+          Add-Failure "Project root references unconfirmed decision: $reference"
+        } else {
+          $rootHasConfirmedAuthority = $true
+        }
+      }
+      'R' { $rootHasRecommendation = $true }
+    }
+  }
+  if ($projectRootStatus -eq 'confirmed' -and -not $rootHasConfirmedAuthority) {
+    Add-Failure 'Confirmed project_root lacks user or confirmed-decision authority.'
+  }
+  if ($projectRootStatus -eq 'recommended-pending' -and (-not $rootHasRecommendation -or $projectRootRecommendationProminent -ne $true)) {
+    Add-Failure 'Pending project_root recommendation is not prominent or lacks R provenance.'
+  }
+
+  foreach ($allowedRoot in $allowedWriteRoots) {
+    if (-not (Test-AllredAbsolutePath -Path $allowedRoot)) { Add-Failure "Allowed write root is not absolute: $allowedRoot"; continue }
+    if (-not (Test-AllredPathWithin -Root $projectRoot -Candidate $allowedRoot)) { Add-Failure "Allowed write root is outside project_root: $allowedRoot" }
+  }
+  foreach ($inputPath in $readOnlyInputs) {
+    if (-not (Test-AllredAbsolutePath -Path $inputPath)) { Add-Failure "Read-only input is not absolute: $inputPath" }
+  }
+  foreach ($plannedPath in $plannedPaths) {
+    if (-not (Test-AllredAbsolutePath -Path $plannedPath)) { Add-Failure "Planned path is not absolute: $plannedPath"; continue }
+    if ($plannedPath -match '[*?\[]') { Add-Failure "Planned path contains a wildcard: $plannedPath" }
+    if (-not (@($allowedWriteRoots | Where-Object { Test-AllredPathWithin -Root $_ -Candidate $plannedPath }).Count -gt 0)) {
+      Add-Failure "Planned path is outside allowed_write_roots: $plannedPath"
+    }
+    foreach ($inputPath in $readOnlyInputs) {
+      if ((Test-AllredPathWithin -Root $inputPath -Candidate $plannedPath) -or (Test-AllredPathWithin -Root $plannedPath -Candidate $inputPath)) {
+        Add-Failure "Planned path overlaps protected read-only input: $plannedPath <-> $inputPath"
+      }
+    }
+  }
+
+  $intake = if ($null -ne $state) { Get-AllredProperty $state 'intake' } else { $null }
+  $materials = if ($null -ne $intake) { Get-AllredProperty $intake 'materials' } else { $null }
+  if ($null -ne $materials -and ([string](Get-AllredProperty $materials 'status')).ToLowerInvariant() -eq 'inspected' -and $readOnlyInputs.Count -eq 0) {
+    Add-Failure 'Inspected materials are not listed as protected read-only inputs.'
+  }
+}
 
 foreach ($conclusion in @(Get-AllredArray (Get-AllredProperty $state 'technical_conclusions'))) {
   $id = [string](Get-AllredProperty $conclusion 'id')

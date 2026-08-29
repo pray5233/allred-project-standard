@@ -3,8 +3,8 @@
   "state_id": "APS-INVALID-READY",
   "route": "new-standard",
   "user_sources": [
-    { "id": "U1", "quote": "Use the supplied sample to assess a local workflow.", "meaning": "The local workflow is the intended outcome." },
-    { "id": "U2", "quote": "Use a desktop delivery form.", "meaning": "Desktop delivery is approved." }
+    { "id": "U1", "quote": "Use the supplied sample to assess a local workflow.", "meaning": "The local workflow is the intended outcome.", "authority": "requirement" },
+    { "id": "U2", "quote": "Use a desktop delivery form.", "meaning": "Desktop delivery is approved.", "authority": "requirement" }
   ],
   "intake": {
     "outcome": { "status": "confirmed", "source": "U1" },
@@ -30,6 +30,7 @@
       "axis": "delivery",
       "status": "confirmed",
       "choice": "desktop",
+      "authority": "required",
       "depends_on": [],
       "exposed": true,
       "trigger": "user:U1",
@@ -42,6 +43,7 @@
       "id": "S1",
       "statement": "Evidence silently selects a new user-visible workflow.",
       "category": "behavior",
+      "relation": "required",
       "provenance": ["E1"],
       "visible": true,
       "approval_required": true,
@@ -62,7 +64,18 @@
       "limitations": ""
     }
   ],
-  "preflight": { "status": "complete", "execution_record": { "status": "valid", "reference": "temp://ER-INVALID" } },
+  "preflight": { "status": "complete", "execution_record": { "status": "valid", "reference": "temp://ER-INVALID", "path": "execution-record.valid.md" } },
+  "write_boundary": {
+    "project_root": "F:/fixture/allred-project",
+    "project_root_status": "recommended-pending",
+    "project_root_provenance": ["R2"],
+    "project_root_recommendation_prominent": true,
+    "allowed_write_roots": ["F:/fixture/allred-project"],
+    "read_only_inputs": ["F:/fixture/samples/input.pdf"],
+    "planned_paths": ["F:/fixture/allred-project/src"],
+    "rollback_checkpoint": "Create a version-control checkpoint before project mutation.",
+    "visible_in_ready": true
+  },
   "blocking_items": [],
   "authorization": { "envelope_id": "C1", "scope_ids": ["S1"], "state": "pending", "starts_execution": true, "approval_source": null },
   "interaction": { "natural_language_reply_allowed": true, "id_reply_optional": true }

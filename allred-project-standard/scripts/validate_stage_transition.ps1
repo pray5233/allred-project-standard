@@ -93,22 +93,6 @@ if ($null -ne $state) {
   }
 }
 
-if ($failures.Count -eq 0 -and $ToStage -in @('READY', 'EXECUTION')) {
-  $frontierValidator = Join-Path $PSScriptRoot 'validate_decision_frontier.ps1'
-  $frontierOutput = & $frontierValidator -Path $Path 2>&1
-  if (-not $?) {
-    Add-Failure 'Decision frontier validation failed.'
-    foreach ($line in @($frontierOutput)) { Add-Failure ([string]$line) }
-  }
-
-  $scopeValidator = Join-Path $PSScriptRoot 'validate_ready_scope.ps1'
-  $scopeOutput = & $scopeValidator -Path $Path 2>&1
-  if (-not $?) {
-    Add-Failure 'READY scope validation failed.'
-    foreach ($line in @($scopeOutput)) { Add-Failure ([string]$line) }
-  }
-}
-
 if ($failures.Count -gt 0) {
   'Stage transition validation: FAIL'
   foreach ($failure in $failures) { "- $failure" }

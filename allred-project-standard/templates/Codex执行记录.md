@@ -27,6 +27,20 @@
 | --- | --- | --- | --- |
 | U1 | replace | exact user instruction or named envelope | active |
 
+## Change Control Ledger
+
+- Change mode: new-baseline/delta
+- Baseline ID: BASE-YYYYMMDD-NNN
+- Baseline status: candidate/confirmed
+- Change ID: CHG-YYYYMMDD-NNN or `None`
+- Change status: proposed/approved/implemented/verified/merged/superseded or `Not applicable`
+
+| Change item ID | Operation | Scope IDs | Provenance | Status |
+| --- | --- | --- | --- | --- |
+| CI1 | establish/add/modify/remove/preserve | U1 | U/D/E/R reference | pending/approved/implemented/verified/merged |
+
+- Later items: `None`, or IDs whose non-blocking status and revisit condition are recorded in the project state
+
 ## Implementation Basis
 
 | Benchmark/reference/version/date | Why comparable | Reuse path | Deliberate difference | Acceptance metric |

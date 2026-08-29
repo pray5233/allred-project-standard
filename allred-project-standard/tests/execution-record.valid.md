@@ -27,6 +27,20 @@
 | --- | --- | --- | --- |
 | D1 | validator accepts the valid execution record fixture | fixture scope S1 | active |
 
+## Change Control Ledger
+
+- Change mode: new-baseline
+- Baseline ID: BASE-TEST-001
+- Baseline status: candidate
+- Change ID: None
+- Change status: Not applicable
+
+| Change item ID | Operation | Scope IDs | Provenance | Status |
+| --- | --- | --- | --- | --- |
+| CI1 | establish | D1 | D1 | pending |
+
+- Later items: None
+
 ## Implementation Basis
 
 | Benchmark/reference/version/date | Why comparable | Reuse path | Deliberate difference | Acceptance metric |

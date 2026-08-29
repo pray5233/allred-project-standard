@@ -73,6 +73,9 @@ $requiredCoverage = [ordered]@{
   'frontier-routing' = 5
   'skill-discovery-gate' = 4
   'optional-dependency-routing' = 5
+  'existing-project' = 3
+  'change-traceability' = 2
+  'regression-baseline' = 1
 }
 
 if ($testSuite -and $oracleSuite) {

@@ -3,7 +3,7 @@
   "state_id": "APS-INVALID-STAGE",
   "route": "new-standard",
   "user_sources": [
-    { "id": "U1", "quote": "Draft alternatives from the stated outcome without materials.", "meaning": "Materials are deferred and Codex may draft alternatives." }
+    { "id": "U1", "quote": "Draft alternatives from the stated outcome without materials.", "meaning": "Materials are deferred and Codex may draft alternatives.", "authority": "delegation" }
   ],
   "intake": {
     "outcome": { "status": "confirmed", "source": "U1" },

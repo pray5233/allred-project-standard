@@ -24,6 +24,7 @@ foreach ($heading in @(
   '## Objective And Boundary',
   '## Evidence Ledger',
   '## Approved Scope Ledger',
+  '## Change Control Ledger',
   '## Implementation Basis',
   '## Exact Files',
   '## Exact Commands',
@@ -42,6 +43,12 @@ Require '(?m)^- Schema version: 1$' 'Schema version must be 1.'
 Require '(?m)^- Record status: (ready|active|closed|superseded)$' 'Record status must be ready, active, closed, or superseded.'
 Require '(?m)^- Approved scope reference: .{3,}$' 'Approved scope reference is missing.'
 Require '(?m)^- Active scope decision IDs: [UD][0-9A-Za-z._-]+' 'Active scope decision IDs are missing.'
+Require '(?m)^- Change mode: (new-baseline|delta)$' 'Change mode must be new-baseline or delta.'
+Require '(?m)^- Baseline ID: BASE-[0-9A-Za-z._-]+$' 'Baseline ID is missing or invalid.'
+Require '(?m)^- Baseline status: (candidate|confirmed)$' 'Baseline status must be candidate or confirmed.'
+Require '(?m)^- Change ID: (CHG-[0-9A-Za-z._-]+|None)$' 'Change ID is missing or invalid.'
+Require '(?m)^- Change status: (proposed|approved|implemented|verified|merged|superseded|Not applicable)$' 'Change status is missing or invalid.'
+Require '(?m)^\| CI[0-9A-Za-z._-]+ \| (establish|add|modify|remove|preserve) \|.+\| (pending|approved|implemented|verified|merged) \|$' 'Change control ledger needs at least one traceable item.'
 Require '(?m)^- Hidden recommendation R: None$' 'Unapproved recommendations must not be hidden in the execution record.'
 Require '(?m)^- Hidden user-visible behavior: None$' 'User-visible behavior must be surfaced in the approved scope.'
 Require '(?m)^- Hidden consequential effect: None$' 'Consequential effects must be surfaced through user authorization.'
@@ -52,17 +59,6 @@ Require '(?m)^\| P[0-9A-Za-z._-]+ \|.+\| (planned|verified|unverified|failed) \|
 
 foreach ($placeholder in @('ER-YYYYMMDD-NNN', 'replace with', '| replace |', 'replace or', 'TBD', 'TODO', '待填写')) {
   if ($text.Contains($placeholder)) { $failures.Add("Unresolved placeholder: $placeholder") | Out-Null }
-}
-
-$decisionCoverageValidator = Join-Path $PSScriptRoot 'validate_decision_coverage.ps1'
-if (Test-Path -LiteralPath $decisionCoverageValidator) {
-  $coverageOutput = & $decisionCoverageValidator -Path $Path
-  if (-not $?) {
-    $failures.Add('Decision coverage validation failed.') | Out-Null
-    foreach ($line in @($coverageOutput)) { $failures.Add("Decision coverage: $line") | Out-Null }
-  }
-} else {
-  $failures.Add('Decision coverage validator is missing.') | Out-Null
 }
 
 if ($failures.Count -gt 0) {

@@ -592,12 +592,12 @@
       ],
       "visible_turns": [
         "新手项目：我想做一个激光甲烷遥测仪的市场信息搜寻工具。",
-        "暂无资料。我的初步想法是从公开网页找厂家、产品型号、技术参数和价格线索，整理成可以导出的表；价格只作为线索。"
+    "暂无资料。我自己做市场调研，主要想减少手工搜集和产品比较时间。我的初步想法是从公开网页找厂家、产品型号、技术参数和价格线索，整理成可以导出的对比表；价格只作为线索，能追溯原网页就算第一版有用。"
       ],
       "post_event_turns": [
         {
           "after": "E30_SOURCE_BENCHMARK_PREFLIGHT",
-          "text": "D1=双击打开的桌面工具；D2=不能要求管理员权限；D3=允许访问公开互联网；D4=本轮先做半自动验证。"
+      "text": "本轮只做产品对比，处理中英文公开网页并允许全球厂商；做双击打开且不要求管理员权限的 Windows 桌面工具，允许访问公开互联网；采用半自动方式，手动输入关键词和刷新，人工复核后导出。"
         },
         {
           "after": "E30_PROJECT_PREFLIGHT",
@@ -629,7 +629,7 @@
         "workflow-efficiency"
       ],
       "visible_turns": [
-        "新手项目：每周把销售订单和发货记录两个 Excel 导出表合并成待跟进清单。样表已经放在当前工程的 samples 文件夹；我的想法是保留原表，只生成一个新文件。"
+        "新手项目：给销售跟单人员每周使用，把销售订单和发货记录两个 Excel 导出表合并成待跟进清单。样表已经放在当前工程的 samples 文件夹；我的想法是保留原表，只生成一个新文件。能按公司模板列出未发货、部分发货和异常记录，并且原表哈希不变，就算本轮可用。"
       ],
       "post_event_turns": [
         {
@@ -1455,7 +1455,7 @@
         "workflow-efficiency"
       ],
       "visible_turns": [
-        "allred新手：做一个整理公开记录的App。暂无本地资料，我的想法是按类别查看标题、来源和原文链接；请先只读检查可用公开来源，再统一确认第一版。"
+        "allred新手：做一个整理中国大陆公开招标记录的 App。暂无本地资料，我的想法是按来源自带类别查看中文标题、来源和原文链接；请先只读检查可用公开来源，再统一确认第一版。"
       ],
       "post_event_turns": [
         {
@@ -3272,6 +3272,303 @@
         "the deferred clear-data control silently included or described as rejected",
         "user required to answer with IDs",
         "scope expansion beyond the exact approved envelope"
+      ]
+    },
+    {
+      "id": "V117",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "adaptive-alignment",
+        "interaction-confirmation",
+        "decision-coverage",
+        "semantic-sampling"
+      ],
+      "visible_turns": [
+        "allred新项目：做一个本地文档处理工具，必须支持按页处理和选择部分处理，不能只有一键全部处理；是否保留一键全部处理请作为单独决定。这轮先确认方案，不开发。"
+      ],
+      "artifact_labels": [
+        "negative sufficiency wording with an explicitly unresolved optional behavior"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "the response preserves page and selection processing as required, keeps whole-document processing as a separate unresolved decision, and does not convert 'cannot only' into an exclusion or deferral",
+      "forbidden_questions": [
+        "whole-document processing silently excluded from the first version",
+        "whole-document processing silently included",
+        "page or selection processing weakened into an optional recommendation",
+        "READY/start gate or development"
+      ]
+    },
+    {
+      "id": "V118",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "stage-routing",
+        "decision-coverage",
+        "execution-closure"
+      ],
+      "visible_turns": [
+        "方案已经谈清楚了。请完成内部检查，检查通过后再给我最终开始确认；检查不通过就直接说明哪里没准备好。"
+      ],
+      "artifact_labels": [
+        "aggregate stage gate with one failing component"
+      ],
+      "tool_event_ids": [
+        "E118_GATE_COMPONENT_FAILURE"
+      ],
+      "stop_condition": "the response treats the aggregate failure as an internal blocker, names the failed boundary concisely, and stays before READY without presenting a start option",
+      "forbidden_questions": [
+        "READY or start-development option after a failed component",
+        "claim that validation passed because other components passed",
+        "manual validator reordering or skipped component",
+        "project mutation"
+      ]
+    },
+    {
+      "id": "V119",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "materials-evidence",
+        "write-boundary",
+        "interaction-confirmation",
+        "execution-closure"
+      ],
+      "visible_turns": [
+        "allred新项目：用我提供的样例文件做一个本地查看工具。双击启动后可以选择本地文件、逐页查看、前后翻页和缩放；不编辑原文件、不联网、不导出。验收时要能打开样例并完成翻页和缩放，样例哈希保持不变。功能范围已经确认，请只读检查后给我最终开始确认。"
+      ],
+      "artifact_labels": [
+        "protected sample outside an otherwise empty workspace"
+      ],
+      "tool_event_ids": [
+        "E119_BOUNDARY_PREFLIGHT"
+      ],
+      "stop_condition": "the final envelope visibly names or prominently proposes one absolute project root, allowed write area, protected sample, concrete planned top-level paths, and rollback checkpoint before requesting start",
+      "forbidden_questions": [
+        "project root or planned paths left as 'to be listed after confirmation'",
+        "sample directory treated as the project write root",
+        "wildcard or unrestricted disk write authority",
+        "mutation before exact boundary approval"
+      ]
+    },
+    {
+      "id": "V120",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "non-software-project",
+        "training-project",
+        "training-alignment",
+        "adaptive-interview",
+        "classification-strategy",
+        "semantic-sampling",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：给公司员工制作一套 Codex 培训，可能涉及 App 入门、扩展能力、版本管理和项目实践。我还没有确定每部分讲多少，请先和我把培训内容谈清楚，不要直接生成文档。"
+      ],
+      "artifact_labels": [
+        "multi-module training request with unresolved curriculum scope"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "the first useful packet explains why this is a multi-module content-design task, asks for the existing learner baseline/materials/must-teach outcome and recognizable success, and leaves module depth and omissions user-owned",
+      "forbidden_questions": [
+        "silent entry into a complete training-system plan",
+        "model-selected first-phase omissions or deferred modules",
+        "directory or document generation before content alignment",
+        "generic size-label question",
+        "framework or software toolchain question"
+      ]
+    },
+    {
+      "id": "V121",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "beginner",
+        "materials-evidence",
+        "adaptive-alignment",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新手项目：给质检文员做一个本地表格检查工具。暂无样例，现在靠人工逐行查看，容易漏掉缺项。我的想法是选择 Excel 后列出所有缺少设备编号或检验日期的行，并显示原表行号；原文件不能修改。能在普通办公电脑打开并找出全部缺项就算本轮可用；先只读检查当前工程和可用方案，再统一确认。"
+      ],
+      "artifact_labels": [
+        "no sample yet",
+        "user initial idea",
+        "empty workspace"
+      ],
+      "tool_event_ids": [
+        "E121_SAFE_PREFLIGHT"
+      ],
+      "stop_condition": "safe read-only preflight uses reversible assumptions and converges on one scope/start gate without a background questionnaire",
+      "forbidden_questions": [
+        "repeat request for materials or initial idea",
+        "project-size choice",
+        "approval before safe preflight",
+        "separate delivery and start gates"
+      ]
+    },
+    {
+      "id": "V122",
+      "priority": "P0",
+      "modules": [
+        "activation-routing",
+        "beginner",
+        "existing-project",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新手项目：继续当前本地记录工具，先查看现有状态。",
+        "退出新手模式，按标准表达继续当前项目。"
+      ],
+      "artifact_labels": [
+        "existing active project and stage"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "interaction style changes while project route, evidence and settled decisions remain intact",
+      "forbidden_questions": [
+        "restart new-project intake",
+        "discard prior evidence",
+        "ask for the project goal again",
+        "treat exit as cancellation"
+      ]
+    },
+    {
+      "id": "V123",
+      "priority": "P0",
+      "modules": [
+        "beginner",
+        "existing-project",
+        "debugging",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新手：继续当前项目调试。导出按钮点击后没有生成文件，界面也没有报错；复现步骤和截图都在当前工程。"
+      ],
+      "artifact_labels": [
+        "existing project",
+        "reproduction steps and screenshot"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "routes directly to read-only debugging evidence collection without restarting project discovery",
+      "forbidden_questions": [
+        "new-project material checkpoint",
+        "first-version strategy",
+        "delivery-form choice",
+        "feature-scope questionnaire"
+      ]
+    },
+    {
+      "id": "V124",
+      "priority": "P0",
+      "modules": [
+        "beginner",
+        "non-software-project",
+        "training-project",
+        "adaptive-interview",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新手项目：给公司员工制作 Codex 项目开发培训。我已经有 App、插件和 Git 讲义，希望新课程能让不同岗位人员用自己的工作问题完成一次项目实践；先把内容谈清楚，不生成文档。"
+      ],
+      "artifact_labels": [
+        "existing training baseline",
+        "cross-role project-practice outcome"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "plain-language concentrated discovery preserves the existing course baseline and leaves new curriculum depth and omissions user-owned",
+      "forbidden_questions": [
+        "repeat App, plugin or Git as unconfirmed training scope",
+        "model-selected omitted modules",
+        "software framework or application delivery-form question",
+        "document creation"
+      ]
+    },
+    {
+      "id": "V125",
+      "priority": "P0",
+      "modules": [
+        "existing-project",
+        "new-feature",
+        "change-traceability",
+        "interaction-confirmation",
+        "execution-closure"
+      ],
+      "visible_turns": [
+        "继续当前项目：只给已验收的清单工具增加按客户筛选功能，原有导入、统计和导出行为都必须保持。完成只读检查后给我一次改造确认。"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E125_DELTA_PREFLIGHT",
+          "text": "1"
+        }
+      ],
+      "artifact_labels": [
+        "confirmed existing baseline",
+        "one feature delta"
+      ],
+      "tool_event_ids": [
+        "E125_DELTA_PREFLIGHT"
+      ],
+      "stop_condition": "one delta gate preserves unaffected baseline and starts only the approved filter change",
+      "forbidden_questions": [
+        "reapprove unchanged import, statistics or export",
+        "rebuild the project baseline",
+        "add unrelated common features",
+        "second unchanged start gate"
+      ]
+    },
+    {
+      "id": "V126",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "change-traceability",
+        "interaction-confirmation",
+        "decision-coverage"
+      ],
+      "visible_turns": [
+        "allred新项目：做一个本地资料目录工具，支持选择文件夹、生成目录和打开原文件。自动提醒只是你提出的建议，我还没决定；导出 PDF 我明确放到下季度再做，等模板确定后重访。本轮先确认，不开发。"
+      ],
+      "artifact_labels": [
+        "core current scope",
+        "unapproved suggestion",
+        "confirmed deferred item with revisit condition"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "current scope, unapproved suggestion and confirmed deferral remain three distinct states with no mutation",
+      "forbidden_questions": [
+        "automatic reminder recorded as deferred or approved",
+        "PDF export included in current scope",
+        "silence treated as approval",
+        "READY or development"
+      ]
+    },
+    {
+      "id": "V127",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "adaptive-interview",
+        "materials-evidence",
+        "workflow-efficiency",
+        "regression-baseline"
+      ],
+      "visible_turns": [
+        "allred新项目：我想做一个内部问题跟踪工具，目前只确定要把多个部门的清单合并起来。先和我把需求谈清楚。"
+      ],
+      "artifact_labels": [
+        "rough standard-mode requirement"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "one concentrated intake packet preserves mature requirement collection without a fixed questionnaire or premature solution",
+      "forbidden_questions": [
+        "one-question-at-a-time interview",
+        "model-created complete product scope",
+        "project-size choice",
+        "implementation or final start gate"
       ]
     }
   ]

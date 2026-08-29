@@ -22,7 +22,7 @@ if (-not $MetricsOnly -and $Route -in $newProjectRoutes -and $Stage -in @('decis
     throw "StatePath is required before loading the $Stage stage for a non-trivial new project. Keep the state package under an isolated session temporary directory, not the project."
   }
   $targetStage = if ($Stage -eq 'decision') { 'DECISION' } else { 'EXECUTION' }
-  $validator = Join-Path $PSScriptRoot 'validate_stage_transition.ps1'
+  $validator = Join-Path $PSScriptRoot 'invoke_validation_gate.ps1'
   $validationOutput = & $validator -Path $StatePath -ToStage $targetStage 2>&1
   if (-not $?) {
     throw "Stage transition to $targetStage was blocked:`n$($validationOutput -join [Environment]::NewLine)"
@@ -100,7 +100,8 @@ if ($Route -in @('new-standard', 'new-beginner', 'new-public', 'new-beginner-pub
 }
 
 if ($Route -in @('new-beginner', 'new-beginner-public')) {
-  if ($Stage -eq 'intake') { Add-Spec $specs 'references\新手模式.md' @('Trigger Guard And Exit', 'Beginner Defaults', 'Opening', 'Direction Before Background Work') }
+  if ($Stage -eq 'intake') { Add-Spec $specs 'references\新手模式.md' @('Trigger Guard And Exit', 'Beginner Defaults', 'Opening', 'Direction After Recommendation Readiness') }
+  if ($Stage -eq 'evidence') { Add-Spec $specs 'references\新手模式.md' @('Evidence To One Final Gate') }
   if ($Stage -eq 'decision') { Add-Spec $specs 'references\新手模式.md' @('Beginner Project Classification', 'Environment And Delivery', 'Escalation') }
   if ($Stage -eq 'verification') { Add-Spec $specs 'references\新手模式.md' @('Ongoing Stages', 'Validation') }
 }

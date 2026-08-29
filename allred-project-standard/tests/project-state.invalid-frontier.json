@@ -3,8 +3,8 @@
   "state_id": "APS-INVALID-FRONTIER",
   "route": "new-standard",
   "user_sources": [
-    { "id": "U1", "quote": "Compare the service routes before development.", "meaning": "Service route remains the parent decision." },
-    { "id": "U2", "quote": "Use operating-system encrypted credential storage.", "meaning": "Credential storage was prematurely selected." }
+    { "id": "U1", "quote": "Compare the service routes before development.", "meaning": "Service route remains the parent decision.", "authority": "requirement" },
+    { "id": "U2", "quote": "Use operating-system encrypted credential storage.", "meaning": "Credential storage was prematurely selected.", "authority": "requirement" }
   ],
   "intake": {
     "outcome": { "status": "confirmed", "source": "U1" },
@@ -20,6 +20,7 @@
       "axis": "service-route",
       "status": "open",
       "choice": null,
+      "authority": null,
       "depends_on": [],
       "exposed": true,
       "trigger": "user:U1",
@@ -31,6 +32,7 @@
       "axis": "credential-storage",
       "status": "confirmed",
       "choice": "os-encrypted",
+      "authority": "required",
       "depends_on": [
         { "id": "D8", "choices": ["direct-api"] }
       ],
