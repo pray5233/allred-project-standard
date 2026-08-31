@@ -4,9 +4,9 @@
 
 ## 最简候选验证
 
-测试 `0.8.0-rc8` 时，不需要重复本仓库的 A/B/C、依赖组合或 127 条行为清单。维护者完成门禁后再提供安装候选。
+测试 `0.8.0-rc11` 候选时，不需要重复本仓库的全部行为清单。维护者完成结构、invariant、运行时通用性、路由隔离及低/高模型门禁后再提供安装候选。
 
-1. 安装或更新 Allred，确认 `VERSION` 为 `0.8.0-rc8`。
+1. 安装或更新 Allred，确认 `VERSION` 为 `0.8.0-rc11`。
 2. 新建一个 Codex 任务，按平时方式提出一个真实需求；不必预先安装 `find-skills` 或 `grilling`。
 3. 正常回答需要你决定的问题，不要为了测试故意配合 Skill。
 4. 只有出现以下情况时保留完整对话并反馈：首轮直接给出完整产品方案、重复询问已提供内容、样例证据替你决定功能、把 `继续/按推荐` 当作开发授权、技术预检前就给开始卡、未经批准安装或修改、批准后仍反复确认、声称完成但没有验证证据。
@@ -60,15 +60,38 @@ Get-Content "$env:USERPROFILE\.codex\skills\.allred-project-standard-installatio
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\allred-project-standard\scripts\check_skill_structure.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\allred-project-standard\scripts\check_behavior_manifest.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\allred-project-standard\scripts\check_runtime_generality.ps1
 ```
 
-两项都必须通过。清单检查会明确输出 `Runtime behavior evaluated: NO`；它们只能证明结构和用例清单完整，不能代替下面的真实对话实验。
+三项都必须通过。清单检查会明确输出 `Runtime behavior evaluated: NO`；它们只能证明结构、用例清单和运行时规则未绑定已知测试场景，不能代替下面的真实对话实验。
+
+候选版还应运行首轮写入探针。该测试使用允许写入的隔离工作区，不在提示中预先告诉模型“禁止写文件”，因此可以发现新项目入口是否偷偷创建脚手架、`outputs` 或证据文件：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\allred-project-standard\scripts\run_entry_guard_eval.ps1 `
+  -UseUserConfig `
+  -DisablePlugins `
+  -Model gpt-5.6-sol `
+  -ReasoningEffort low
+```
 
 Codex CLI 已正确认证时，可另外执行独立测试组/检查组烟雾测试：
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\allred-project-standard\scripts\run_behavior_eval.ps1 -CaseIds V01,V03,V61
 ```
+
+`rc11` 继续用六组场景的八个候选案例覆盖主流程；外部来源分别验证一次性查询和持续监测，软件交付另验证公司办公环境条件层：
+
+```powershell
+$cases = 'V134','V135','V136','V137','V138','V139','V140','V141'
+pwsh -NoProfile -File .\allred-project-standard\scripts\run_behavior_eval.ps1 `
+  -CaseIds $cases -UseUserConfig -DisablePlugins -Model gpt-5.6-sol -ReasoningEffort low -TimeoutSeconds 300
+pwsh -NoProfile -File .\allred-project-standard\scripts\run_behavior_eval.ps1 `
+  -CaseIds $cases -UseUserConfig -DisablePlugins -Model gpt-5.6-sol -ReasoningEffort high -TimeoutSeconds 300
+```
+
+维护 Skill 的独立场景把 `maintainer\allred-project-lab` 同时作为 `-SkillRoot` 和 `-SuiteRoot`；评测器脚本仍使用主 Skill 提供的 `run_behavior_eval.ps1`。普通项目安装和测试不加载该目录。
 
 如果模型 endpoint 和认证来自用户级 `config.toml`，使用：
 
@@ -119,6 +142,7 @@ Copy-Item "$repo\experiments\fixtures\order-report" $mixedCase -Recurse
 | --- | --- |
 | 普通对话误触发 | 0 次 |
 | 非软件项目路由 | 不询问 App/框架；使用执行而非开发措辞；保持来源、版本和专业复核边界 |
+| 新手表达层 | 与标准表达使用同一工作流、问题状态、范围、授权和验收；只允许措辞、解释深度和回答便利性不同 |
 | 模糊新手项目交互 | 不设置轮次上限；当前可知问题集中提出，依赖问题在答案或新证据出现后再集中询问 |
 | 信息已经充分的新项目 | 不重复收集已知信息，不重复确认相同范围 |
 | 明确的已有项目功能或 Bug | 不出现礼节性开始确认 |
@@ -156,7 +180,7 @@ CSV 和 Excel 文件有什么区别？请简要说明。
 
 合格表现：直接回答问题，不出现资料收集、项目分级、开始开发确认或 Allred 项目卡。
 
-### B. 新手模式先接住用户想法
+### B. 新手表达层先接住用户想法
 
 新建任务，发送：
 

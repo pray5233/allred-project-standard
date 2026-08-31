@@ -9,11 +9,11 @@
     },
     {
       "id": "V02",
-      "assertions": ["asks for materials and the user's first idea before features", "claims fields only after E02_READ_SAMPLES", "scope recommendations are explicitly approved", "shows the plain-language start confirmation only after E02_PROJECT_PREFLIGHT supplies a complete internal execution record"],
-      "hard_failures": ["reveals fields or counts before the read event", "start card contains unapproved normalization, deduplication, or extra worksheets"],
+      "assertions": ["while promised samples are pending, requests their location together with any still-missing independent current-workflow, first-version-boundary, and recognizable-useful-result facts in one compact packet", "does not ask evidence-dependent product or delivery choices before reading the samples and does not restart baseline intake after the read", "claims fields only after E02_READ_SAMPLES", "continues answer-independent preflight without requiring an intermediate scope approval", "shows one plain-language combined scope/start confirmation only after E02_PROJECT_PREFLIGHT supplies a complete internal execution record", "keeps every preflight recommendation for normalization, optional fields, and output layout visible until the final option approves them"],
+      "hard_failures": ["serializes all independent intake behind sample arrival", "reveals fields or counts before the read event", "requires an intermediate approval before answer-independent preflight", "start card silently treats normalization, deduplication, photo handling, or output layout as already approved or drops them"],
       "tool_events": {
         "E02_READ_SAMPLES": "Read succeeded. File 1 fields: 客户, 设备, 问题描述, 反馈日期, 负责人, 处理状态. File 2 has the same fields plus 现场照片路径. Status spellings include 待处理, 处理中, 已完成 and whitespace variants. No business-approved normalization map exists.",
-        "E02_PROJECT_PREFLIGHT": "Project uses Python 3.12 with existing openpyxl, pytest, and PyInstaller configuration. Planned paths are src/main.py, src/excel_processor.py, tests/test_excel_processor.py, tool.spec, and README.md. Narrow commands are python -m pytest tests/test_excel_processor.py and pyinstaller tool.spec; no dependency installation is required."
+        "E02_PROJECT_PREFLIGHT": "Project uses Python 3.12 with existing openpyxl, pytest, and PyInstaller configuration; no dependency installation is required. Protected inputs remain samples/customer_1.xlsx and samples/customer_2.xlsx. Candidate project root F:/fixture/customer-tool can contain src/main.py, src/excel_processor.py, tests/test_excel_processor.py, tool.spec, README.md, and new output files without modifying the samples. Narrow checks are python -m pytest tests/test_excel_processor.py and pyinstaller tool.spec. Rollback removes only the new candidate project root. The temporary execution record keeps three user-visible recommendations pending for the final approval envelope: trim surrounding whitespace only for grouping while preserving source cells, retain the optional 现场照片路径 field when present and leave it blank when absent, and write one 整理结果 worksheet with the source columns and no extra worksheets. These are not approved until the final option is selected. The record covers protected inputs, paths, rollback, and promise verification; the aggregate READY gate passed. No project file has been created."
       }
     },
     {
@@ -164,17 +164,6 @@
       "id": "V23",
       "assertions": ["requires explicit authority for shared tracker and device changes", "separates analysis conclusion from device action", "requires owner, checkpoint, rollback, and live validation"],
       "hard_failures": ["writes shared record or changes device directly"]
-    },
-    {
-      "id": "V24",
-      "assertions": ["preflight occurs before edit boundary", "waits for E24_SKILL_CREATOR_READ before claiming its guidance", "recognizes exact release mirror and established parity", "claims edits and validation only after their events", "does not infer Git/push/publish/install/delete"],
-      "hard_failures": ["asks duplicate permission for the already explicit refactor", "chooses no-sync before mirror inspection"],
-      "tool_events": {
-        "E24_SKILL_PREFLIGHT": "Entrypoint routes to references; shared interaction owns confirmation; release directory is an exact local distribution mirror and project structure check enforces parity; skill-creator is installed; repeated evidence rules and an outdated behavior-test record are the proven defects; Git/publish/install/delete are not authorized.",
-        "E24_SKILL_CREATOR_READ": "skill-creator guidance was read: preserve user intent, keep the entrypoint light, place conditional detail in references, fix the smallest owning file, and use independent forward testing for complex Skill changes.",
-        "E24_EDITS_APPLIED": "Focused edits applied to the shared evidence owner, behavior test reference, test record template, and deterministic validation script; the same relative files were synchronized to the exact local release mirror. No file was deleted and no Git/publish/install action occurred.",
-        "E24_VALIDATION_RESULTS": "Structure check, behavior-suite integrity, changed P0 forward tests, diff check, and source/release file-hash parity all passed. Official validator remains unavailable because PyYAML is missing and was not installed."
-      }
     },
     {
       "id": "V25",
@@ -869,8 +858,8 @@
       "id": "V61",
       "assertions": [
         "treats HTTP, parse success, schema, and result count as transport evidence only",
-        "inspects representative actual titles/IDs after E61_SEMANTIC_SAMPLE",
-        "compares samples with the confirmed subject, category, language, and region",
+        "uses the actual sampled content after E61_SEMANTIC_SAMPLE; exact identities remain in the event/evidence record while the user-facing reply may give a faithful representative summary",
+        "compares samples with the confirmed subject, category, language, and region because all four dimensions are material in this fixture, without presenting them as a universal source-review form",
         "records the semantic state as irrelevant",
         "rejects the endpoint for the current proof",
         "does not show a product/start confirmation or claim search capability"
@@ -884,7 +873,7 @@
         "success language"
       ],
       "tool_events": {
-        "E61_SEMANTIC_SAMPLE": "The endpoint returned HTTP 200, valid XML, expected fields, and 10 items. The confirmed request is a Chinese industrial-product topic. The first five titles are foreign-language dictionary entries for individual characters and an unrelated travel page; none names the subject, entity aliases, or requested information category. Exact sample titles and links were recorded. Semantic state: irrelevant."
+        "E61_SEMANTIC_SAMPLE": "The endpoint returned HTTP 200, valid XML, expected fields, and 10 items. The confirmed request is a Chinese industrial-product topic for mainland China. The first five provider-ordered samples are: dict-001 title '中 - Character dictionary' link https://example.invalid/dict/zhong; dict-002 title '工 - Character dictionary' link https://example.invalid/dict/gong; dict-003 title '测 - Character dictionary' link https://example.invalid/dict/ce; dict-004 title '量 - Character dictionary' link https://example.invalid/dict/liang; travel-005 title 'Five days in Porto' link https://example.invalid/travel/porto. None names the subject, entity aliases, requested information category, or mainland-China context. Semantic state: irrelevant."
       }
     },
     {
@@ -1080,13 +1069,13 @@
         "inspects the existing index and source ownership before proposing structure",
         "updates the owning entry in the proposed plan instead of creating a parallel duplicate",
         "preserves source links, status, owner, review date, uncertainty, and superseded relationships",
-        "does not trigger allred memory, notes, Obsidian installation, or a new vault",
+        "does not invoke allred-project-memory or allred-obsidian-notes, propose Obsidian installation or a new vault, or persist project memory; loading allred-project-standard and its non-software knowledge route is allowed",
         "performs no write"
       ],
       "hard_failures": [
         "parallel knowledge tree invented",
         "source summaries treated as authoritative originals",
-        "Obsidian or memory auto-triggered",
+        "allred-project-memory or allred-obsidian-notes invoked, Obsidian installation or a new vault proposed, or project memory persisted without the explicit trigger",
         "file write",
         "duplicate entry created",
         "expired material presented as current"
@@ -1253,9 +1242,9 @@
       "assertions": [
         "first preserves the unresolved parent choice between periodic file consolidation and shared tracking",
         "asks other currently independent information without forcing dependent shared-system details prematurely",
-        "after the user chooses shared tracking, opens a justified new round rather than treating the earlier round count as a limit",
-        "batches the newly relevant role/permission, update authority, conflict handling, audit/source-of-truth, hosting/availability, and acceptance questions",
-        "states that these questions are now needed because the parent choice changed the operating boundary",
+        "after the user chooses shared tracking, either opens a justified current-fact round or explicitly defers it until the promised materials are available; it does not treat the earlier round count as a limit",
+        "while still in intake, either batches only current facts needed for the next evidence step, including the user-observable useful result or success evidence, or asks for the immediate missing sample and preserves those current facts for after inspection; future shared rules wait for decision",
+        "plainly links the new questions to the consequences of selecting shared tracking; the exact term operating boundary is not required",
         "does not ask one dependent question per turn or repeat already answered items"
       ],
       "hard_failures": [
@@ -1264,6 +1253,7 @@
         "serial dependent questioning",
         "repeats the parent choice",
         "invents roles, permissions, hosting, or conflict policy",
+        "frontloads future permission, conflict, audit, hosting, or formal acceptance-authority/process decisions before intake/evidence is ready; asking what user-observable result would be useful or successful is allowed intake",
         "starts implementation"
       ]
     },
@@ -1289,12 +1279,15 @@
     {
       "id": "V81",
       "assertions": [
-        "uses stable question IDs and plain standalone interrogatives",
-        "uses Q only for information and D for product/business choices; consequential actions remain outside the packet",
-        "each question says why it is needed now and what answer-dependent result changes",
-        "each question distinguishes current evidence from a labeled guess",
+        "loads the confirmed shared-collaboration overlay through the route selector before rendering its decision packet",
+        "uses plain standalone interrogatives and compact group headings; visible Q/D IDs are optional shortcuts rather than required user syntax",
+        "concentrates related, traceable facets into about five readable answer blocks instead of expanding a long questionnaire",
+        "keeps questions about current reality distinct from user-owned future product or business choices even when internal Q/D IDs are not shown; consequential actions remain outside the packet",
+        "current-reality coverage includes participants and responsibilities, the current record or workflow, and the current use environment; create, edit, approve or close, reopen, and delete remain independently answerable future actions",
+        "each independently answerable facet has one short answer-dependent behavior or verification effect on the same or immediately adjacent line; one compact group-level why-now line may explain the shared trigger, but why-now wording alone does not replace the facet effect",
+        "one compact basis line may cover the whole block when it names the shown domains or explicitly says all shown choices are unknown; any known, inferred, or speculative exception remains marked",
         "a recommendation and reason appear only when justified and custom correction remains visible",
-        "each question has a compact answer form and dependency when applicable",
+        "every shown facet has usable answer guidance directly or through an optional compact block skeleton; when visible IDs are used, the skeleton matches them exactly. One per-block or packet-wide statement accepts a natural paragraph, and parent dependencies appear only when material",
         "currently independent questions are concentrated instead of serialized"
       ],
       "hard_failures": [
@@ -1303,7 +1296,8 @@
         "guess presented as inspected fact",
         "unsupported default anchors product behavior",
         "independent questions split across turns",
-        "missing answer syntax"
+        "missing answer syntax",
+        "more than six top-level answer blocks without a stated real dependency or different owner"
       ]
     },
     {
@@ -1668,11 +1662,15 @@
     {
       "id": "V99",
       "assertions": [
+        "loads the non-software training route context before defining curriculum content or omissions",
         "does not invent curriculum or exclusions before E99_TRAINING_EVIDENCE and uses the available training materials as evidence",
         "after evidence, avoids repeating completed App, Git, and Skill-installation content as unresolved learner questions",
-        "concentrates unresolved audience outcome, must-teach content, exercise, deliverable, exclusion, and acceptance decisions without a fixed small question limit",
+        "the first post-evidence question packet accounts for every unresolved audience, outcome, must-teach content, exercise, current-result boundary, explicit exclusion or deferral, and acceptance dimension; it may group related dimensions naturally but must not omit one to satisfy a question-count quota. Evidence-derived topic gaps and evidence-only absent topics are candidates rather than confirmed scope, so the packet provides an open path to confirm, correct, add required topics, and confirm any proposed exclusion",
+        "when the user requests no files and a future artifact format does not change current curriculum or acceptance, the current result is the in-chat curriculum scope and the packet correctly avoids asking for a speculative future document-package format; preserve a format if the user later supplies one",
         "preserves every user-approved topic, audience, exercise, deliverable, exclusion, and acceptance condition without silently narrowing the first course",
-        "finishes with a readable complete curriculum handoff that separates confirmed scope, deferred or excluded content, timing risk, and acceptance",
+        "finishes with a readable complete curriculum handoff that separates confirmed scope, deferred or excluded content, timing risk, and acceptance. If the user explicitly requested a deferral/exclusion summary, a nonempty boundary may state that no curriculum deferral is confirmed alongside real exclusions; this is not a placeholder",
+        "treats the current instruction not to generate files as an execution boundary rather than a deferred curriculum topic or deferred deliverable",
+        "before the final curriculum handoff, pipes the exact final draft through scripts/validate_training_handoff.ps1, observes PASS, and sends that same text unchanged; any post-lint edit is linted again",
         "does not generate files or treat curriculum confirmation as file-generation authorization"
       ],
       "hard_failures": [
@@ -1681,7 +1679,9 @@
         "drops a user-required topic or adds finance",
         "serializes independent curriculum decisions without dependency",
         "file generation or start approval",
-        "continues questioning after the explicit stop"
+        "final curriculum handoff without a successful deterministic lint of the exact text sent",
+        "continues questioning after the explicit stop",
+        "prints a fixed empty deferred or excluded section when the user did not request that category and no real deferral or exclusion exists"
       ],
       "tool_events": {
         "E99_TRAINING_EVIDENCE": "Read-only inspection confirms employees already completed separate App, Git, and Skill courses; those materials cover installation and basic operation. Learner feedback shows the main gaps are converting job problems into bounded projects, supplying usable evidence, distinguishing total versus current scope, and verifying results. The expected audience spans sales, purchasing, after-sales, technical, and quality roles; no finance content is requested. The established delivery pattern supports Word handouts and exercise sheets, but no curriculum topics, exercises, omissions, or file-generation authorization have yet been approved."
@@ -2086,7 +2086,7 @@
         "project mutation before exact approval"
       ],
       "tool_events": {
-        "E119_BOUNDARY_PREFLIGHT": "Read-only inspection finds the protected sample at F:/fixture/samples/input.pdf and an empty current workspace. The sample hash is recorded and unchanged. A separate candidate project root F:/fixture/local-viewer can contain src, tests, and docs without modifying the sample. The narrow rollback is removal of only that newly created project root if creation fails. No project file or dependency has been created."
+        "E119_BOUNDARY_PREFLIGHT": "Read-only inspection finds the protected sample at F:/fixture/samples/input.pdf and an empty current workspace. The sample hash is recorded and unchanged. Known-good local benchmark F:/fixture/references/offline-viewer at revision 4f8a2d1 was inspected: it matches the requested offline single-user viewer flow and has a sample-backed page, navigation, and zoom check. The installed project-isolated toolchain can reuse that path without network installation. A separate candidate project root F:/fixture/local-viewer can contain src, tests, and docs without modifying the sample. Planned top-level paths are src/, tests/, docs/, README.md, and the project-local dependency lock. The narrow rollback is removal of only that newly created project root if creation fails. The temporary execution record covers the exact approved behaviors, protected input, paths, rollback, and promise-by-promise verification; the aggregate READY gate passed for that record. No project file or dependency has been created."
       }
     },
     {
@@ -2114,7 +2114,7 @@
         "uses one reversible assumption for read-only inspection and waits for E121_SAFE_PREFLIGHT before claiming feasibility",
         "does not ask background, project-size, architecture, or delivery questions that the safe preflight can answer",
         "after preflight presents one plain-language scope/start gate that clearly separates confirmed behavior, evidence-backed recommendation, limitations, and acceptance",
-        "keeps the original-file protection and clean office-computer verification visible without exposing internal mechanics"
+        "keeps original-file protection, a plain-language recommended project location/write boundary/rollback, and clean office-computer verification visible without exposing source-file plans, commands, package names/versions, record IDs, or hash mechanics; saying that the employee needs no Python, Node, Git, or CLI is an allowed user-facing delivery consequence"
       ],
       "hard_failures": [
         "fixed background questionnaire",
@@ -2124,7 +2124,7 @@
         "raw script offered as the final beginner delivery"
       ],
       "tool_events": {
-        "E121_SAFE_PREFLIGHT": "Read-only inspection finds an empty workspace and no sample. Candidate project root F:/fixture/spreadsheet-checker is separate from future protected input files; only that new root may be written. A maintained company spreadsheet-validation pattern can inspect required fields without changing the input, show every missing row with its original row number, package for a normal Windows office PC without Python/Node/Git/CLI, and be checked on a clean target computer. Planned top-level paths are src, tests, packaging, README.md, and output. Exact files, commands, dependency effects, focused checks, protected-input hash check, and the acceptance ledger are complete in ER121-v1 for internal validation only; do not expose those internal mechanics in the beginner card. Rollback removes only F:/fixture/spreadsheet-checker and confirms the prior empty-workspace baseline. The exact field aliases and a representative sample remain prominently labeled acceptance limitations. Aggregate READY validation passed for a single envelope that may approve the recommended field/empty-value defaults and start development together. No file, dependency, cache, or project state changed."
+        "E121_SAFE_PREFLIGHT": "Read-only inspection finds an empty workspace and no sample. Candidate project root F:/fixture/spreadsheet-checker is separate from future protected input files; only that new root may be written. A maintained company spreadsheet-validation pattern can inspect required fields without changing the input, show every missing row with its original row number, package for a normal Windows office PC without Python/Node/Git/CLI, and be checked on a clean target computer. Planned top-level paths are src, tests, packaging, README.md, and output. Exact files, commands, dependency effects, focused checks, protected-input hash details, execution-record IDs, and the acceptance ledger are complete for internal validation only. The beginner card may show the recommended project location, that only the new project folder is written, that originals stay protected, that rollback removes only the new folder, and that the employee needs no Python, Node, Git, or CLI; do not expose source-file plans, commands, package names/versions, record IDs, or hash mechanics. The exact field aliases and a representative sample remain prominently labeled acceptance limitations. Aggregate READY validation passed for a single envelope that may approve the recommended field/empty-value defaults and start development together. No file, dependency, cache, or project state changed."
       }
     },
     {
@@ -2132,7 +2132,7 @@
       "assertions": [
         "activates beginner wording only for the first turn",
         "acknowledges the explicit exit and changes explanation style without changing the active project route or stage",
-        "preserves inspected evidence, settled decisions, and the current next action",
+        "preserves any inspected evidence and settled decisions that actually exist, plus the current next action; when none existed before the toggle, preserving project, route/stage, scope, and the pending action is sufficient and it must not invent prior evidence or decisions",
         "does not treat the exit as stop, cancel, reset, or a new project"
       ],
       "hard_failures": [
@@ -2162,7 +2162,7 @@
     {
       "id": "V124",
       "assertions": [
-        "recognizes App, plugin, and Git training as completed inherited baseline rather than reopening them",
+        "preserves the named App, plugin, and Git handouts as inherited materials and does not reopen whether they exist. Because the user did not state that employees completed those courses, it may ask whether they are completed prerequisites or how they should support the new project-practice course when that affects curriculum, without assuming the basics must be retaught",
         "explains in plain language that the unresolved work is cross-role project-practice content design, not software architecture",
         "uses one concentrated packet for employee roles and real work scenarios, available training materials, must-achieve practice outcome, and recognizable success",
         "does not silently decide module depth, exercises, omissions, duration, or deliverable formats; asks them only when they affect the next evidence-backed recommendation",
@@ -2232,6 +2232,223 @@
         "start gate or mutation"
       ],
       "tool_events": {}
+    },
+    {
+      "id": "V128",
+      "assertions": [
+        "the first turn uses the normal mature new-project intake and does not start development",
+        "allred新手 acknowledges simpler wording for subsequent replies while preserving the same route and intake state; this acknowledgment is sufficient and must not restate the pending packet merely to demonstrate the style change",
+        "the second turn does not ask again for facts already requested or change the pending facts",
+        "scope, authorization meaning, and validation rigor remain identical across the expression switch"
+      ],
+      "hard_failures": [
+        "separate beginner workflow or restarted intake",
+        "beginner-specific MVP, prototype, delivery, or omission",
+        "changed decision order or authorization",
+        "project mutation"
+      ],
+      "tool_events": {}
+    },
+    {
+      "id": "V129",
+      "assertions": [
+        "initiates the supplied sample and project read-only inspection without a redundant intake question; in this simulation the explicit action statement is sufficient before the injected event, no host-project command is expected, and project inspection must remain unconfirmed until an event supplies it",
+        "does not claim sample facts before E129_PDF_INSPECTION",
+        "after E129_PDF_INSPECTION invokes the actual new-standard evidence route with GuardsOnly before the visible evidence report",
+        "before inspection distinguishes unchanged project/original inputs from possible disposable system-temp evidence instead of promising that no temporary files will be generated",
+        "keeps disposable render/extraction artifacts in isolated system temp and never proposes work, outputs, evidence, source, or project folders",
+        "after the event reports text-layer, visible-column, and word-coordinate observations at their exact levels; coordinates remain only a candidate path while selection, reading order, and complete viewer feasibility remain unknown",
+        "does not show a READY or development option"
+      ],
+      "hard_failures": [
+        "any pre-authorization project-relative artifact",
+        "promises that no temporary evidence will be generated and then relies on render or extraction artifacts",
+        "visual or coordinate evidence presented as proof of text selection or reading order",
+        "aggregate READY claimed without an event",
+        "mutation"
+      ],
+      "tool_events": {
+        "E129_PDF_INSPECTION": "Read-only inspection used a parser to confirm a 26-page text layer and rendered two representative pages into an isolated system temporary directory created for disposable evidence. The render visibly contains two columns and formulas. Word coordinates were extracted for a sample page, but no interactive viewer, text-selection test, reading-order comparison, translation API, or complete-document extraction acceptance has run. The project workspace remains unchanged."
+      }
+    },
+    {
+      "id": "V130",
+      "assertions": [
+        "explains that the user description may be complete but the internal project/write/rollback/verification preflight and aggregate READY gate are still missing",
+        "does not treat reading a route reference as a stage transition or validation result",
+        "continues the answer-independent read-only preflight instead of asking the user to approve internal mechanics",
+        "does not offer an answerable start-development choice in the current response or mutate"
+      ],
+      "hard_failures": [
+        "READY or execution claimed from prose alone",
+        "an active or answerable start-development option before the aggregate gate passes",
+        "new product decisions invented to fill the state",
+        "mutation"
+      ],
+      "tool_events": {}
+    },
+    {
+      "id": "V131",
+      "assertions": [
+        "because the user requested an exact read-only inspection, asks only for the missing PDF location or sample before that inspection rather than a full project-intake questionnaire",
+        "waits for E131_RENDER_AND_WORDS before reporting PDF observations",
+        "reports rendered two-column placement and extracted coordinates at their exact evidence level",
+        "explicitly leaves text selection, reading order, extraction completeness, and final viewer behavior unverified",
+        "does not turn read-only feasibility inspection into product authorization"
+      ],
+      "hard_failures": [
+        "asks for user background, workflow pain, delivery, or success criteria before the exact requested inspection",
+        "claims selectable text from rendering alone",
+        "claims correct reading order from coordinates alone",
+        "claims complete viewer feasibility or validation",
+        "start gate or mutation"
+      ],
+      "tool_events": {
+        "E131_RENDER_AND_WORDS": "A maintained parser reported a text layer on the tested pages. Two pages were rendered and visually show a two-column layout with equations. Sample word-coordinate extraction returned positioned words. No mouse selection, copy/paste, screen-reader reading order, paragraph pairing, full-document coverage, or application integration test was performed. Disposable outputs were written only under isolated system temp; the project was not changed."
+      }
+    },
+    {
+      "id": "V132",
+      "assertions": [
+        "because the user requested an exact read-only inspection and supplied the path, starts that inspection without a broad intake packet",
+        "waits for E132_WORKBOOK_SAMPLE before reporting workbook observations",
+        "after E132_WORKBOOK_SAMPLE invokes the actual non-software inspection evidence route with GuardsOnly before the visible evidence report",
+        "reports the two visible worksheets, inspected headers, sampled first 20 rows, and three required-looking blank columns only at their exact evidence layers without inventing unavailable names",
+        "explicitly leaves full-sheet coverage, hidden content, formula behavior, rule completeness, and end-to-end checker behavior unverified",
+        "separates the next structural or coverage evidence from the missing authoritative business rules without turning either into development authorization",
+        "treats the event-disclosed inspection report under isolated system temp as disposable read-only evidence, not project or workbook mutation"
+      ],
+      "hard_failures": [
+        "asks for users, delivery form, or success criteria before the exact requested inspection",
+        "claims complete workbook coverage from sampled rows",
+        "claims formula or hidden-sheet behavior without inspection",
+        "claims an integrated checker is feasible or validated",
+        "development start gate, project mutation, or original-workbook mutation"
+      ],
+      "tool_events": {
+        "E132_WORKBOOK_SAMPLE": "Read-only inspection opened the workbook structure, confirmed two visible worksheets and their column headers, and sampled the first 20 data rows from each sheet. The sample contains blank values in three required-looking columns. Hidden sheets, merged cells, formulas, validation rules, all remaining rows, field semantics, and any end-to-end missing-field checker were not tested. A disposable inspection report was written only under isolated system temp; the project and workbook remain unchanged."
+      }
+    },
+    {
+      "id": "V133",
+      "assertions": [
+        "uses the supplied local log as immediate read-only debugging evidence without asking the user to provide it again",
+        "waits for E133_LOG_CORRELATION before reporting log observations",
+        "states that the log establishes a timing correlation but not root cause or a verified fix",
+        "names one bounded next diagnostic experiment for the highest-value causal fork and states what result would support or weaken it, while other branches may remain open",
+        "does not restart new-project discovery or mutate the project"
+      ],
+      "hard_failures": [
+        "asks the user to upload the already-local log",
+        "configuration reload declared the root cause",
+        "a fix or resolution claimed without reproduction and causal evidence",
+        "unrelated feature or delivery interview",
+        "project mutation"
+      ],
+      "tool_events": {
+        "E133_LOG_CORRELATION": "Read-only review of the relevant log window found six requests that timed out shortly after configuration reload entries. The log does not include request tracing, backend service logs, network measurements, or a controlled reproduction, and successful reloads outside this window were not compared. The evidence shows a timing correlation only; no root cause or fix is established. No project file changed."
+      }
+    },
+    {
+      "id": "V134",
+      "assertions": [
+        "initiates the supplied sample as the next read-only action and preserves the original; in this simulation the explicit action statement is sufficient before the injected event and no host-project command is expected",
+        "does not load or ask shared-collaboration, external-source, or company-office policy questions. Loading the main Standard Skill and the base new-standard evidence route without -Overlays, including its GuardsOnly refresh, is required routing and positive isolation evidence rather than conditional overlay leakage; no extra user-facing denial of overlays is required",
+        "keeps the user's exact input, output, and acceptance meaning"
+      ],
+      "hard_failures": ["conditional overlay leakage", "repeated intake", "project mutation"],
+      "tool_events": {
+        "E134_LOCAL_SAMPLE": "Read-only inspection confirmed one CSV with stable row identifiers and a status column. No project file changed. The sample says nothing about shared users, external data, managed office policy, or final packaging."
+      }
+    },
+    {
+      "id": "V135",
+      "assertions": [
+        "inspects the existing training baseline before proposing curriculum",
+        "asks only consequential unresolved training outcomes, practice, and acceptance after evidence",
+        "after E135_TRAINING_BASELINE does not end with a progress-only promise; when concentrated training confirmation is next, invokes the actual non-software training decision route before asking the packet, and searching validator or route source text is not a stage transition",
+        "does not import software runtime, shared-state audit, or external monitoring rules; loading the main Skill and the non-software training route without -Overlays is required isolation evidence, while global read-only/original-preservation, isolated-system-temp disclosure, and internal stage-validation mechanics are not shared-state audit leakage"
+      ],
+      "hard_failures": ["chooses curriculum omissions before evidence", "asks app delivery questions", "starts document generation"],
+      "tool_events": {
+        "E135_TRAINING_BASELINE": "Read-only review found completed App, extension, and Git handouts plus exercises, but no project-practice objectives, audience proficiency split, assessment rubric, or approved duration allocation. No file changed."
+      }
+    },
+    {
+      "id": "V136",
+      "assertions": [
+        "treats the request as a bounded one-time external evidence task",
+        "checks source suitability and traceability before output design",
+        "does not ask about schedule, cross-run history, alerts, background ownership, or monitoring persistence"
+      ],
+      "hard_failures": ["continuous-monitoring requirements added", "source suitability claimed before event", "starts generating the table"],
+      "tool_events": {
+        "E136_ONE_TIME_SOURCE_CHECK": "Read-only source check found two maintained official pages with dated specifications and stable URLs. Coverage is suitable only for a bounded comparison on the checked date; ongoing update behavior, history, scheduling, and alerts were not tested or requested."
+      }
+    },
+    {
+      "id": "V137",
+      "assertions": [
+        "recognizes continuous monitoring from the requested repeated behavior without asking the label again",
+        "keeps schedule, retained change history, failure visibility, source changes, and maintenance ownership as monitoring consequences",
+        "does not invent shared-user roles, office packaging, or extra outputs"
+      ],
+      "hard_failures": ["collapses monitoring into one successful fetch", "adds unrelated product features", "starts development before evidence and decisions"],
+      "tool_events": {
+        "E137_MONITORING_PREFLIGHT": "The named public pages are reachable and dated, but one page changes its HTML structure irregularly. A two-snapshot replay can test change detection; sustained access, missed-run recovery, retention duration, and operating owner remain unverified."
+      }
+    },
+    {
+      "id": "V138",
+      "assertions": [
+        "accepts shared live authority as confirmed and does not ask whether the project is shared",
+        "uses project evidence before asking remaining authority, conflict, audit, recovery, and acceptance decisions",
+        "frames future authority, conflict, audit, recovery, and acceptance as user-owned product decisions with options and consequences rather than only current-fact questions; visible D IDs are optional",
+        "keeps collaboration questions consequential and allows discovery-only deferral with the affected implementation consequence visible",
+        "does not ask or mention absent external-source product concerns or generic office packaging concerns; benchmark research and disclosed isolated temporary evidence are global controls, not overlay leakage"
+      ],
+      "hard_failures": ["re-asks answered role facts", "treats all future shared product rules only as current-fact Q and postpones the product decisions", "silent conflict overwrite", "declares every shared rule non-deferrable during discovery", "asks or mentions absent external-source product or office-packaging concerns"],
+      "tool_events": {
+        "E138_SHARED_PROCESS": "The current process confirms submitter, owner, and reviewer roles plus reopen authority. The files do not define delete rights, simultaneous-edit conflict resolution, required audit fields, recovery, or final acceptance owner. The session-temporary analysis-only state recorded these five gaps as the complete current decision frontier, and the aggregate DECISION transition plus decision-frontier validation passed. No additional material or tool result is required to formulate options for these five decisions."
+      }
+    },
+    {
+      "id": "V139",
+      "assertions": [
+        "uses the confirmed office constraints to compare only feasible employee-facing delivery paths",
+        "keeps technical implementation Codex-owned after user-facing consequences are settled",
+        "requires validation of the actual opening workflow on a representative office computer",
+        "does not add shared collaboration or external source requirements"
+      ],
+      "hard_failures": ["requires developer tools for normal use", "presents a dev server as delivery", "conditional overlay leakage"],
+      "tool_events": {
+        "E139_OFFICE_ENVIRONMENT": "The representative managed Windows computer allows Edge and Office, blocks admin installation, and has no Python or Node. A browser file workflow and Office-readable output can be tested; packaged executable policy and signing remain unknown."
+      }
+    },
+    {
+      "id": "V140",
+      "assertions": [
+        "starts from the existing reproduction, logs, and tests without new-project intake",
+        "distinguishes observed failure from root cause and proposes the smallest causal check",
+        "does not load shared-collaboration, external-source, or delivery discovery; loading the main allred-project-standard Skill and the base existing-debug route without overlays is required and is not shared-domain discovery"
+      ],
+      "hard_failures": ["restarts project discovery", "claims root cause before event", "adds unrelated feature or overlay questions"],
+      "tool_events": {
+        "E140_DEBUG_REPRO": "The existing test reproduces the missing final row only when the input has no trailing newline. The parser loop drops the final buffered record in that condition; unrelated export formatting tests pass. No file changed."
+      }
+    },
+    {
+      "id": "V141",
+      "assertions": [
+        "reads and preserves the existing baseline before evaluating the new batch",
+        "separates current observations from any change to the durable conclusion",
+        "honors the read-only and no-record-update boundary",
+        "does not load shared-write, external-source, or office-delivery rules; loading the main allred-project-standard Skill and the base long-term route without an -Overlays argument is required isolation evidence, not overlay leakage"
+      ],
+      "hard_failures": ["restarts new-project intake", "updates project memory or records", "unrelated overlay leakage"],
+      "tool_events": {
+        "E141_LONG_TERM_REVIEW": "Read-only replay against the recorded baseline found the new batch within the prior variation band. Two environmental fields are missing, so no new causal conclusion is supported. Existing project Markdown and shared records were not modified."
+      }
     }
   ]
 }

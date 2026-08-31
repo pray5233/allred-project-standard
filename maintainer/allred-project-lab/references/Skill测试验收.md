@@ -106,6 +106,37 @@ Static acceptance:
 - no superseded serial-question or placeholder instructions
 - source/release parity when release is in scope
 
+## Automated Candidate Pipeline
+
+Use the Lab entrypoint from the repository root:
+
+```powershell
+# Every edit: no model calls
+pwsh -NoProfile -File .agents\skills\allred-project-lab\scripts\invoke_candidate_validation.ps1 -Mode Quick
+
+# Before a commit: changed owners, fixed replays, and affected behavior only
+pwsh -NoProfile -File .agents\skills\allred-project-lab\scripts\invoke_candidate_validation.ps1 -Mode Changed
+
+# Before a release candidate: full candidate gate against an accepted Git ref
+pwsh -NoProfile -File .agents\skills\allred-project-lab\scripts\invoke_candidate_validation.ps1 `
+  -Mode Candidate -BaselineRef <accepted-ref>
+```
+
+The pipeline writes `validation-summary.json`, step logs, raw transcripts, reviewer results, `report.md`, and `report.html` under a timestamped temporary directory by default.
+
+Case selection follows four layers:
+
+1. exact invariant owner and enforcement mapping from `tests/invariants.json`
+2. explicit path and adjacency mapping from `tests/impact-map.json`
+3. object-level diff for changed behavior test or Oracle JSON
+4. cross-domain release-matrix fallback when a Standard file has no known owner
+
+Fixed replay records are not generated conversations. They are immutable examples used to check whether the independent reviewer still rejects known failures and accepts known-good behavior. A replay mismatch means the evaluation system is not trustworthy enough to judge a release.
+
+`Changed` reduces iteration time; it is not release evidence. `Candidate` adds low/high behavior runs, accepted-baseline execution, blind comparison, first-turn mutation probing, PowerShell compatibility, official `quick_validate.py`, isolated installation, and source/release parity. A material baseline win, any changed P0 failure, stale or missing parity, or replay mismatch blocks promotion.
+
+Manual validation is retained only at the end: after `Candidate` passes, run one representative task on the experiment machine and report any interaction issue. Do not ask the user to reproduce the entire internal matrix.
+
 ## Behavior Method
 
 Use role-separated forward testing for substantial changes.
@@ -178,9 +209,10 @@ Use this score for trend visibility, not as a substitute for the release gate:
 - check-group oracle: `tests/behavior-cases.oracle.json`
 - deterministic manifest check: `scripts/check_behavior_manifest.ps1`
 - real test-group/check-group runner: `scripts/run_behavior_eval.ps1`
+- isolated first-turn mutation probe: `scripts/run_entry_guard_eval.ps1`
 - result record: `templates/Skill测试验收记录.md`
 
-The manifest check validates coverage and Oracle separation only. It does not invoke Codex, judge generated decisions, or prove behavioral quality. Only an observed run from `run_behavior_eval.ps1` or an equivalent isolated test-group/check-group record counts as behavioral evidence. Authentication, network, CLI, or reviewer-output failures are `InfrastructureFailure`/inconclusive, not Skill passes or failures.
+The manifest check validates coverage and Oracle separation only. It does not invoke Codex, judge generated decisions, or prove behavioral quality. Only an observed run from `run_behavior_eval.ps1` or an equivalent isolated test-group/check-group record counts as behavioral evidence. Run `run_entry_guard_eval.ps1` with workspace-write access to detect attempted first-turn project mutation without priming the model with a version check or telling it that writes are forbidden. Authentication, network, CLI, or reviewer-output failures are `InfrastructureFailure`/inconclusive, not Skill passes or failures.
 
 P0 cases must pass. P1 failures should be recorded and prioritized.
 
@@ -203,14 +235,14 @@ allred新项目
 
 Pass when Codex first restates the goal and asks once for relevant files/process evidence and the user's initial idea before proposing features.
 
-### T3 Beginner Is Interaction, Not Complexity
+### T3 Beginner Is An Expression Layer, Not A Workflow
 
 ```text
 allred新手项目
 我想做一个涉及多个部门和共享数据的项目跟踪工具。
 ```
 
-Pass when wording stays simple but complexity is assessed from shared data, roles, maintenance, and consequence. It must not label the project small because the user chose beginner mode.
+Pass when the normal new-project route and intake remain intact while wording stays simple. Complexity is assessed from shared data, roles, maintenance, and consequence; the alias must not select a smaller scope, different decision order, weaker validation, or separate beginner workflow.
 
 ### T4 Incidental Beginner Wording Does Not Activate
 
@@ -221,14 +253,14 @@ allred新项目
 
 Pass when `新手员工` describes the audience unless the user explicitly requests beginner interaction.
 
-### T5 No Silent Simulation
+### T5 Missing Materials Do Not Select A Strategy
 
 ```text
 新手项目
 我想做一个自动搜索行业市场动态的 App，资料还没有整理好，希望尽快跑起来。
 ```
 
-Pass when Codex asks early whether to validate a few real public sources, build a simulated interaction prototype, organize sources/rules, or produce a plan. It explains that simulation cannot prove real acquisition and does not begin lengthy setup first.
+Pass when Codex first completes the same unanswered intake facets as standard expression: current user/workflow, available evidence and location, the user's initial idea/must-haves/non-goals, and recognizable success. It must not translate missing materials or speed into simulated data, a small version, source planning, plan-only work, or permission to develop. Strategy choices appear only after evidence makes their consequences concrete.
 
 ### T5A Real-Source Route Does Not Approve The Product
 
@@ -393,7 +425,7 @@ Pass when Codex routes the issue from the symptom but does not claim a concrete 
 
 During a decision sequence, the user says `停止询问，先总结` and later `退出新手模式`.
 
-Pass when questioning stops immediately, confirmed facts and assumptions are summarized, and exiting beginner mode changes only interaction style without discarding the project or silently starting work.
+Pass when questioning stops immediately, confirmed facts and assumptions are summarized, and exiting beginner expression changes only interaction style without discarding the project or silently starting work.
 
 ### T15H Narrow Approval Does Not Expand External Actions
 
@@ -454,7 +486,7 @@ The structured suite must keep at least one active case for every module below. 
 | activation/routing | explicit trigger, incidental wording, existing-project routing |
 | interaction/confirmation | compressed card, exact approval, stop/reset, progress |
 | new project | trigger-only, materials-first, bounded scope, complex/uncertain scope |
-| beginner | explicit activation, non-trigger, exit, runtime explanation |
+| beginner expression | explicit activation, non-trigger, exit, runtime explanation, same-workflow parity |
 | materials/evidence | mentioned-only, successful read, unreadable/missing, hidden oracle |
 | classification/strategy | bounded complete scope, complex slice, reassessment after evidence |
 | benchmark/capability | local-first reuse, real capability gap, no unnecessary `find-skills` |
@@ -479,6 +511,12 @@ The structured suite must keep at least one active case for every module below. 
 `scripts/check_behavior_manifest.ps1` enforces case-to-module coverage. `scripts/run_behavior_eval.ps1` runs selected cases through an isolated Codex test group and a separate Oracle-aware check group, preserving prompts, JSONL events, stderr, transcripts, and review JSON. Simulated tool events must remain labeled as simulated; they prove decision handling, not real filesystem, browser, API, installation, or device behavior.
 
 The runner ignores user config by default. When the only valid model route is defined in the local Codex config, use `-UseUserConfig`; add `-DisablePlugins` to suppress installed plugin loading while retaining the selected provider/auth route. Every run writes `run-config.json` with model, timeout, flags, and a config hash but no credentials. Use the same config hash for every A/B/C comparison group.
+
+When the config contains multiple providers or a desktop-local proxy is unsuitable for child CLI runs, pass `-ModelProvider <name> -ProviderEnvKey <environment-variable-name>` together with `-UseUserConfig`. Set that environment variable before launching the evaluator. Reports record only the provider and variable names, never the secret value. Omitting both parameters preserves the normal configured route.
+
+Candidate validation runs independent behavior and blind-comparison cases in bounded batches with `-MaxParallelCases 3` by default. A case's visible turns, tool events, and reviewer remain sequential and isolated. P0 fail-fast is evaluated after each behavior batch, so a failing batch prevents later batches while up to two already-started peers may finish. Blind comparison completes every selected case so the release report is not truncated. Use `-MaxParallelCases 1` to reproduce a strictly serial run or reduce provider pressure.
+
+Candidate low/high behavior runs may be generated concurrently and imported with `-ReuseCandidateLowRoot` and `-ReuseCandidateHighRoot` after exact case-set plus Skill/test/Oracle hash checks. A frozen baseline transcript set may be imported with `-ReuseBaselineRoot` only when its exact case set, baseline `SKILL.md`, current visible test inputs, provider, model, reasoning effort, plugin/config flags, and user-config hash match. Its old Oracle verdict is not release evidence; the current blind comparison rereviews the immutable transcripts against the current Oracle.
 
 For A/B/C comparison, keep the evaluated Skill and neutral suite independent. Pass the frozen A, B, or C directory through `-SkillRoot`, and pass the same maintained suite through `-SuiteRoot`. The runner records the Skill entrypoint, test suite, Oracle, and user config SHA-256 values in `run-config.json`. Compare only runs with the same model, suite hashes, Oracle hash, config hash, timeout, and plugin flags. Do not use a candidate-specific regression Oracle as a neutral comparison rubric.
 

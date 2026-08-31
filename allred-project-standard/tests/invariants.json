@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "skill": "allred-project-standard",
+  "conditional_overlays": [
+    {
+      "name": "shared-collaboration",
+      "owner": "references/shared-collaboration.md",
+      "activation_invariant": "INV-CONDITIONAL-SHARED"
+    },
+    {
+      "name": "external-source",
+      "owner": "references/external-source.md",
+      "activation_invariant": "INV-CONDITIONAL-EXTERNAL"
+    },
+    {
+      "name": "company-office-delivery",
+      "owner": "references/company-office-delivery.md",
+      "activation_invariant": "INV-CONDITIONAL-OFFICE"
+    }
+  ],
+  "invariants": [
+    {
+      "id": "INV-ACTIVATION",
+      "priority": "P0",
+      "owner": "SKILL.md",
+      "owner_section": "Activation And Routing",
+      "behavior_cases": ["V01", "V04", "V122"],
+      "enforcement": ["agents/openai.yaml"]
+    },
+    {
+      "id": "INV-INTAKE",
+      "priority": "P0",
+      "owner": "references/新项目启动模式.md",
+      "owner_section": "1. Capture The Rough Requirement",
+      "behavior_cases": ["V02", "V99", "V127"],
+      "enforcement": ["scripts/validate_stage_transition.ps1"]
+    },
+    {
+      "id": "INV-EVIDENCE-HONESTY",
+      "priority": "P0",
+      "owner": "SKILL.md",
+      "owner_section": "Runtime Hard Stops",
+      "behavior_cases": ["V131", "V132", "V133"],
+      "enforcement": ["scripts/invoke_validation_gate.ps1"]
+    },
+    {
+      "id": "INV-DECISION-FRONTIER",
+      "priority": "P0",
+      "owner": "references/决策前沿与Skill交接.md",
+      "owner_section": "Internal Frontier Model",
+      "behavior_cases": ["V79", "V81", "V120"],
+      "enforcement": ["scripts/validate_decision_frontier.ps1"]
+    },
+    {
+      "id": "INV-READY-SCOPE",
+      "priority": "P0",
+      "owner": "references/阶段状态硬校验.md",
+      "owner_section": "READY Scope Gate",
+      "behavior_cases": ["V119", "V126", "V130"],
+      "enforcement": ["scripts/validate_ready_scope.ps1", "scripts/validate_change_traceability.ps1"]
+    },
+    {
+      "id": "INV-BEGINNER-EXPRESSION",
+      "priority": "P0",
+      "owner": "references/新手表达层.md",
+      "owner_section": "Boundary And Toggle",
+      "behavior_cases": ["V121", "V122", "V124"],
+      "enforcement": []
+    },
+    {
+      "id": "INV-CONDITIONAL-SHARED",
+      "priority": "P0",
+      "owner": "references/shared-collaboration.md",
+      "owner_section": "Boundary And Activation",
+      "behavior_cases": ["V79", "V81", "V138"],
+      "enforcement": ["scripts/get_route_context.ps1", "scripts/validate_question_packet.ps1"]
+    },
+    {
+      "id": "INV-CONDITIONAL-EXTERNAL",
+      "priority": "P0",
+      "owner": "references/external-source.md",
+      "owner_section": "Boundary And Activation",
+      "behavior_cases": ["V61", "V136", "V137"],
+      "enforcement": ["scripts/get_route_context.ps1"]
+    },
+    {
+      "id": "INV-CONDITIONAL-OFFICE",
+      "priority": "P0",
+      "owner": "references/company-office-delivery.md",
+      "owner_section": "Activation Boundary",
+      "behavior_cases": ["V121", "V139"],
+      "enforcement": ["scripts/get_route_context.ps1"]
+    },
+    {
+      "id": "INV-DEBUG-IN-PLACE",
+      "priority": "P0",
+      "owner": "references/功能调试.md",
+      "owner_section": "Evidence First",
+      "behavior_cases": ["V36", "V133", "V140"],
+      "enforcement": []
+    },
+    {
+      "id": "INV-NON-SOFTWARE",
+      "priority": "P0",
+      "owner": "references/非软件项目模式.md",
+      "owner_section": "Route Boundary",
+      "behavior_cases": ["V99", "V120", "V135"],
+      "enforcement": ["scripts/validate_training_handoff.ps1"]
+    },
+    {
+      "id": "INV-LONG-TERM",
+      "priority": "P0",
+      "owner": "references/长期任务模式.md",
+      "owner_section": "State Model",
+      "behavior_cases": ["V22", "V100", "V141"],
+      "enforcement": []
+    },
+    {
+      "id": "INV-MEMORY-NOTES-HANDOFF",
+      "priority": "P0",
+      "owner": "SKILL.md",
+      "owner_section": "Memory And Notes Boundary",
+      "behavior_cases": ["V71"],
+      "enforcement": []
+    },
+    {
+      "id": "INV-BENCHMARK-FIRST",
+      "priority": "P0",
+      "owner": "references/开发依据与能力复用.md",
+      "owner_section": "Benchmark Gate",
+      "behavior_cases": ["V47", "V61"],
+      "enforcement": []
+    },
+    {
+      "id": "INV-RUNTIME-GENERALITY",
+      "priority": "P0",
+      "owner": "SKILL.md",
+      "owner_section": "Shared Invariants",
+      "behavior_cases": ["V61", "V99", "V134", "V140"],
+      "enforcement": ["scripts/check_runtime_generality.ps1"]
+    }
+  ],
+  "release_matrix": {
+    "software": ["V134", "V139"],
+    "training": ["V135"],
+    "external-data": ["V136", "V137"],
+    "shared-collaboration": ["V138"],
+    "debugging": ["V140"],
+    "long-term": ["V141"]
+  }
+}

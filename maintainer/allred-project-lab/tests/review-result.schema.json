@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "result",
+    "first_divergent_turn",
+    "failed_assertions",
+    "hard_failures",
+    "notes"
+  ],
+  "properties": {
+    "case_id": { "type": "string" },
+    "result": { "type": "string", "enum": ["Pass", "Partial", "Fail"] },
+    "first_divergent_turn": { "type": ["integer", "null"], "minimum": 1 },
+    "failed_assertions": { "type": "array", "items": { "type": "string" } },
+    "hard_failures": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}

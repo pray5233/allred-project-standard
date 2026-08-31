@@ -1,0 +1,6 @@
+interface:
+  display_name: "Allred Project Lab"
+  short_description: "维护、评测和发布 Allred 项目标准"
+  default_prompt: "Use $allred-project-lab to review and improve allred-project-standard with regression evidence."
+policy:
+  allow_implicit_invocation: false

@@ -5,10 +5,14 @@ param(
   [string]$OutputRoot = (Join-Path (Get-Location) ("behavior-eval-" + (Get-Date -Format 'yyyyMMdd-HHmmss'))),
   [string]$CodexCommand = 'codex',
   [string]$Model = '',
+  [string]$ModelProvider = '',
+  [string]$ProviderEnvKey = '',
   [ValidateSet('default', 'low', 'medium', 'high', 'xhigh', 'ultra', 'max')]
   [string]$ReasoningEffort = 'default',
   [switch]$UseUserConfig,
   [switch]$DisablePlugins,
+  [switch]$StatelessTurns,
+  [switch]$FailFastP0,
   [ValidateRange(10, 3600)]
   [int]$TimeoutSeconds = 180
 )
@@ -16,6 +20,19 @@ param(
 $ErrorActionPreference = 'Stop'
 $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 [Console]::OutputEncoding = $OutputEncoding
+
+if ($ModelProvider -and $ModelProvider -notmatch '^[A-Za-z0-9_-]+$') { throw 'ModelProvider contains unsupported characters.' }
+if ($ProviderEnvKey -and $ProviderEnvKey -notmatch '^[A-Za-z_][A-Za-z0-9_]*$') { throw 'ProviderEnvKey is not a valid environment-variable name.' }
+if ($ProviderEnvKey -and -not $ModelProvider) { throw 'ProviderEnvKey requires ModelProvider.' }
+if ($ProviderEnvKey -and [string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($ProviderEnvKey))) { throw "Provider environment variable is not set: $ProviderEnvKey" }
+
+function Add-ProviderArguments([System.Collections.Generic.List[string]]$Arguments) {
+  if (-not $ModelProvider) { return }
+  $Arguments.Add('-c'); $Arguments.Add("model_provider=`"$ModelProvider`"")
+  if ($ProviderEnvKey) {
+    $Arguments.Add('-c'); $Arguments.Add("model_providers.$ModelProvider.env_key=`"$ProviderEnvKey`"")
+  }
+}
 
 function Read-Json([string]$Path) {
   Get-Content -LiteralPath $Path -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -61,6 +78,7 @@ function Invoke-CodexTurn {
     }
     $args.Add('--skip-git-repo-check')
     if ($Model) { $args.Add('-m'); $args.Add($Model) }
+    Add-ProviderArguments $args
     if ($ReasoningEffort -ne 'default') { $args.Add('-c'); $args.Add("model_reasoning_effort=`"$ReasoningEffort`"") }
     if ($SchemaPath) { $args.Add('--output-schema'); $args.Add($SchemaPath) }
     $args.Add('-o'); $args.Add($finalPath)
@@ -78,6 +96,7 @@ function Invoke-CodexTurn {
     $args.Add('-C'); $args.Add($RunDirectory)
     if ($Ephemeral) { $args.Add('--ephemeral') }
     if ($Model) { $args.Add('-m'); $args.Add($Model) }
+    Add-ProviderArguments $args
     if ($ReasoningEffort -ne 'default') { $args.Add('-c'); $args.Add("model_reasoning_effort=`"$ReasoningEffort`"") }
     if ($SchemaPath) { $args.Add('--output-schema'); $args.Add($SchemaPath) }
     $args.Add('-o'); $args.Add($finalPath)
@@ -119,21 +138,41 @@ function Invoke-CodexTurn {
   }
   $started = $events | Where-Object type -eq 'thread.started' | Select-Object -First 1
   $errors = @($events | Where-Object type -eq 'error' | ForEach-Object message)
+  $turnCompleted = @($events | Where-Object type -eq 'turn.completed').Count -gt 0
+  $turnFailed = @($events | Where-Object type -eq 'turn.failed').Count -gt 0
   $stderr = if (Test-Path -LiteralPath $stderrPath) { Get-Content -LiteralPath $stderrPath -Raw -Encoding UTF8 } else { '' }
   $final = if (Test-Path -LiteralPath $finalPath) { Get-Content -LiteralPath $finalPath -Raw -Encoding UTF8 } else { '' }
+  $commandResults = @($events | Where-Object { $_.type -eq 'item.completed' -and $_.item.type -eq 'command_execution' } | ForEach-Object {
+    $output = ([string]$_.item.aggregated_output).Trim()
+    if ($output.Length -gt 1600) {
+      $output = $output.Substring(0, 700) + "`n...[command output truncated]...`n" + $output.Substring($output.Length - 700)
+    }
+    [pscustomobject]@{
+      command = [string]$_.item.command
+      status = [string]$_.item.status
+      exit_code = if ($null -eq $_.item.exit_code) { $null } else { [int]$_.item.exit_code }
+      output = $output
+    }
+  })
 
   [pscustomobject]@{
     ExitCode = if ($timedOut) { 124 } else { $process.ExitCode }
     TimedOut = $timedOut
+    TurnCompleted = $turnCompleted
+    TurnFailed = $turnFailed
     SessionId = if ($started) { [string]$started.thread_id } else { $SessionId }
     Final = $final.Trim()
     Errors = @($errors)
     Stderr = $stderr.Trim()
+    Commands = @($events | Where-Object { $_.type -eq 'item.completed' -and $_.item.type -eq 'command_execution' } | ForEach-Object { [string]$_.item.command })
+    CommandResults = @($commandResults)
   }
 }
 
 function Test-InfrastructureFailure($Run) {
   if ($Run.TimedOut) { return $true }
+  if ($Run.TurnFailed) { return $true }
+  if ($Run.TurnCompleted -and -not [string]::IsNullOrWhiteSpace($Run.Final)) { return $false }
   if ($Run.ExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($Run.Final)) { return $false }
   $combined = (@($Run.Errors) + @($Run.Stderr)) -join "`n"
   if ($Run.ExitCode -ne 0 -and [string]::IsNullOrWhiteSpace($Run.Final)) { return $true }
@@ -146,6 +185,44 @@ function Get-InfrastructureReason($Run) {
   if ($combined.Length -gt 600) { $combined = $combined.Substring(0, 600) }
   if (-not [string]::IsNullOrWhiteSpace($combined)) { return $combined }
   return "Codex CLI exited with code $($Run.ExitCode) without a final response."
+}
+
+function Get-RuntimeSurfaceHash {
+  param([string]$Root)
+  $rootFull = [System.IO.Path]::GetFullPath($Root).TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar
+  $entries = foreach ($file in Get-ChildItem -LiteralPath $Root -Recurse -File) {
+    $relative = $file.FullName.Substring($rootFull.Length).Replace('\', '/')
+    if ($relative -notmatch '^(?:SKILL\.md|VERSION|agents/|references/|templates/|scripts/)') { continue }
+    $hash = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+    "$relative|$hash"
+  }
+  $payload = [System.Text.Encoding]::UTF8.GetBytes((@($entries | Sort-Object) -join "`n"))
+  $sha = [System.Security.Cryptography.SHA256]::Create()
+  try { return ([System.BitConverter]::ToString($sha.ComputeHash($payload)) -replace '-', '').ToLowerInvariant() }
+  finally { $sha.Dispose() }
+}
+
+function New-StatelessContinuationPrompt {
+  param(
+    [string]$CaseContext,
+    [object[]]$Transcript,
+    [string]$CurrentInputType,
+    [string]$CurrentInput
+  )
+
+  $history = ConvertTo-Json -InputObject @($Transcript) -Depth 8
+  return @"
+$CaseContext
+
+This is a stateless continuation of the same simulated conversation. Treat the prior transcript, including observed command results, as the exact earlier conversation and tool evidence. Do not repeat or revise earlier answers unless the current input requires it. Apply the Skill afresh to the current input: new evidence may invalidate an earlier stage context, so run the route, gate, or validator required for this response instead of relying on a stale prior command.
+
+PRIOR TRANSCRIPT JSON:
+$history
+
+CURRENT INPUT TYPE: $CurrentInputType
+CURRENT INPUT:
+$CurrentInput
+"@
 }
 
 $SkillRoot = (Resolve-Path -LiteralPath $SkillRoot).Path
@@ -167,21 +244,26 @@ foreach ($id in $CaseIds) {
 }
 
 New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
-$userConfigPath = Join-Path $HOME '.codex\config.toml'
+$codexHome = if ([string]::IsNullOrWhiteSpace($env:CODEX_HOME)) { Join-Path $HOME '.codex' } else { $env:CODEX_HOME }
+$userConfigPath = Join-Path $codexHome 'config.toml'
 $runConfig = [ordered]@{
   schema_version = 1
   generated_at_utc = [DateTime]::UtcNow.ToString('o')
   skill_root = $SkillRoot
   suite_root = $SuiteRoot
   skill_md_sha256 = (Get-FileHash -LiteralPath (Join-Path $SkillRoot 'SKILL.md') -Algorithm SHA256).Hash.ToLowerInvariant()
+  runtime_surface_sha256 = Get-RuntimeSurfaceHash -Root $SkillRoot
   test_suite_sha256 = (Get-FileHash -LiteralPath $testPath -Algorithm SHA256).Hash.ToLowerInvariant()
   oracle_suite_sha256 = (Get-FileHash -LiteralPath $oraclePath -Algorithm SHA256).Hash.ToLowerInvariant()
   case_ids = @($CaseIds)
   model_override = $Model
+  model_provider_override = $ModelProvider
+  provider_env_key_name = $ProviderEnvKey
   reasoning_effort_override = $ReasoningEffort
   timeout_seconds = $TimeoutSeconds
   use_user_config = [bool]$UseUserConfig
   disable_plugins = [bool]$DisablePlugins
+  stateless_turns = [bool]$StatelessTurns
   user_config_sha256 = if ($UseUserConfig -and (Test-Path -LiteralPath $userConfigPath)) { (Get-FileHash -LiteralPath $userConfigPath -Algorithm SHA256).Hash.ToLowerInvariant() } else { $null }
 }
 Write-Utf8 (Join-Path $OutputRoot 'run-config.json') ($runConfig | ConvertTo-Json -Depth 5)
@@ -197,7 +279,7 @@ foreach ($case in $selected) {
   $turnNumber = 0
   $needsResume = @($case.visible_turns).Count + @($case.tool_event_ids).Count + @($case.post_event_turns).Count -gt 1
 
-  $opening = @"
+  $caseContext = @"
 You are the test group evaluating one installed Skill. Start from this Skill source:
 $SkillRoot\SKILL.md
 
@@ -208,22 +290,32 @@ This is a behavior simulation. Do not inspect the host machine for the simulated
 Artifact labels: $((@($case.artifact_labels) | ConvertTo-Json -Compress))
 
 Respond to the user naturally as Codex using the Skill. Do not discuss this evaluation harness.
+"@
+
+  $opening = @"
+$caseContext
 
 USER:
 $($case.visible_turns[0])
 "@
 
   $turnNumber++
-  $run = Invoke-CodexTurn -Prompt $opening -RunDirectory $caseDir -Prefix ("test-{0:d2}" -f $turnNumber) -Ephemeral:(-not $needsResume)
+  $run = Invoke-CodexTurn -Prompt $opening -RunDirectory $caseDir -Prefix ("test-{0:d2}" -f $turnNumber) -Ephemeral:($StatelessTurns -or -not $needsResume)
   $sessionId = $run.SessionId
-  $transcript.Add([pscustomobject]@{ turn = $turnNumber; input_type = 'user'; input = $case.visible_turns[0]; response = $run.Final })
+  $transcript.Add([pscustomobject]@{ turn = $turnNumber; input_type = 'user'; input = $case.visible_turns[0]; response = $run.Final; observed_commands = @($run.Commands); observed_command_results = @($run.CommandResults) })
   if (Test-InfrastructureFailure $run) { $infrastructureFailure = $true }
 
   if (-not $infrastructureFailure) {
     for ($i = 1; $i -lt @($case.visible_turns).Count; $i++) {
       $turnNumber++
-      $run = Invoke-CodexTurn -Prompt ("USER:`n" + $case.visible_turns[$i]) -RunDirectory $caseDir -Prefix ("test-{0:d2}" -f $turnNumber) -SessionId $sessionId
-      $transcript.Add([pscustomobject]@{ turn = $turnNumber; input_type = 'user'; input = $case.visible_turns[$i]; response = $run.Final })
+      $nextInput = [string]$case.visible_turns[$i]
+      if ($StatelessTurns) {
+        $prompt = New-StatelessContinuationPrompt -CaseContext $caseContext -Transcript @($transcript) -CurrentInputType 'USER' -CurrentInput $nextInput
+        $run = Invoke-CodexTurn -Prompt $prompt -RunDirectory $caseDir -Prefix ("test-{0:d2}" -f $turnNumber) -Ephemeral
+      } else {
+        $run = Invoke-CodexTurn -Prompt ("USER:`n" + $nextInput) -RunDirectory $caseDir -Prefix ("test-{0:d2}" -f $turnNumber) -SessionId $sessionId
+      }
+      $transcript.Add([pscustomobject]@{ turn = $turnNumber; input_type = 'user'; input = $case.visible_turns[$i]; response = $run.Final; observed_commands = @($run.Commands); observed_command_results = @($run.CommandResults) })
       if (Test-InfrastructureFailure $run) { $infrastructureFailure = $true; break }
     }
   }
@@ -234,14 +326,25 @@ $($case.visible_turns[0])
       if ($null -eq $event) { continue }
       $turnNumber++
       $eventPrompt = "TEST TOOL EVENT $eventId (simulated read-only observation; use only from this turn onward):`n$($event.Value)"
-      $run = Invoke-CodexTurn -Prompt $eventPrompt -RunDirectory $caseDir -Prefix ("test-{0:d2}" -f $turnNumber) -SessionId $sessionId
-      $transcript.Add([pscustomobject]@{ turn = $turnNumber; input_type = 'tool_event'; input = $eventId; event = $event.Value; response = $run.Final })
+      if ($StatelessTurns) {
+        $prompt = New-StatelessContinuationPrompt -CaseContext $caseContext -Transcript @($transcript) -CurrentInputType 'TEST TOOL EVENT' -CurrentInput $eventPrompt
+        $run = Invoke-CodexTurn -Prompt $prompt -RunDirectory $caseDir -Prefix ("test-{0:d2}" -f $turnNumber) -Ephemeral
+      } else {
+        $run = Invoke-CodexTurn -Prompt $eventPrompt -RunDirectory $caseDir -Prefix ("test-{0:d2}" -f $turnNumber) -SessionId $sessionId
+      }
+      $transcript.Add([pscustomobject]@{ turn = $turnNumber; input_type = 'tool_event'; input = $eventId; event = $event.Value; response = $run.Final; observed_commands = @($run.Commands); observed_command_results = @($run.CommandResults) })
       if (Test-InfrastructureFailure $run) { $infrastructureFailure = $true; break }
 
       foreach ($postTurn in @($case.post_event_turns | Where-Object after -eq $eventId)) {
         $turnNumber++
-        $run = Invoke-CodexTurn -Prompt ("USER:`n" + $postTurn.text) -RunDirectory $caseDir -Prefix ("test-{0:d2}" -f $turnNumber) -SessionId $sessionId
-        $transcript.Add([pscustomobject]@{ turn = $turnNumber; input_type = 'user'; input = $postTurn.text; response = $run.Final })
+        $nextInput = [string]$postTurn.text
+        if ($StatelessTurns) {
+          $prompt = New-StatelessContinuationPrompt -CaseContext $caseContext -Transcript @($transcript) -CurrentInputType 'USER' -CurrentInput $nextInput
+          $run = Invoke-CodexTurn -Prompt $prompt -RunDirectory $caseDir -Prefix ("test-{0:d2}" -f $turnNumber) -Ephemeral
+        } else {
+          $run = Invoke-CodexTurn -Prompt ("USER:`n" + $nextInput) -RunDirectory $caseDir -Prefix ("test-{0:d2}" -f $turnNumber) -SessionId $sessionId
+        }
+        $transcript.Add([pscustomobject]@{ turn = $turnNumber; input_type = 'user'; input = $postTurn.text; response = $run.Final; observed_commands = @($run.Commands); observed_command_results = @($run.CommandResults) })
         if (Test-InfrastructureFailure $run) { $infrastructureFailure = $true; break }
       }
       if ($infrastructureFailure) { break }
@@ -253,6 +356,7 @@ $($case.visible_turns[0])
 
   if ($infrastructureFailure) {
     $summary.Add([pscustomobject]@{ case_id = $case.id; priority = $case.priority; status = 'InfrastructureFailure'; result = $null; first_divergent_turn = $null; report = $null; infrastructure_reason = (Get-InfrastructureReason $run) })
+    if ($FailFastP0 -and $case.priority -eq 'P0') { break }
     continue
   }
 
@@ -271,6 +375,7 @@ $(Get-Content -LiteralPath $transcriptPath -Raw -Encoding UTF8)
   $review = Invoke-CodexTurn -Prompt $reviewPrompt -RunDirectory $caseDir -Prefix 'review' -SchemaPath $schemaPath -Ephemeral
   if (Test-InfrastructureFailure $review) {
     $summary.Add([pscustomobject]@{ case_id = $case.id; priority = $case.priority; status = 'InfrastructureFailure'; result = $null; first_divergent_turn = $null; report = $null; infrastructure_reason = (Get-InfrastructureReason $review) })
+    if ($FailFastP0 -and $case.priority -eq 'P0') { break }
     continue
   }
 
@@ -281,6 +386,11 @@ $(Get-Content -LiteralPath $transcriptPath -Raw -Encoding UTF8)
     $summary.Add([pscustomobject]@{ case_id = $case.id; priority = $case.priority; status = 'Evaluated'; result = $reviewResult.result; first_divergent_turn = $reviewResult.first_divergent_turn; report = $reviewPath })
   } catch {
     $summary.Add([pscustomobject]@{ case_id = $case.id; priority = $case.priority; status = 'ReviewerOutputInvalid'; result = $null; first_divergent_turn = $null; report = $reviewPath })
+  }
+
+  if ($FailFastP0 -and $case.priority -eq 'P0') {
+    $latest = $summary[$summary.Count - 1]
+    if ($latest.status -ne 'Evaluated' -or $latest.result -ne 'Pass') { break }
   }
 }
 

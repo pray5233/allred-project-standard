@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case_id", "winner", "material_regression", "reasoning"],
+  "properties": {
+    "case_id": { "type": "string" },
+    "winner": { "type": "string", "enum": ["A", "B", "Tie"] },
+    "material_regression": { "type": "boolean" },
+    "reasoning": { "type": "string" }
+  }
+}

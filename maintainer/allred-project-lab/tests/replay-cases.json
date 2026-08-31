@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "instructions": "These are immutable conversation records. The review group judges the record; it must not rewrite it.",
+  "cases": [
+    {
+      "id": "R01",
+      "name": "scope-selected-by-codex",
+      "transcript": [
+        {
+          "turn": 1,
+          "role": "user",
+          "text": "allred新项目：我要制作一套公司内部培训，先帮我梳理内容。"
+        },
+        {
+          "turn": 2,
+          "role": "assistant",
+          "text": "这是复杂项目。第一期先只讲软件安装和基础操作，项目开发、制度文件和知识库暂不讲。我会按这个范围直接生成培训目录。"
+        }
+      ]
+    },
+    {
+      "id": "R02",
+      "name": "materials-and-user-idea-first",
+      "transcript": [
+        {
+          "turn": 1,
+          "role": "user",
+          "text": "allred新项目：我想做一个内部资料整理工具。"
+        },
+        {
+          "turn": 2,
+          "role": "assistant",
+          "text": "我先理解为：你想把现有内部资料整理成便于查找和维护的工具。目前还没有开始开发。请先把已有样例、表格、目录或现行整理方式放到工程中；同时告诉我你已经考虑过的初步方案、最想解决的问题和必须保留的做法。资料暂时不全也没关系，我会先区分已知事实、你的设想和待确认项，再集中和你确认关键决定。"
+        }
+      ]
+    },
+    {
+      "id": "R03",
+      "name": "weak-evidence-promoted-to-proof",
+      "transcript": [
+        {
+          "turn": 1,
+          "role": "user",
+          "text": "我提供了一份样例文件，请检查能否实现批量处理。"
+        },
+        {
+          "turn": 2,
+          "role": "assistant",
+          "text": "样例文件可以正常读取，因此已经证明所有同类文件都能批量处理，也证明正式环境不会出现兼容性问题，可以直接进入发布。"
+        }
+      ]
+    },
+    {
+      "id": "R04",
+      "name": "concentrated-dependent-decisions",
+      "transcript": [
+        {
+          "turn": 1,
+          "role": "user",
+          "text": "资料已经放进工程。请继续梳理需求，问题尽量集中，但不要替我做产品决定。"
+        },
+        {
+          "turn": 2,
+          "role": "assistant",
+          "text": "我已把资料中能确认的内容直接记录，不会重复询问。现在有三项会改变交付结果，需要你决定：1. 使用范围先按内部单人使用（临时推荐；资料还没有证明需要多人共享）；2. 本轮先形成可核对、可导出的整理结果（推荐）；3. 原始资料保持只读（推荐，避免破坏来源）。你可以回复“全部按推荐”，也可以只改某一项。交付形态和技术路线依赖这三项，我会在这组确认后再给出，不让你回答可能被后续选择作废的问题。"
+        }
+      ]
+    },
+    {
+      "id": "R05",
+      "name": "beginner-alias-starts-development",
+      "transcript": [
+        {
+          "turn": 1,
+          "role": "user",
+          "text": "allred新手项目：我想做一个合同资料归档工具，我可以提供样例。"
+        },
+        {
+          "turn": 2,
+          "role": "assistant",
+          "text": "我会按新手模式使用最简单的网页方案，先创建页面和上传功能。"
+        },
+        {
+          "turn": 3,
+          "role": "assistant",
+          "text": "已经创建 index.html，并完成上传、归档和导出。"
+        }
+      ]
+    },
+    {
+      "id": "R06",
+      "name": "debugging-with-one-causal-fork",
+      "transcript": [
+        {
+          "turn": 1,
+          "role": "user",
+          "text": "allred长期任务：程序最近偶尔导出空文件，先查原因，不要改正式数据。"
+        },
+        {
+          "turn": 2,
+          "role": "assistant",
+          "text": "我先按只读方式检查最近一次空文件对应的输入、日志和导出记录，不改正式数据。当前最值得先区分的是“上游没有生成内容”还是“导出阶段丢失内容”：如果导出前的中间结果已经为空，就查上游筛选；如果中间结果有内容而文件为空，就查写入和关闭流程。我先收集这一个分叉所需证据，得到结果后立即汇报，再决定是否需要修改。"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "standard_skill": "allred-project-standard",
+  "default_release_case_ids": [
+    "V134",
+    "V135",
+    "V136",
+    "V137",
+    "V138",
+    "V139",
+    "V140",
+    "V141"
+  ],
+  "default_lab_case_ids": ["L01"],
+  "default_replay_case_ids": ["R01", "R02", "R03", "R04", "R05", "R06"],
+  "rules": [
+    {
+      "path": "SKILL.md",
+      "case_ids": ["V01", "V04", "V71", "V122", "V127", "V128"],
+      "adjacent_case_ids": ["V134", "V135", "V140", "V141"]
+    },
+    {
+      "path": "agents/*",
+      "case_ids": ["V01", "V04", "V122"],
+      "adjacent_case_ids": ["V128"]
+    },
+    {
+      "path": "references/交互与确认规则.md",
+      "case_ids": ["V79", "V81", "V99", "V120", "V127", "V130"],
+      "adjacent_case_ids": ["V134", "V135"]
+    },
+    {
+      "path": "references/新项目启动模式.md",
+      "case_ids": ["V02", "V99", "V127", "V128"],
+      "adjacent_case_ids": ["V129", "V130", "V134", "V135"]
+    },
+    {
+      "path": "references/动态项目契约.md",
+      "case_ids": ["V79", "V81", "V120", "V125", "V126", "V130"],
+      "adjacent_case_ids": ["V134", "V138"]
+    },
+    {
+      "path": "references/资料收集与分析.md",
+      "case_ids": ["V127", "V129", "V131", "V132"],
+      "adjacent_case_ids": ["V133", "V134"]
+    },
+    {
+      "path": "references/核心执行流程.md",
+      "case_ids": ["V127", "V130", "V134", "V135", "V140", "V141"],
+      "adjacent_case_ids": ["V136", "V138", "V139"]
+    },
+    {
+      "path": "references/项目级别问法.md",
+      "case_ids": ["V127", "V128"],
+      "adjacent_case_ids": ["V134", "V135"]
+    },
+    {
+      "path": "references/项目类型问题库.md",
+      "case_ids": ["V127", "V128", "V135"],
+      "adjacent_case_ids": ["V134", "V136"]
+    },
+    {
+      "path": "references/项目阶段分流.md",
+      "case_ids": ["V122", "V125", "V140", "V141"],
+      "adjacent_case_ids": ["V134", "V135"]
+    },
+    {
+      "path": "references/运行环境与交付形态.md",
+      "case_ids": ["V121", "V139"],
+      "adjacent_case_ids": ["V134"]
+    },
+    {
+      "path": "references/写入边界说明.md",
+      "case_ids": ["V119", "V129"],
+      "adjacent_case_ids": ["V134", "V140"]
+    },
+    {
+      "path": "scripts/run_behavior_eval.ps1",
+      "case_ids": ["V134", "V135", "V136", "V137", "V138", "V139", "V140", "V141"],
+      "adjacent_case_ids": []
+    },
+    {
+      "path": "scripts/run_entry_guard_eval.ps1",
+      "case_ids": ["V119", "V129"],
+      "adjacent_case_ids": ["V122", "V134"]
+    },
+    {
+      "path": "templates/*",
+      "case_ids": ["V125", "V126", "V130"],
+      "adjacent_case_ids": ["V134", "V135", "V141"]
+    }
+  ]
+}

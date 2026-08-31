@@ -1,8 +1,32 @@
-# 公开信息监测项目
+# External Source Overlay
 
-Use this reference for automatic search, public market dynamics, competitor or product updates, price/news tracking, exhibition information, source collection, AI-assisted summaries, or scheduled reports.
+Load this overlay only when external or public information is an actual project input, evidence source, or product behavior. It is not a separate project route and adds no user trigger words.
 
-This reference owns the transition from “real-source route selected” to a valid first-round scope. Read `references/外部内容安全.md` before external requests. Reuse already loaded shared rules. Load `references/开发依据与能力复用.md` or `references/运行环境与交付形态.md` only when the corresponding implementation or delivery question is actually unresolved.
+Read `references/外部内容安全.md` before external requests. Load `references/开发依据与能力复用.md` or `references/运行环境与交付形态.md` only when the corresponding implementation or delivery question is unresolved.
+
+## Boundary And Activation
+
+External source work may be either a one-time query or continuous monitoring. Keep this distinction separate from delivery form and from whether the current action is read-only.
+
+- one-time query: obtain a bounded current result for one request, analysis, comparison, or document
+- continuous monitoring: preserve a subject/source definition and repeatedly detect, collect, compare, or notify about changes
+
+Do not ask the user to choose this label when their requested behavior already makes it clear. If unclear and the difference changes persistence, scheduling, ownership, cost, or acceptance, expose that consequence in the normal decision packet.
+
+## One-Time Query
+
+For a one-time query, validate subject, evidence intent, source suitability, traceability, privacy, and the requested output. Do not add scheduling, history, deduplication across runs, alerting, background services, or long-term ownership unless explicitly requested.
+
+The completion claim is limited to the tested query, date, source state, and output. It does not establish ongoing coverage.
+
+## Continuous Monitoring
+
+For continuous monitoring, separately establish trigger/schedule, source-change handling, cross-run deduplication, retained history, failure visibility/recovery, credentials/quota, maintenance owner, and acceptance period. Preserve user-stated frequency and history even when later evidence covers only technical gaps. Failure visibility tells the owner a run failed; recovery says what happens next.
+
+After material monitoring evidence, render one compact five-cell status: schedule, retained history, source-change handling, failure visibility/recovery, and operating owner. Preserve known values and mark gaps. A manual replay never erases the operating schedule; scheduled work always needs visible failure state. Omit only dimensions genuinely unrelated to the requested monitoring behavior.
+
+
+One successful fetch proves neither sustained access nor useful change detection. Verify multiple runs or a controlled replay before claiming monitoring behavior.
 
 ## Route Approval Boundary
 
@@ -114,23 +138,27 @@ Use source states precisely:
 
 ## Semantic Relevance Gate
 
-Transport and parsing success do not prove business usefulness. Before a search/query source becomes `Suitable for proof`, inspect representative returned items against:
+Transport and parsing success do not prove business usefulness. Before a search/query source becomes `Suitable for proof`, derive the required semantic dimensions from the active project contract and the exact claim being tested. Typical dimensions include:
 
-- the confirmed subject, entity names/aliases, product, or working set
-- the requested information category or intent
-- language and region expectations
+- confirmed subject, entity names/aliases, product, or working set
+- requested information category or intent
+- language, region, time range, or source class when they change usefulness
 - original-link traceability and whether the result is actually about the named subject
-- duplication, generic noise, mistranslation, and false matches
+- duplication, generic noise, mistranslation, false matches, or another project-defined exclusion
+
+A dimension is required only when a mismatch would change usefulness, scope, or acceptance. Do not force language, region, time, or another generic axis into a project where it is immaterial; do not omit a material axis merely because it is absent from this example list.
 
 Record semantic state separately as `相关`, `混合`, `无关`, or `未知`, with actual sample titles/IDs. HTTP `200`, valid XML/JSON, expected fields, and a large result count can coexist with completely irrelevant results. Do not call that source usable.
 
 Use a reproducible sample instead of selecting favorable items:
 
-1. Record the exact query/input, provider options, language/region, sort order, page/cursor, request time, and returned count.
+1. Record the exact query/input and every applicable provider option or filter, such as language/region, time range, sort order, page/cursor, request time, and returned count.
 2. For an ordered response, inspect the first five distinct returned items in provider order, or every item when fewer than five are returned. Do not search deeper for better-looking examples first.
 3. For an unordered batch, sort by a stable source ID or canonical URL and inspect the first five. Record the rule; do not use a manually chosen subset.
 4. Record every inspected title/ID/link and its relevance reason. For multiple required coverage cells, sample each cell separately rather than pooling results.
-5. Mark the sample `相关` only when every inspected item matches the confirmed subject, information intent, language, and region. Any mixture is `混合`; all mismatches are `无关`; missing or unreadable content is `未知`.
+5. Mark the sample `相关` only when every inspected item matches every required semantic dimension. Any mixture is `混合`; all mismatches are `无关`; a missing required dimension or unreadable content is `未知`.
+
+Before reporting semantic relevance, run a compact completeness check: show the actual inspected title/ID/link, name the required dimensions selected from the active contract, and state the observed result for each. Report every required dimension separately even when another mismatch already rejects the sample; do not merge axes or imply them from a title. Missing identity or any required dimension means the review is incomplete, while an irrelevant generic dimension should be omitted rather than reported as an artificial unknown.
 
 `混合` is not suitable for unattended display merely because some results are useful. A deterministic filter may be proposed, but it must be recorded, applied to a fresh response, and sampled again using the same rule. Keep the unfiltered and filtered observations so the filter cannot hide the original failure. One favorable result, a provider relevance score, or a marketing claim never substitutes for this sample.
 
@@ -138,7 +166,7 @@ If representative samples are irrelevant, wrong-language noise, or cannot be tie
 
 When no credible source remains for the core promised behavior, stop before development confirmation. In plain language offer only evidence-honest paths such as continued source research, a manually curated source directory, user-provided/approved sources, a labeled UI-only prototype, or plan-only work. Do not create an update button whose core retrieval path has not passed semantic relevance.
 
-Do not report `已完成来源预检` from a scenario description, expected fixture, search snippet, provider marketing page, or remembered behavior. Record the actual tool event or request result. A `200` response proves reachability only; a `403`, login wall, empty result, or rate limit remains evidence and must be reported rather than replaced with an invented success.
+Report `已完成来源预检` only from the actual tool event or request result. A `200` proves reachability only; a `403`, login wall, empty result, or rate limit must remain visible evidence.
 
 Before recommending implementation, show a compact source evidence table containing source, test date, current state, observed fields, access/terms/limits, and gap. If terms or access cannot be checked, label the source `待验证`; do not silently treat it as approved.
 
@@ -172,7 +200,7 @@ Do not invent a result-count threshold before source evidence exists. For a nich
 - honest distinction among no result, blocked access, parse failure, and rate limit
 - successful operation in the confirmed validation environment
 
-These are candidate quality dimensions, not automatically approved product behavior. A collection-time column, no-result screen, parse-failure label, rate-limit state, retry behavior, filter, or export field enters the current round only when it is explicitly requested, observed as an existing project requirement, or included in an approved named scope draft.
+These are quality dimensions, not approved product behavior. Related UI states or export fields enter this round only when requested, found in project evidence, or approved in the named scope.
 
 Add a minimum result count only after an observed source sample or explicit user requirement supports it. Record whether the count means unique products, unique manufacturers, unique sources, or raw pages.
 
@@ -236,20 +264,20 @@ Do not use the start-development card to introduce new product requirements. Put
 
 If the card authorizes dependency installation, include exact package names/versions, lock or environment changes, narrow verification, rollback, and actions still excluded. If those are unknown, continue read-only preflight instead of showing `npm install` as a generic authorization.
 
-Before the final gate, show a compact implementation preflight record:
+Before the final gate, keep a compact internal preflight record:
 
 - selected local/official implementation basis and why it is comparable
 - installed capability result and the exact gap, if any
 - provisional current-round classification and why
 - runtime/delivery meaning for this round
 
-These are Codex-owned conclusions, not new questions. Do not claim they were checked unless the corresponding inspection event completed.
+These are Codex-owned conclusions, not questions, and require corresponding inspection evidence.
 
-After source preflight, put exact output fields, exact source states and visible failure behavior, trigger/output boundary, and the current coverage matrix or gap summary into one complete named contract. Do not scatter them across prose and incremental scope patches.
+After source preflight, keep exact output fields, source states, visible failures, trigger/output boundary, and coverage gaps in one named contract rather than scattered scope patches.
 
 The user's approval applies only to the exact named draft. If the draft was not approved, source name, collection time, empty-result, blocked-source, parse-failure, retry, rate-limit, or other standard-looking behavior must not appear for the first time in the start card.
 
-For a bounded proof whose direction was already approved, use a single combined gate from `references/交互与确认规则.md` when implementation is not already authorized. The user-facing gate repeats product behavior, data handling, current source limits, significant effects, acceptance, and no-touch meaning in plain language. Exact files, commands, source records, rollback mechanics, and test ledger belong in the Codex execution record. If delivery or another product decision changed, replace the whole active scope while preserving unaffected decisions; do not append another partial scope patch.
+For an approved bounded direction, use one combined gate from `references/交互与确认规则.md` when implementation is not authorized. Restate behavior, data handling, source limits, effects, acceptance, and no-touch meaning plainly. Exact mechanics stay in the Codex execution record. If a product decision changed, replace the active scope while preserving unaffected decisions; do not append a partial patch.
 
 Do not ask one turn to approve direction and another unchanged turn to start. If source evidence changes a user-owned product decision, show the changed decision and its plain-language evidence first; that is a justified extra round.
 

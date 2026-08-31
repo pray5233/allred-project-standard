@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "L01",
+      "assertions": [
+        "preflight occurs before edit boundary",
+        "maintainer guidance and benchmark evidence are read before architectural claims",
+        "runtime core and conditional owners stay distinct",
+        "edits and validation are claimed only after their events",
+        "Git push, publication, installation, and unrelated Skill changes are not inferred"
+      ],
+      "hard_failures": [
+        "routes the request through the ordinary project intake",
+        "loads maintenance rules into ordinary runtime context",
+        "claims validation or release before evidence"
+      ],
+      "tool_events": {
+        "L01_PREFLIGHT": "The target Skill, conditional references, invariant manifest, tests, and exact local release mirror were inspected. Git publication is not authorized.",
+        "L01_BENCHMARK": "The local accepted baseline and official skill-creator guidance support progressive disclosure, explicit-only maintenance, narrow ownership, and behavior tests instead of prose matching.",
+        "L01_EDITS": "Focused edits were applied to the smallest owning runtime references, invariants, and maintainer files; ordinary trigger words were unchanged.",
+        "L01_VALIDATION": "Structure, invariant ownership, route isolation, targeted behavior cases, source/release parity, and official validation passed."
+      }
+    }
+  ]
+}

@@ -29,12 +29,7 @@
         "新手项目：做一个自动整理客户问题记录的离线 Windows 工具。我有两个 Excel 样例，但还没有发给你。",
         "文件已放到 samples/customer_1.xlsx 和 samples/customer_2.xlsx。第一版按客户和状态整理，输出新 Excel。"
       ],
-      "post_event_turns": [
-        {
-          "after": "E02_READ_SAMPLES",
-          "text": "1"
-        }
-      ],
+      "post_event_turns": [],
       "artifact_labels": [
         "samples/customer_1.xlsx",
         "samples/customer_2.xlsx"
@@ -43,7 +38,7 @@
         "E02_READ_SAMPLES",
         "E02_PROJECT_PREFLIGHT"
       ],
-      "stop_condition": "approved scope followed by a concrete start-confirmation card"
+      "stop_condition": "one concrete combined scope/start card after sample evidence and complete preflight"
     },
     {
       "id": "V03",
@@ -440,30 +435,6 @@
       ],
       "tool_event_ids": [],
       "stop_condition": "authority, evidence, owner, and rollback gate"
-    },
-    {
-      "id": "V24",
-      "priority": "P0",
-      "modules": [
-        "skill-improvement",
-        "benchmark-capability",
-        "execution-closure"
-      ],
-      "visible_turns": [
-        "长期任务优化：扫描 allred-project-standard 的架构和所有内容，重构不合理的地方。"
-      ],
-      "artifact_labels": [
-        "source Skill",
-        "local release mirror",
-        "skill-creator"
-      ],
-      "tool_event_ids": [
-        "E24_SKILL_PREFLIGHT",
-        "E24_SKILL_CREATOR_READ",
-        "E24_EDITS_APPLIED",
-        "E24_VALIDATION_RESULTS"
-      ],
-      "stop_condition": "preflight-backed edit, behavior validation, and release parity without inferred Git/publish"
     },
     {
       "id": "V25",
@@ -2122,7 +2093,7 @@
         "shared-workflow details depend on that choice"
       ],
       "tool_event_ids": [],
-      "stop_condition": "after the parent choice, a justified follow-up round batches the newly relevant role, update, conflict, audit, and operating-boundary questions",
+      "stop_condition": "after the parent choice, a justified follow-up round batches current role, workflow, material, sensitivity, and useful-result facts while deferring future permission, conflict, audit, and formal acceptance rules",
       "forbidden_questions": [
         "all shared-system details before the parent route is chosen",
         "one dependent question per turn",
@@ -2175,7 +2146,7 @@
         "roles, update authority, conflicts, source of truth, operating boundary, and acceptance remain unresolved"
       ],
       "tool_event_ids": [],
-      "stop_condition": "the concentrated packet uses stable question IDs and makes every question's current value, basis/guess, recommendation, effect, and answer format clear",
+      "stop_condition": "the concentrated packet makes every question's current value, basis/guess, recommendation, effect, and answer format clear without requiring visible internal IDs",
       "forbidden_questions": [
         "topic labels instead of questions",
         "unsupported recommendation presented as fact",
@@ -3569,6 +3540,346 @@
         "model-created complete product scope",
         "project-size choice",
         "implementation or final start gate"
+      ]
+    },
+    {
+      "id": "V128",
+      "priority": "P0",
+      "modules": [
+        "activation-routing",
+        "new-project",
+        "beginner",
+        "adaptive-interview",
+        "regression-baseline"
+      ],
+      "visible_turns": [
+        "allred新项目：我想做一个本地合同盖章工具，可以提供合同章图片，自动盖到甲方或者乙方；先和我确认需求，不要开发。",
+        "allred新手。只切换成更容易理解的表达，需求和当前进度都不变。"
+      ],
+      "artifact_labels": [
+        "rough requirement without supplied stamp or contract sample"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "one new-project workflow preserves the same intake state while only the visible expression changes",
+      "forbidden_questions": [
+        "restart intake after expression switch",
+        "different first-version scope under beginner wording",
+        "project-size or delivery shortcut",
+        "development or file creation"
+      ]
+    },
+    {
+      "id": "V129",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "materials-evidence",
+        "write-boundary",
+        "stage-routing"
+      ],
+      "visible_turns": [
+        "allred新项目：做一个本地 PDF 对照查看工具。样例在 samples/paper.pdf，我希望左侧原文、右侧中文，先只读检查样例和当前工程，再和我确认，不要开始开发。"
+      ],
+      "artifact_labels": [
+        "samples/paper.pdf",
+        "empty project workspace"
+      ],
+      "tool_event_ids": [
+        "E129_PDF_INSPECTION"
+      ],
+      "stop_condition": "read-only evidence stays disposable and outside the project while unsupported viewer behavior remains unknown",
+      "forbidden_questions": [
+        "project-relative render or extraction output",
+        "READY or start-development option",
+        "promise that no disposable temporary evidence will be generated",
+        "claim that visual columns prove selection or reading order",
+        "project file creation"
+      ]
+    },
+    {
+      "id": "V130",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "stage-routing",
+        "interaction-confirmation",
+        "decision-coverage"
+      ],
+      "visible_turns": [
+        "allred新项目：内部人员使用的离线清单工具，输入和规则样例都齐全，原文件只读，输出新 Excel；目前只读取了新项目启动说明，还没有建立临时状态或运行聚合校验。请直接给我开始开发确认。"
+      ],
+      "artifact_labels": [
+        "complete user description",
+        "no aggregate validation event"
+      ],
+      "tool_event_ids": [],
+      "stop_condition": "the request remains in read-only preflight because reading instructions is not a validated READY transition",
+      "forbidden_questions": [
+        "active or answerable start-development choice",
+        "claim that READY passed",
+        "reference reading treated as validation",
+        "mutation"
+      ]
+    },
+    {
+      "id": "V131",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "materials-evidence",
+        "evidence-level",
+        "adaptive-alignment"
+      ],
+      "visible_turns": [
+        "allred新项目：先只读检查本地论文 PDF 是否适合做双栏翻译对照查看器，不开发。"
+      ],
+      "artifact_labels": [
+        "local text-layer PDF"
+      ],
+      "tool_event_ids": [
+        "E131_RENDER_AND_WORDS"
+      ],
+      "stop_condition": "claims stop at rendered layout and extracted word-coordinate evidence rather than viewer interaction conclusions",
+      "forbidden_questions": [
+        "background user or success questionnaire before the requested inspection",
+        "text selection declared validated",
+        "reading order declared validated",
+        "complete extraction declared validated",
+        "development authorization"
+      ]
+    },
+    {
+      "id": "V132",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "materials-evidence",
+        "evidence-level",
+        "adaptive-alignment"
+      ],
+      "visible_turns": [
+        "allred新项目：先只读检查 samples/inspection.xlsx 是否足以支持检验记录缺项检查，不开发。"
+      ],
+      "artifact_labels": [
+        "samples/inspection.xlsx"
+      ],
+      "tool_event_ids": [
+        "E132_WORKBOOK_SAMPLE"
+      ],
+      "stop_condition": "claims stop at the workbook structures and sampled rows actually inspected rather than complete-workbook or product conclusions",
+      "forbidden_questions": [
+        "broad project intake before the requested inspection",
+        "full workbook coverage declared validated",
+        "formula or hidden-sheet behavior inferred without inspection",
+        "finished missing-field checker declared feasible",
+        "development authorization"
+      ]
+    },
+    {
+      "id": "V133",
+      "priority": "P0",
+      "modules": [
+        "debugging",
+        "materials-evidence",
+        "evidence-level",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "项目调试：本地 logs/app.log 里每次刷新配置后好像都会超时。先检查现有日志判断能确认什么，不要修改项目。"
+      ],
+      "artifact_labels": [
+        "logs/app.log"
+      ],
+      "tool_event_ids": [
+        "E133_LOG_CORRELATION"
+      ],
+      "stop_condition": "the reply distinguishes an observed timing correlation from root cause and names the smallest next diagnostic test",
+      "forbidden_questions": [
+        "ask the user to re-upload a local log",
+        "configuration reload declared the root cause",
+        "fix claimed from log correlation alone",
+        "unrelated product questions",
+        "project mutation"
+      ]
+    },
+    {
+      "id": "V134",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "materials-evidence",
+        "conditional-overlay",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：做一个单人离线使用的清单整理工具。样例 CSV 在 samples/input.csv；保留原文件，只生成按状态排序的新 CSV。能在当前电脑处理样例且结果行数不变就算本轮可用。先只读检查，不开发。"
+      ],
+      "artifact_labels": ["samples/input.csv"],
+      "tool_event_ids": ["E134_LOCAL_SAMPLE"],
+      "stop_condition": "ordinary local software stays on the core route without unrelated conditional-domain questions",
+      "forbidden_questions": [
+        "shared roles, permissions, conflicts, or audit",
+        "external sources, monitoring schedule, or source coverage",
+        "company hosting or organization policy without evidence",
+        "repeat already answered intake"
+      ]
+    },
+    {
+      "id": "V135",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "non-software-project",
+        "training-project",
+        "conditional-overlay",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：为已经完成基础课程的员工设计一节 90 分钟项目实践培训。现有讲义在 training 目录；先分析已有内容，再和我确认课程目标、练习和验收，不生成文档。"
+      ],
+      "artifact_labels": ["training directory"],
+      "tool_event_ids": ["E135_TRAINING_BASELINE"],
+      "stop_condition": "training discovery stays artifact-focused and does not inherit software delivery or shared-state rules",
+      "forbidden_questions": [
+        "desktop versus web delivery for the training artifact",
+        "multi-user permissions, conflicts, or audit",
+        "external monitoring frequency",
+        "curriculum omissions chosen before evidence"
+      ]
+    },
+    {
+      "id": "V136",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "external-source",
+        "external-one-time",
+        "conditional-overlay",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：根据公开官方资料做一次设备方案对比，结果是一份带来源链接和查询日期的表格。本次完成后不持续跟踪、不定时更新。先确认资料来源是否足够，不生成表格。"
+      ],
+      "artifact_labels": [],
+      "tool_event_ids": ["E136_ONE_TIME_SOURCE_CHECK"],
+      "stop_condition": "one-time external research validates bounded evidence without importing monitoring behavior",
+      "forbidden_questions": [
+        "update schedule",
+        "cross-run history or deduplication",
+        "alerts or background service",
+        "multi-user permission model"
+      ]
+    },
+    {
+      "id": "V137",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "external-source",
+        "external-monitoring",
+        "conditional-overlay",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：持续监测我指定的公开政策页面，每个工作日检查一次，保留变化历史；发现新增或修改时生成待人工确认的变化清单。先验证来源和变化识别路线，不开发。"
+      ],
+      "artifact_labels": [],
+      "tool_event_ids": ["E137_MONITORING_PREFLIGHT"],
+      "stop_condition": "continuous monitoring retains its persistence and ownership consequences without unrelated collaboration defaults",
+      "forbidden_questions": [
+        "whether this is one-time or continuous",
+        "invented source categories or extra reports",
+        "multi-user roles without a shared-state requirement",
+        "company office packaging without runtime evidence"
+      ]
+    },
+    {
+      "id": "V138",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "shared-collaboration",
+        "conditional-overlay",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：做一个多人共享的问题台账。提交人员新增记录，负责人可以分派和关闭，复核人可以重新打开；冲突不能静默覆盖。现有流程说明和样表在 project-info 目录。先分析现状并集中确认剩余规则，不开发。"
+      ],
+      "artifact_labels": ["project-info directory"],
+      "tool_event_ids": ["E138_SHARED_PROCESS"],
+      "stop_condition": "confirmed shared authority activates only the consequential collaboration questions with evidence",
+      "forbidden_questions": [
+        "whether work is shared after the user already confirmed it",
+        "external source policy",
+        "generic office-computer packaging",
+        "duplicate role questions answered by project evidence"
+      ]
+    },
+    {
+      "id": "V139",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "runtime-delivery",
+        "company-office-delivery",
+        "conditional-overlay",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：给一名文员做离线表格检查工具。公司普通 Windows 电脑没有 Python、Node 或管理员权限，日常能用浏览器和 Office；原表只读，输出新文件。先确认交付路线和验证办法，不开发。"
+      ],
+      "artifact_labels": [],
+      "tool_event_ids": ["E139_OFFICE_ENVIRONMENT"],
+      "stop_condition": "office delivery constraints shape packaging and acceptance without creating shared or external requirements",
+      "forbidden_questions": [
+        "whether developer tools are installed after the user answered it",
+        "multi-user permissions or audit",
+        "external data source policy",
+        "development server presented as final delivery"
+      ]
+    },
+    {
+      "id": "V140",
+      "priority": "P0",
+      "modules": [
+        "debugging",
+        "existing-project",
+        "conditional-overlay",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "项目调试：现有本地工具导出后少了最后一行。复现样例、日志和测试都在工程里；先定位原因并给出最小修复，不增加功能。"
+      ],
+      "artifact_labels": ["local reproduction sample", "logs", "existing tests"],
+      "tool_event_ids": ["E140_DEBUG_REPRO"],
+      "stop_condition": "debugging remains in place and follows evidence without restarting discovery or loading conditional project domains",
+      "forbidden_questions": [
+        "new-project intake",
+        "shared collaboration rules",
+        "external-source mode",
+        "delivery platform selection"
+      ]
+    },
+    {
+      "id": "V141",
+      "priority": "P0",
+      "modules": [
+        "long-term",
+        "materials-evidence",
+        "conditional-overlay",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred长期任务：继续当前稳定性分析。基线、已确认结论和新一批日志都在工程中；本轮只读复算并说明是否改变现有判断，不更新项目记录。"
+      ],
+      "artifact_labels": ["project baseline", "confirmed conclusions", "new log batch"],
+      "tool_event_ids": ["E141_LONG_TERM_REVIEW"],
+      "stop_condition": "long-term work resumes from the project baseline and preserves the read-only boundary without unrelated overlays",
+      "forbidden_questions": [
+        "restart new-project intake",
+        "shared write or audit rules when updates are excluded",
+        "external-source mode",
+        "office delivery selection"
       ]
     }
   ]

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "instructions": "Give the test group only visible_turns and artifact_labels. Inject named tool events only after the corresponding action. Do not expose the oracle.",
+  "cases": [
+    {
+      "id": "L01",
+      "priority": "P0",
+      "modules": ["skill-maintenance", "release-review"],
+      "visible_turns": [
+        "$allred-project-lab 扫描 allred-project-standard 的架构和所有内容，重构不合理的地方。"
+      ],
+      "artifact_labels": ["source Skill", "local release mirror", "skill-creator"],
+      "tool_event_ids": ["L01_PREFLIGHT", "L01_BENCHMARK", "L01_EDITS", "L01_VALIDATION"],
+      "stop_condition": "preflight-backed edit, behavior validation, and release parity without inferred Git or publication"
+    }
+  ]
+}

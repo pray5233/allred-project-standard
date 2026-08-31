@@ -50,7 +50,6 @@ $requiredCoverage = [ordered]@{
   'long-term' = 4
   'evidence-level' = 1
   'write-boundary' = 3
-  'skill-improvement' = 1
   'execution-closure' = 10
   'workflow-efficiency' = 6
   'memory-notes-boundary' = 1
@@ -76,6 +75,12 @@ $requiredCoverage = [ordered]@{
   'existing-project' = 3
   'change-traceability' = 2
   'regression-baseline' = 1
+  'conditional-overlay' = 8
+  'external-source' = 2
+  'external-one-time' = 1
+  'external-monitoring' = 1
+  'shared-collaboration' = 1
+  'company-office-delivery' = 1
 }
 
 if ($testSuite -and $oracleSuite) {
