@@ -1,0 +1,93 @@
+name: Allred Static Validation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: allred-static-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  workflow-lint:
+    name: GitHub Actions workflow lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Run pinned actionlint
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=1.7.12
+          archive="actionlint_${version}_linux_amd64.tar.gz"
+          base="https://github.com/rhysd/actionlint/releases/download/v${version}"
+          curl --fail --location --silent --show-error "${base}/${archive}" --output "${archive}"
+          curl --fail --location --silent --show-error "${base}/actionlint_${version}_checksums.txt" --output checksums.txt
+          grep " ${archive}$" checksums.txt | sha256sum --check
+          tar -xzf "${archive}" actionlint
+          ./actionlint -config-file .github/actionlint.yaml
+
+  windows-static:
+    name: Windows static and install checks
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run dependency-free quick validation
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $output = Join-Path $PWD '_ci\quick'
+          & .\maintainer\allred-project-lab\scripts\invoke_candidate_validation.ps1 `
+            -Mode Quick `
+            -RepoRoot $PWD `
+            -StandardRoot (Join-Path $PWD 'allred-project-standard') `
+            -LabRoot (Join-Path $PWD 'maintainer\allred-project-lab') `
+            -ReleaseRoot $PWD `
+            -OutputRoot $output
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Validate Windows PowerShell 5.1 compatibility
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & .\allred-project-standard\scripts\check_skill_structure.ps1 `
+            -SkillRoot .\allred-project-standard
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Verify isolated installation
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $destination = Join-Path $PWD '_ci\install'
+          & .\install.ps1 -DestinationRoot $destination
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $sourceVersion = (Get-Content .\allred-project-standard\VERSION -Raw -Encoding UTF8).Trim()
+          $installedVersion = (Get-Content (Join-Path $destination 'allred-project-standard\VERSION') -Raw -Encoding UTF8).Trim()
+          if ($sourceVersion -ne $installedVersion) {
+            throw "Installed version mismatch: $sourceVersion != $installedVersion"
+          }
+
+      - name: Upload static validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allred-static-${{ github.run_id }}
+          path: |
+            _ci/quick
+            _ci/install/.allred-project-standard-installation.json
+          if-no-files-found: warn
+          retention-days: 14

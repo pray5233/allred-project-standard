@@ -391,3 +391,36 @@ Add an internal `discovery_coverage` state with three methods: contract-slot rev
 - isolated installation from the final release package installed `0.8.0-rc12`, wrote a receipt, and passed installed-structure validation at `allred-project-standard-validation/install-v080rc12-final2-20260901`
 
 Residual scope: the complete 142-case low/xhigh dynamic matrix was not rerun. Publication, Git commit, and stable-version promotion remain separate user-authorized actions.
+
+## 2026-09-01 GitHub Validation Automation
+
+### Problem And Success Criteria
+
+Manual testing catches realistic interaction defects but covers too few routes and model variants. The repository needs automatic breadth without putting credentials in a public repository or running expensive model evaluations on every push.
+
+Success means:
+
+- every push and pull request runs dependency-free Windows static checks with no model credentials
+- static CI verifies structure, invariants, route isolation/budget, runtime generality, harness integrity, PowerShell 5.1, and isolated installation
+- model behavior is manual-only and never runs on untrusted pull-request events
+- dynamic evaluation reuses an authenticated self-hosted Windows experiment machine and stores complete test/check transcripts as artifacts
+- maintainers can choose changed, release, full-low, or full-dual coverage without editing YAML
+- all jobs use read-only repository permissions and bounded artifact retention
+
+### Benchmarks
+
+| Source | Version/date | Comparable path | Reused principle |
+| --- | --- | --- | --- |
+| GitHub Actions workflow syntax | official documentation, checked 2026-09-01 | push/PR static checks and manual `workflow_dispatch` | least-privilege permissions, concurrency, bounded jobs, artifacts |
+| GitHub self-hosted runners | official documentation, checked 2026-09-01 | authenticated local Codex evaluation without repository secrets | label the dedicated Windows runner and use manual dispatch only |
+| OpenAI Skill eval guidance | official Eval Skills article, checked 2026-09-01 | repeated realistic task trials and comparison against success criteria | keep deterministic checks separate from model behavior evidence |
+| local `allred-project-lab` | `0.8.0-rc12`, 2026-09-01 | impact selection, parallel test/check groups, blind comparison, HTML reports | wrap existing validated runners instead of introducing another evaluator |
+
+### Decision
+
+Add two repository workflows:
+
+1. `static-validation.yml` runs on push, pull request, and manual dispatch using GitHub-hosted `windows-latest`. It needs no Codex login or secret.
+2. `behavior-evals.yml` runs only through `workflow_dispatch` on a self-hosted runner labeled `allred-eval`. The runner must already have Codex CLI authenticated. It uploads complete evidence and never runs on pull requests.
+
+Add `run_ci_behavior.ps1` as the testable orchestration owner. `Changed` uses impact-selected low evaluation, `Release` runs the candidate gate, `FullLow` evaluates all behavior cases at low reasoning, and `FullDual` evaluates all cases at low then xhigh. The workflows do not install Skills, change the user's active Codex configuration, publish releases, or promote a candidate.

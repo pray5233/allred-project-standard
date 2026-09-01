@@ -13,6 +13,55 @@
 
 完整实验矩阵保留在后文，仅供维护者复现问题时使用。
 
+## GitHub自动测试
+
+### 自动静态CI
+
+`.github/workflows/static-validation.yml` 在每次push、Pull Request和手动触发时运行。它使用GitHub托管的Windows环境，不需要Codex登录或任何密钥，执行：
+
+- Quick结构、Invariant、运行时通用性、路由预算和Lab候选框架检查
+- 使用固定版本 `actionlint 1.7.12` 检查GitHub Actions语义与自托管runner标签
+- Windows PowerShell 5.1兼容检查
+- 隔离安装及版本一致性检查
+- 上传HTML报告和安装回执，保留14天
+
+静态CI通过只代表机械门禁通过，不代表Skill交互效果已经通过。
+
+### 手动动态评测
+
+`.github/workflows/behavior-evals.yml` 只接受Actions页面中的手动运行，不绑定push或Pull Request。推荐使用专门的Windows实验机作为自托管runner：
+
+1. 在GitHub仓库的 `Settings -> Actions -> Runners` 添加Windows self-hosted runner。
+2. 为该runner增加标签 `allred-eval`，保留系统标签 `self-hosted`、`Windows`、`X64`。
+3. 在runner账号下安装Codex CLI，并执行 `codex login`；使用 `codex login status`确认登录。
+4. runner工作目录不要放真实项目、个人知识库或生产资料，只用于仓库测试夹具。
+5. 打开 `Actions -> Allred Behavior Evals -> Run workflow`，选择测试范围。
+
+范围建议：
+
+- 日常修改使用 `changed`。
+- 准备候选版使用 `release`。
+- 每周或大量规则变更后使用 `full-low`。
+- 稳定版前使用 `full-dual`。
+
+动态运行会上传完整测试组对话、命令结果、检查组判定和报告，保留30天。`InfrastructureFailure`仍表示环境或认证未完成，不能算Skill通过或失败。
+
+安全边界：
+
+- 动态工作流使用 `workflow_dispatch`，不在外部Pull Request上运行。
+- 仓库权限为只读；工作流不提交、不推送、不发布版本。
+- Codex凭据保存在自托管runner本地，不写入仓库、日志或Release。
+- 公共runner应专机专用；停止测试时可以在GitHub中禁用runner服务。
+
+也可以在自托管实验机的仓库根目录直接运行同一入口：
+
+```powershell
+pwsh -NoProfile -File .\maintainer\allred-project-lab\scripts\run_ci_behavior.ps1 `
+  -Suite Changed `
+  -BaselineRef v0.8.0-rc11 `
+  -Model gpt-5.6-sol
+```
+
 ## 一、实验原则
 
 1. 每个独立场景新建一个 Codex 任务，避免前一个场景的模式和假设污染后一个场景。

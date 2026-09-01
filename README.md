@@ -446,4 +446,22 @@ pwsh -NoProfile -File .\allred-project-standard\scripts\run_entry_guard_eval.ps1
 
 测试 Skill 触发和交互时建议使用独立的测试组和检查组：测试组只看 `tests/behavior-cases.test.json`，检查组再使用 `tests/behavior-cases.oracle.json` 审阅原始对话。不要把 Oracle、预期答案或旧缺陷提前提供给测试组。完整标准见 `allred-project-standard/references/Skill测试验收.md`。
 
+## GitHub 自动测试
+
+仓库提供两层GitHub Actions：
+
+- `Allred Static Validation`：每次推送和Pull Request自动运行，不需要模型、Codex登录或API密钥。
+- `Allred Behavior Evals`：只允许手动触发，使用带 `allred-eval` 标签的自托管Windows实验机和该机器现有的Codex登录。
+
+动态评测支持四种范围：
+
+| 范围 | 用途 |
+| --- | --- |
+| `changed` | 根据Git改动选择受影响案例和相邻案例，适合日常修改 |
+| `release` | 发布候选门禁，包括低/极高、回放、盲审、写入探针和安装检查 |
+| `full-low` | 全部行为案例低推理测试，适合定期广覆盖 |
+| `full-dual` | 全部案例低推理和极高推理测试，适合重要重构或稳定版前 |
+
+公开仓库不会在Pull Request上调用自托管动态评测，也不会保存Codex凭据。完整设置和操作见 [TESTING.md](TESTING.md)。
+
 稳定版本应使用与 `VERSION` 一致的 Git tag；当前稳定 tag 为 `v0.7.1`，最新 GitHub 预发布 tag 为 `v0.8.0-rc12`。`rc12` 已完成自动化与本机候选验证，仍需实验机真实项目验收和完整动态矩阵后再决定是否晋升稳定版。

@@ -18,7 +18,8 @@ foreach ($relative in @(
   'tests\review-result.schema.json',
   'scripts\check_behavior_manifest.ps1',
   'scripts\check_candidate_harness.ps1',
-  'scripts\invoke_candidate_validation.ps1'
+  'scripts\invoke_candidate_validation.ps1',
+  'scripts\run_ci_behavior.ps1'
 )) {
   if (-not (Test-Path -LiteralPath (Join-Path $LabRoot $relative))) { $failures.Add("Missing lab file: $relative") | Out-Null }
 }

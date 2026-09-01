@@ -1,0 +1,120 @@
+name: Allred Behavior Evals
+
+on:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Evaluation breadth
+        required: true
+        type: choice
+        default: changed
+        options:
+          - changed
+          - release
+          - full-low
+          - full-dual
+      baseline_ref:
+        description: Accepted baseline tag or commit
+        required: true
+        type: string
+        default: v0.8.0-rc11
+      model:
+        description: Codex model available on the self-hosted runner
+        required: true
+        type: string
+        default: gpt-5.6-sol
+      max_parallel_cases:
+        description: Parallel cases on the runner
+        required: true
+        type: choice
+        default: '3'
+        options:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+      timeout_seconds:
+        description: Timeout for each Codex turn
+        required: true
+        type: choice
+        default: '420'
+        options:
+          - '300'
+          - '420'
+          - '600'
+          - '900'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: allred-behavior-evals
+  cancel-in-progress: false
+
+jobs:
+  behavior-evals:
+    name: ${{ inputs.suite }} on self-hosted Windows
+    runs-on: [self-hosted, Windows, X64, allred-eval]
+    timeout-minutes: 720
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify local Codex runner
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          codex --version
+          codex login status
+          if ($LASTEXITCODE -ne 0) {
+            throw 'Codex CLI is not authenticated on this self-hosted runner.'
+          }
+
+      - name: Run selected behavior suite
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $suiteMap = @{
+            'changed' = 'Changed'
+            'release' = 'Release'
+            'full-low' = 'FullLow'
+            'full-dual' = 'FullDual'
+          }
+          $output = Join-Path $PWD ("_eval\{0}" -f '${{ github.run_id }}')
+          & .\maintainer\allred-project-lab\scripts\run_ci_behavior.ps1 `
+            -Suite $suiteMap['${{ inputs.suite }}'] `
+            -RepoRoot $PWD `
+            -StandardRoot (Join-Path $PWD 'allred-project-standard') `
+            -LabRoot (Join-Path $PWD 'maintainer\allred-project-lab') `
+            -BaselineRef '${{ inputs.baseline_ref }}' `
+            -Model '${{ inputs.model }}' `
+            -MaxParallelCases ([int]'${{ inputs.max_parallel_cases }}') `
+            -TimeoutSeconds ([int]'${{ inputs.timeout_seconds }}') `
+            -OutputRoot $output
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Publish report link in job summary
+        if: always()
+        shell: pwsh
+        run: |
+          $root = Join-Path $PWD ("_eval\{0}" -f '${{ github.run_id }}')
+          "## Allred behavior evaluation" >> $env:GITHUB_STEP_SUMMARY
+          "- Suite: `${{ inputs.suite }}`" >> $env:GITHUB_STEP_SUMMARY
+          "- Baseline: `${{ inputs.baseline_ref }}`" >> $env:GITHUB_STEP_SUMMARY
+          "- Model: `${{ inputs.model }}`" >> $env:GITHUB_STEP_SUMMARY
+          "- Artifact: `allred-evals-${{ github.run_id }}`" >> $env:GITHUB_STEP_SUMMARY
+          if (Test-Path (Join-Path $root 'report.md')) {
+            Get-Content (Join-Path $root 'report.md') -Encoding UTF8 >> $env:GITHUB_STEP_SUMMARY
+          }
+
+      - name: Upload behavior evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allred-evals-${{ github.run_id }}
+          path: _eval/${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 30

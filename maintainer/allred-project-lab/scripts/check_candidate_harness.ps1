@@ -32,7 +32,8 @@ $required = @(
   'scripts\run_replay_eval.ps1',
   'scripts\run_blind_comparison.ps1',
   'scripts\write_validation_report.ps1',
-  'scripts\invoke_candidate_validation.ps1'
+  'scripts\invoke_candidate_validation.ps1',
+  'scripts\run_ci_behavior.ps1'
 )
 foreach ($relative in $required) {
   if (-not (Test-Path -LiteralPath (Join-Path $LabRoot $relative))) {
@@ -167,6 +168,18 @@ if (-not $candidateLowBlock.Success -or -not $candidateLowBlock.Value.Contains('
 $blindBlock = [regex]::Match($candidateText, 'invoke_blind_comparison_batch\.ps1.*?Invoke-ValidationStep -Name ''blind-baseline-comparison''', [System.Text.RegularExpressions.RegexOptions]::Singleline)
 if (-not $blindBlock.Success -or -not $blindBlock.Value.Contains('Add-ComparisonOptions -Arguments $arguments -Effort $LowReasoningEffort') -or $blindBlock.Value.Contains('Add-BehaviorOptions -Arguments $arguments')) {
   $failures.Add('Blind comparison block does not use comparison-only options.') | Out-Null
+}
+
+$ciBehaviorText = Get-Content -LiteralPath (Join-Path $LabRoot 'scripts\run_ci_behavior.ps1') -Raw -Encoding UTF8
+foreach ($contract in @(
+  "[ValidateSet('Changed', 'Release', 'FullLow', 'FullDual')]",
+  "login status",
+  "@('low', 'xhigh')",
+  "DisablePlugins = `$true",
+  "StatelessTurns = `$true",
+  "exit [int]`$code"
+)) {
+  if (-not $ciBehaviorText.Contains($contract)) { $failures.Add("CI behavior runner is missing contract: $contract") | Out-Null }
 }
 $entryGuardText = Get-Content -LiteralPath (Join-Path $StandardRoot 'scripts\run_entry_guard_eval.ps1') -Raw -Encoding UTF8
 $noWriteBoundaryContract = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('KD865rKh5pyJfOacqikoPzrkv67mlLl85Yib5bu6KSg/OuaIluWIm+W7unzlkozliJvlu7opPyg/OuS7u+S9lSk/KD866aG555uuKT/mlofku7Y='))
