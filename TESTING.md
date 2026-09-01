@@ -33,9 +33,10 @@
 
 1. 在GitHub仓库的 `Settings -> Actions -> Runners` 添加Windows self-hosted runner。
 2. 为该runner增加标签 `allred-eval`，保留系统标签 `self-hosted`、`Windows`、`X64`。
-3. 在runner账号下安装Codex CLI，并执行 `codex login`；使用 `codex login status`确认登录。
-4. runner工作目录不要放真实项目、个人知识库或生产资料，只用于仓库测试夹具。
-5. 打开 `Actions -> Allred Behavior Evals -> Run workflow`，选择测试范围。
+3. 使用GitHub当前版本的runner；工作流使用Node.js 24版 `actions/checkout@v7` 和 `actions/upload-artifact@v7`。
+4. 在runner账号下安装Codex CLI，并执行 `codex login`；使用 `codex login status`确认登录。
+5. runner工作目录不要放真实项目、个人知识库或生产资料，只用于仓库测试夹具。
+6. 打开 `Actions -> Allred Behavior Evals -> Run workflow`，选择测试范围。
 
 范围建议：
 
