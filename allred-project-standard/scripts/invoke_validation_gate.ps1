@@ -71,6 +71,7 @@ $results.Add((Invoke-AllredValidatorProcess -Name 'stage-transition' -ScriptPath
 $results.Add((Invoke-AllredValidatorProcess -Name 'decision-frontier' -ScriptPath (Join-Path $PSScriptRoot 'validate_decision_frontier.ps1') -Arguments @('-Path', $statePath) -PowerShellExecutable $powerShellExecutable)) | Out-Null
 
 if ($ToStage -in @('READY', 'EXECUTION')) {
+  $results.Add((Invoke-AllredValidatorProcess -Name 'discovery-coverage' -ScriptPath (Join-Path $PSScriptRoot 'validate_discovery_coverage.ps1') -Arguments @('-Path', $statePath) -PowerShellExecutable $powerShellExecutable)) | Out-Null
   try {
     $recordPath = Resolve-AllredExecutionRecordPath -StatePath $statePath -ExplicitPath $ExecutionRecordPath
     $results.Add((Invoke-AllredValidatorProcess -Name 'execution-record' -ScriptPath (Join-Path $PSScriptRoot 'validate_execution_record.ps1') -Arguments @('-Path', $recordPath) -PowerShellExecutable $powerShellExecutable)) | Out-Null

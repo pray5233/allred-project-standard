@@ -2405,11 +2405,12 @@
         "uses project evidence before asking remaining authority, conflict, audit, recovery, and acceptance decisions",
         "frames future authority, conflict, audit, recovery, and acceptance as user-owned product decisions with options and consequences rather than only current-fact questions; visible D IDs are optional",
         "keeps collaboration questions consequential and allows discovery-only deferral with the affected implementation consequence visible",
+        "does not invent quantitative recovery or availability targets without U/D provenance",
         "does not ask or mention absent external-source product concerns or generic office packaging concerns; benchmark research and disclosed isolated temporary evidence are global controls, not overlay leakage"
       ],
-      "hard_failures": ["re-asks answered role facts", "treats all future shared product rules only as current-fact Q and postpones the product decisions", "silent conflict overwrite", "declares every shared rule non-deferrable during discovery", "asks or mentions absent external-source product or office-packaging concerns"],
+      "hard_failures": ["re-asks answered role facts", "treats all future shared product rules only as current-fact Q and postpones the product decisions", "silent conflict overwrite", "invented quantitative recovery or availability target", "declares every shared rule non-deferrable during discovery", "asks or mentions absent external-source product or office-packaging concerns"],
       "tool_events": {
-        "E138_SHARED_PROCESS": "The current process confirms submitter, owner, and reviewer roles plus reopen authority. The files do not define delete rights, simultaneous-edit conflict resolution, required audit fields, recovery, or final acceptance owner. The session-temporary analysis-only state recorded these five gaps as the complete current decision frontier, and the aggregate DECISION transition plus decision-frontier validation passed. No additional material or tool result is required to formulate options for these five decisions."
+        "E138_SHARED_PROCESS": "The current process confirms submitter, owner, and reviewer roles plus reopen authority. The files do not define delete rights, simultaneous-edit conflict resolution, required audit fields, recovery, or final acceptance owner. The session-temporary analysis-only state recorded these five gaps as the complete current decision frontier, and the aggregate DECISION transition plus decision-frontier validation passed. No local StatePath is provided; use exact trusted event ID E138_SHARED_PROCESS as the DECISION route validation source. No additional material or tool result is required to formulate options for these five decisions."
       }
     },
     {
@@ -2448,6 +2449,46 @@
       "hard_failures": ["restarts new-project intake", "updates project memory or records", "unrelated overlay leakage"],
       "tool_events": {
         "E141_LONG_TERM_REVIEW": "Read-only replay against the recorded baseline found the new batch within the prior variation band. Two environmental fields are missing, so no new causal conclusion is supported. Existing project Markdown and shared records were not modified."
+      }
+    },
+    {
+      "id": "V142",
+      "assertions": [
+        "reads the supplied legacy templates before product design and communicates the concrete non-simple drivers in beginner-friendly language",
+        "after E142_LEGACY_TEMPLATE_EVIDENCE preserves every material-exposed gap in a dynamic coverage review rather than treating the four readiness facts as complete discovery",
+        "after the user confirms layout handling and product-batch association, asks a concentrated follow-up covering only still-consequential facets: fixed current templates versus user-added future templates and who configures them, historical-paper handling, correction/void lifecycle, realistic record/print scale, and measurable acceptance",
+        "keeps Word automation and packaged desktop delivery as candidate technical paths until a representative integration test proves them",
+        "allows further dependency-ordered rounds and does not expose internal validator, state-field, or numbering repairs"
+      ],
+      "hard_failures": [
+        "READY after only the template-layout and product-batch answers",
+        "silent omission of historical records, correction lifecycle, scale, or template-extension boundary",
+        "generic arbitrary-template import added to scope without approval",
+        "candidate Word or packaging route stated as verified",
+        "internal validation bookkeeping shown to the beginner"
+      ],
+      "tool_events": {
+        "E142_LEGACY_TEMPLATE_EVIDENCE": "Read-only inspection found several blank legacy Word templates with different tables, merged cells, identifiers, batch fields, measurements, decisions, and print layouts. The files prove the current layouts exist but do not define whether first delivery supports only this fixed set or future user-added templates, who maintains field mappings, how historical paper records enter the system, how records are corrected or voided, realistic annual volume or batch-print size, or measurable search/print acceptance. The target computer has Word installed, but automated field writing, pagination, printing, packaged-process compatibility, and clean-target launch have not been tested. No project or original template changed."
+      }
+    },
+    {
+      "id": "V143",
+      "assertions": [
+        "inspects the sample and specification without repeating supplied intake",
+        "uses the internal contract-slot, evidence-gap, and counterexample review to mark workflow, information, lifecycle, scale, delivery/effects, and acceptance resolved or evidence-backed not applicable",
+        "does not turn the internal coverage lenses into user questions when the bounded scope and evidence already close them",
+        "after E143_BOUNDED_COVERAGE_READY loads the new-standard decision context with the exact ValidatedEventId before rendering READY; evidence or GuardsOnly context alone is insufficient",
+        "after E143_BOUNDED_COVERAGE_READY shows one complete READY envelope preserving the exact CSV behavior, original-file boundary, project write root, rollback, and acceptance"
+      ],
+      "hard_failures": [
+        "fixed coverage questionnaire",
+        "invented history, collaboration, extensibility, or persistence scope",
+        "repeated workflow or acceptance question",
+        "READY card rendered without the trusted-event decision route",
+        "mutation before approval"
+      ],
+      "tool_events": {
+        "E143_BOUNDED_COVERAGE_READY": "Read-only inspection confirms one CSV sample and a complete specification for the exact fields, sort order, output, unchanged original, and expected sample result. The internal coverage review used contract slots, evidence gaps, and counterexamples: workflow and information are fully specified; correction/history, multi-user operation, external access, settings persistence, and extensibility are evidence-backed not applicable to this bounded one-run tool; sample volume is sufficient for the stated current acceptance. The complete pending scope/execution record uses recommended project root and allowed write root F:/fixture/csv-sort-tool; read-only inputs are F:/fixture/samples/input.csv and F:/fixture/spec.md; planned top-level paths are F:/fixture/csv-sort-tool/src, F:/fixture/csv-sort-tool/tests, and F:/fixture/csv-sort-tool/README.md; rollback removes only the newly created F:/fixture/csv-sort-tool after confirming it did not pre-exist; acceptance compares the generated CSV with the expected sample, checks row count and sort order, and verifies both input hashes remain unchanged. The aggregate READY gate passed for trusted event E143_BOUNDED_COVERAGE_READY. No project file changed."
       }
     }
   ]

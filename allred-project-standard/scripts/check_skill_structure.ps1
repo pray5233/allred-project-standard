@@ -97,6 +97,7 @@ $required = @(
   'scripts\invoke_validation_gate.ps1',
   'scripts\validate_stage_transition.ps1',
   'scripts\validate_decision_frontier.ps1',
+  'scripts\validate_discovery_coverage.ps1',
   'scripts\validate_ready_scope.ps1',
   'scripts\validate_change_traceability.ps1',
   'scripts\validate_execution_record.ps1',
@@ -150,7 +151,15 @@ foreach ($source in @('references\external-source.md', 'references\shared-collab
 
 $eventDecision = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage decision -ValidatedEventId E_FIXTURE_READY) -join "`n"
 Require-Contains $eventDecision 'Trusted-event validation source: E_FIXTURE_READY' 'trusted event decision routing'
-Require-Contains $eventDecision 'never user start authorization or EXECUTION' 'trusted event cannot authorize execution'
+Require-Contains $eventDecision 'otherwise ask only its decision frontier' 'trusted decision event boundary'
+Require-Contains $eventDecision 'Never EXECUTION' 'trusted event cannot authorize execution'
+Require-Contains $eventDecision 'how does not settle scope/owner' 'decision route preserves unanswered sibling facets'
+$decisionGuardsOnlyBlocked = $false
+try { & $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage decision -ValidatedEventId E_FIXTURE_READY -GuardsOnly 2>&1 | Out-Null } catch { $decisionGuardsOnlyBlocked = $true }
+if (-not $decisionGuardsOnlyBlocked) { Add-Failure 'GuardsOnly was accepted as a DECISION route load.' }
+$eventEvidenceBlocked = $false
+try { & $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage evidence -ValidatedEventId E_FIXTURE_READY 2>&1 | Out-Null } catch { $eventEvidenceBlocked = $true }
+if (-not $eventEvidenceBlocked) { Add-Failure 'Trusted READY event was accepted outside the decision stage.' }
 $eventExecutionBlocked = $false
 try { & $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage execution -ValidatedEventId E_FIXTURE_READY 2>&1 | Out-Null } catch { $eventExecutionBlocked = $true }
 if (-not $eventExecutionBlocked) { Add-Failure 'Trusted READY event incorrectly authorized EXECUTION context.' }
@@ -180,12 +189,14 @@ Require-Contains $debugEvidence 'support versus weaken' 'bounded debug experimen
 
 $sharedDecision = (& $selectorPath -SkillRoot $SkillRoot -Route long-term -Stage decision -Overlays shared-collaboration) -join "`n"
 Require-Contains $sharedDecision '<!-- source: references\shared-collaboration.md -->' 'shared decision overlay routing'
-Require-Match $sharedDecision '(?is)Q is current reality.{0,240}(include|allow|do).{0,80}\bD\b' 'shared current-fact versus future-decision separation'
-Require-Contains $sharedDecision 'Current facts cover participants/responsibilities, current records/workflow, and current use environment' 'shared current-fact coverage'
+Require-Contains $sharedDecision 'Q is current reality; future behavior is D' 'shared current-fact versus future-decision separation'
+Require-Contains $sharedDecision 'Facts cover participants, workflow/records, and environment' 'shared current-fact coverage'
 Require-Contains $sharedDecision 'Keep create, edit, approve/close, reopen, and delete as separate suffixes' 'shared action-axis separation'
 Require-Match $sharedDecision '(?is)Each suffix bullet.{0,100}影响：.{0,100}回复：.{0,180}group text or examples never substitute' 'shared per-facet consequence and reply contract'
 Require-Contains $sharedDecision 'Pipe the exact draft through scripts/validate_question_packet.ps1; after PASS send it unchanged or re-lint' 'shared deterministic question-packet lint'
-Require-Contains $sharedDecision 'Allow one natural-prose reply for the packet' 'shared natural reply contract'
+Require-Contains $sharedDecision 'Allow one natural-prose reply' 'shared natural reply contract'
+Require-Contains $sharedDecision "Shared hard stops: no invented days/hours/counts/retention; use '由你指定'" 'shared quantitative provenance hard stop'
+Require-Contains $sharedDecision "可暂缓任一项；对应设计/实现/验收保持未定，不开发" 'shared discovery deferral hard stop'
 Require-Match $sharedDecision '(?is)(ID-free groups|ID-free headings)' 'shared group-heading separation'
 
 $beginnerEvidence = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage evidence -Interaction beginner) -join "`n"
@@ -193,6 +204,7 @@ Require-Contains $beginnerEvidence 'never echo internal English labels' 'beginne
 
 $newProjectIntake = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage intake -Interaction standard) -join "`n"
 Require-Contains $newProjectIntake 'one packet-wide consequence sentence is insufficient' 'new-project intake per-group consequence lint'
+Require-Contains $newProjectIntake 'aggregate DECISION/READY without StatePath' 'intake trusted event handoff'
 Require-Contains $newProjectIntake 'recognizable useful result -> acceptance evidence' 'new-project success effect coverage'
 Require-Contains $newProjectIntake 'do not search the workspace for it' 'intake guard respects explicitly unsupplied materials'
 Require-Contains $newProjectIntake 'Pending material postpones evidence-dependent recommendations, not independent intake' 'missing material preserves independent intake packet'
@@ -218,12 +230,14 @@ Require-Contains $evidenceGuardOnly 'a descriptive name or label is not a target
 Require-Contains $evidenceGuardOnly 'ask only for the location or minimum sample' 'narrow missing-target question'
 Require-Contains $evidenceGuardOnly 'Report observations, limits, and write boundary before another action' 'post-event evidence report ordering'
 Require-Contains $evidenceGuardOnly 'Unselected-overlay negatives are routing metadata' 'post-event conditional-overlay isolation'
-Require-Contains $evidenceGuardOnly 'Preserve every named untested capability' 'named negative evidence coverage'
+Require-Contains $evidenceGuardOnly 'omit them from user-facing findings' 'unselected overlay negatives stay internal'
+Require-Contains $evidenceGuardOnly 'Preserve every named untested capability and evidence gap at facet level' 'named negative evidence coverage'
 Require-Contains $evidenceGuardOnly 'Evidence-quantifier lint:' 'evidence population and subgroup boundary'
 Require-Contains $evidenceGuardOnly 'an aggregate does not prove each subgroup' 'aggregate evidence cannot expand to subgroups'
 Require-Contains $evidenceGuardOnly 'Temp outputs are disposable evidence, not project artifacts' 'isolated evidence artifact classification'
 Require-Contains $evidenceGuardOnly 'Before render/extract disclose unchanged originals/project plus disposable evidence only in isolated temp' 'pre-inspection disposable evidence disclosure'
 Require-Contains $evidenceGuardOnly 'Unless blocked, continue authorized read-only work' 'post-report read-only continuation'
+Require-Contains $evidenceGuardOnly 'Trusted DECISION/READY event: call get_route_context.ps1 -Route new-standard -Stage decision -ValidatedEventId <ID>' 'trusted event exact decision route'
 Require-Contains $evidenceGuardOnly 'Script search is not a stage transition' 'decision route cannot be replaced by source search'
 if ($evidenceGuardOnly.Contains('<!-- source:')) { Add-Failure 'Guards-only routing loaded reference sections.' }
 
@@ -299,6 +313,23 @@ $gate = Join-Path $SkillRoot 'scripts\invoke_validation_gate.ps1'
 $validState = Join-Path $SkillRoot 'tests\project-state.valid-ready.json'
 $validCode = Invoke-IsolatedScriptExitCode -ScriptPath $gate -Arguments @('-Path', $validState, '-ToStage', 'READY')
 if ($validCode -ne 0) { Add-Failure 'Aggregate gate rejected valid READY state.' }
+$coverageValidator = Join-Path $SkillRoot 'scripts\validate_discovery_coverage.ps1'
+if ((Invoke-IsolatedScriptExitCode -ScriptPath $coverageValidator -Arguments @('-Path', $validState)) -ne 0) {
+  Add-Failure 'Discovery coverage validator rejected valid READY state.'
+}
+$invalidCoverageTemp = Join-Path ([System.IO.Path]::GetTempPath()) ('allred-invalid-coverage-' + [guid]::NewGuid().ToString('N') + '.json')
+try {
+  $invalidCoverageState = Get-Content -LiteralPath $validState -Raw -Encoding UTF8 | ConvertFrom-Json
+  $invalidCoverageState.discovery_coverage.status = 'incomplete'
+  $invalidCoverageState.discovery_coverage.areas[2].status = 'open'
+  $invalidCoverageState.discovery_coverage.areas[2].open_item_ids = @('Q-LIFECYCLE')
+  [System.IO.File]::WriteAllText($invalidCoverageTemp, ($invalidCoverageState | ConvertTo-Json -Depth 16), [System.Text.UTF8Encoding]::new($false))
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $coverageValidator -Arguments @('-Path', $invalidCoverageTemp)) -eq 0) {
+    Add-Failure 'Discovery coverage validator accepted an unresolved coverage area.'
+  }
+} finally {
+  if (Test-Path -LiteralPath $invalidCoverageTemp) { Remove-Item -LiteralPath $invalidCoverageTemp -Force }
+}
 foreach ($invalid in @(
   @{ file = 'project-state.invalid-stage.json'; stage = 'DECISION' },
   @{ file = 'project-state.invalid-frontier.json'; stage = 'DECISION' },

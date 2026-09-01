@@ -41,14 +41,23 @@ if ($ExternalMode -ne 'none' -and 'external-source' -notin $Overlays) {
 $newProjectRoutes = @('new-standard')
 $validatedByEvent = $false
 
+if (-not $MetricsOnly -and -not [string]::IsNullOrWhiteSpace($ValidatedEventId)) {
+  if ($Route -notin $newProjectRoutes -or $Stage -ne 'decision') {
+    throw 'ValidatedEventId is valid only for -Route new-standard -Stage decision. A trusted READY event must load decision context before rendering a READY card.'
+  }
+}
+
+if (-not $MetricsOnly -and $GuardsOnly -and $Stage -eq 'decision') {
+  throw 'GuardsOnly cannot load DECISION context. Rerun the same route, interaction, variant, and overlays at -Stage decision without -GuardsOnly before any question or READY packet.'
+}
+
 if (-not $MetricsOnly -and $Route -in $newProjectRoutes -and $Stage -in @('decision', 'execution')) {
   if (-not [string]::IsNullOrWhiteSpace($ValidatedEventId)) {
-    if ($Stage -ne 'decision') { throw 'ValidatedEventId can validate DECISION/READY context only; EXECUTION still requires the authorized state package.' }
     if (-not [string]::IsNullOrWhiteSpace($StatePath)) { throw 'Use either StatePath or ValidatedEventId, not both.' }
     if ($ValidatedEventId -notmatch '^E[0-9A-Za-z_-]+$') { throw 'ValidatedEventId must be the exact current trusted tool/event ID.' }
     $validatedByEvent = $true
   } elseif ([string]::IsNullOrWhiteSpace($StatePath)) {
-    throw "StatePath is required before loading the $Stage stage for a non-trivial new project. Keep the state package under an isolated session temporary directory, not the project."
+    throw "StatePath is required before loading the $Stage stage for a non-trivial new project. If the current trusted event reports aggregate DECISION/READY, rerun with -ValidatedEventId <exact event ID>; otherwise keep the state package under isolated session temp."
   } else {
     $targetStage = if ($Stage -eq 'decision') { 'DECISION' } else { 'EXECUTION' }
     $validator = Join-Path $PSScriptRoot 'invoke_validation_gate.ps1'
@@ -219,19 +228,19 @@ $stageGuards = @{
   } else {
     "## Active Route Guard`n`nCurrent route is existing or continuing work. Inspect the current project evidence before asking factual questions. Do not restart new-project discovery or add a ceremonial start gate when the exact safe local work is already authorized."
   }
-  evidence = "## Active Stage Guard`n`nCurrent stage: EVIDENCE. Enter through the normal route; GuardsOnly is post-result only and never the first or only route load for a review. Artifact-location hard stop: a descriptive name or label is not a target. Without a path, attachment, or workspace hit, return to INTAKE and ask only for the location or minimum sample. Before render/extract disclose unchanged originals/project plus disposable evidence only in isolated temp. After each result, refresh GuardsOnly, then reload the normal evidence route before interpreting new evidence beyond status. Report observations, limits, and write boundary before another action. Unselected-overlay negatives are routing metadata; never echo or list unrelated domains. Preserve every named untested capability. Evidence-quantifier lint: preserve sample/subgroup/count/uncertainty; an aggregate does not prove each subgroup. Temp outputs are disposable evidence, not project artifacts. Unless blocked, continue authorized read-only work. Proxy is not higher-layer proof; unsupported claims stay unknown. Evidence cannot choose behavior/overlays. Script search is not a stage transition. Before Q/D load decision context and validate. No READY or mutation."
-  decision = "## Active Stage Guard`n`nCurrent internal stage: DECISION. Validation passed. Ask user-owned choices with recorded triggers/dependencies. Later rounds need new evidence or dependency. Users may answer naturally. Validate READY before the final card. No mutation."
+  evidence = "## Active Stage Guard`n`nCurrent stage: EVIDENCE. GuardsOnly is never the first or only route load for a review. Artifact-location hard stop: a descriptive name or label is not a target. Without a locatable target, ask only for the location or minimum sample. Before render/extract disclose unchanged originals/project plus disposable evidence only in isolated temp. After each result, refresh GuardsOnly, then reload the normal evidence route before interpreting new evidence. Report observations, limits, and write boundary before another action. Unselected-overlay negatives are routing metadata; omit them from user-facing findings. Preserve every named untested capability and evidence gap at facet level. Evidence-quantifier lint: preserve sample/subgroup/count/uncertainty; an aggregate does not prove each subgroup. Temp outputs are disposable evidence, not project artifacts. Unless blocked, continue authorized read-only work. Coverage-review before READY; gaps return to DECISION. Trusted DECISION/READY event: call get_route_context.ps1 -Route new-standard -Stage decision -ValidatedEventId <ID>; event content limits questions vs READY. Script search is not a stage transition. Before Q/D load decision context. No mutation."
+  decision = "## Active Stage Guard`n`nCurrent stage: DECISION. Validation passed. Unanswered facets stay visible or have exact dependency/deferral reasons; how does not settle scope/owner, and new children do not replace them. Complete coverage and READY before final card. No mutation."
   'external-read' = "## Active Stage Guard`n`nCurrent internal stage: EXTERNAL-READ. Apply trust, privacy, and network boundaries. For a semantic sample, show each inspected title/ID/link and name the result for every dimension required by the active project contract, even when another mismatch already rejects the sample. Mark unavailable required dimensions unknown; do not merge axes or imply them from titles. Counts or summaries never replace sample identity. This stage does not approve product behavior or mutation."
   execution = "## Active Stage Guard`n`nCurrent internal stage: EXECUTION. Stage, frontier, READY-scope, and exact authorization validation have passed. Proceed only inside that approved scope and effects envelope; return only the affected item to DECISION for material scope change."
   verification = "## Active Stage Guard`n`nCurrent internal stage: VERIFICATION. Verify promises with fresh evidence and do not expand scope or infer release actions."
 }
 
 if ($Stage -eq 'intake') {
-  $stageGuards.intake += " A later tool or event result that supplies inspected evidence or otherwise changes the active stage invalidates this INTAKE context. Before the next non-trivial visible packet or synthesis, rerun this selector with the same route, interaction, variant, and confirmed overlays at the actual new stage; do not keep answering from the stale intake route."
+  $stageGuards.intake += " A later tool/event that changes stage invalidates INTAKE. Before the next packet, rerun this selector with the same route, interaction, variant, and overlays. If a trusted event reports aggregate DECISION/READY without StatePath, call get_route_context.ps1 -Route new-standard -Stage decision -ValidatedEventId <ID>; never answer from stale intake."
 }
 
 if ($validatedByEvent -and $Stage -eq 'decision') {
-  $stageGuards.decision += " Trusted-event validation source: $ValidatedEventId. The current tool/event already supplied aggregate READY evidence and its complete pending record. Preserve every event recommendation and scope item; do not require or invent another local StatePath. This validates decision/READY context only, never user start authorization or EXECUTION."
+  $stageGuards.decision += " Trusted-event validation source: $ValidatedEventId. DECISION context is valid without local StatePath. If this event explicitly says aggregate READY passed and includes the complete pending scope/execution record, READY may be rendered; otherwise ask only its decision frontier. Never EXECUTION."
 }
 
 if ($Route -in $newProjectRoutes -and $Stage -eq 'intake') {
@@ -272,7 +281,7 @@ if ($Stage -eq 'intake' -and 'shared-collaboration' -in $Overlays) {
   $stageGuards.intake += " Shared-intake override: selecting shared tracking confirms only the parent direction, not future governance. Before the remaining current-fact questions, say briefly that participants, workflow/source, sensitivity, materials, and useful result determine the shared update boundary, evidence to inspect, and later acceptance. Reuse the preceding packet; do not reopen answered facts. If promised samples are absent, preserve all open current-fact clusters and ask for samples plus only unanswered current facts. Permissions, conflict, audit/history, truth source, operation/recovery, and final acceptance are DECISION questions after evidence."
 }
 if ($Stage -eq 'decision' -and 'shared-collaboration' -in $Overlays) {
-  $stageGuards.decision += " Shared decision: five ID-free groups: current facts, authority, consistency, operation, acceptance; one why-now/basis line each. Current facts cover participants/responsibilities, current records/workflow, and current use environment. Q is current reality; include/allow/do choices are D. Keep create, edit, approve/close, reopen, and delete as separate suffixes. Each suffix bullet includes '影响：...' and '回复：...'; later group text or examples never substitute. Pipe the exact draft through scripts/validate_question_packet.ps1; after PASS send it unchanged or re-lint. Recommend only with evidence/benchmark; otherwise neutral. Allow one natural-prose reply for the packet. Discovery-only: list deferrable IDs and blockers."
+  $stageGuards.decision += " Shared hard stops: no invented days/hours/counts/retention; use '由你指定'. Discovery-only ends with '可暂缓任一项；对应设计/实现/验收保持未定，不开发'. Decision groups: facts, authority, consistency, operation, acceptance; one why/basis line each. Facts cover participants, workflow/records, and environment. Q is current reality; future behavior is D. Keep create, edit, approve/close, reopen, and delete as separate suffixes. Each suffix bullet includes '影响：...' and '回复：...'; later group text or examples never substitute. Pipe the exact draft through scripts/validate_question_packet.ps1; after PASS send it unchanged or re-lint. Recommend only with evidence/benchmark; otherwise neutral. Allow one natural-prose reply."
 }
 if ($Stage -eq 'decision' -and $Route -eq 'non-software' -and $Variant -eq 'training') {
   $stageGuards.decision += " Training-decision override: cover audience/outcome, content, exercise, deliverable, deferrals/exclusions, and learning proof. Keep completed baselines closed absent a gap; batch unresolved choices. Same packet confirms each evidence-only absence/non-request as exclusion or leaves it unclassified; never call it '已确认'. A delivery pattern is not format approval; silence is not exclusion. Defer only exact user-confirmed curriculum items, never generation, schedule, examples, or mechanics. Lint final draft with scripts/validate_training_handoff.ps1; after PASS send it unchanged or re-lint. No-file instruction belongs only under 执行边界, never curriculum deferral/exclusion. No empty headings; put requested 'none confirmed' in a nonempty boundary."

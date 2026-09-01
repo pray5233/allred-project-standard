@@ -52,6 +52,14 @@
       "enforcement": ["scripts/validate_decision_frontier.ps1"]
     },
     {
+      "id": "INV-DISCOVERY-COVERAGE",
+      "priority": "P0",
+      "owner": "references/动态项目契约.md",
+      "owner_section": "Discovery Coverage Review",
+      "behavior_cases": ["V142", "V143"],
+      "enforcement": ["scripts/validate_discovery_coverage.ps1", "scripts/invoke_validation_gate.ps1"]
+    },
+    {
       "id": "INV-READY-SCOPE",
       "priority": "P0",
       "owner": "references/阶段状态硬校验.md",
@@ -141,7 +149,7 @@
     }
   ],
   "release_matrix": {
-    "software": ["V134", "V139"],
+    "software": ["V134", "V139", "V142", "V143"],
     "training": ["V135"],
     "external-data": ["V136", "V137"],
     "shared-collaboration": ["V138"],

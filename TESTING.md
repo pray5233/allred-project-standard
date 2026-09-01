@@ -4,9 +4,9 @@
 
 ## 最简候选验证
 
-测试 `0.8.0-rc11` 候选时，不需要重复本仓库的全部行为清单。维护者完成结构、invariant、运行时通用性、路由隔离及低/高模型门禁后再提供安装候选。
+测试 `0.8.0-rc12` 候选时，不需要重复本仓库的全部行为清单。维护者完成结构、invariant、运行时通用性、路由隔离及低/高模型门禁后再提供安装候选。
 
-1. 安装或更新 Allred，确认 `VERSION` 为 `0.8.0-rc11`。
+1. 安装或更新 Allred，确认 `VERSION` 为 `0.8.0-rc12`。
 2. 新建一个 Codex 任务，按平时方式提出一个真实需求；不必预先安装 `find-skills` 或 `grilling`。
 3. 正常回答需要你决定的问题，不要为了测试故意配合 Skill。
 4. 只有出现以下情况时保留完整对话并反馈：首轮直接给出完整产品方案、重复询问已提供内容、样例证据替你决定功能、把 `继续/按推荐` 当作开发授权、技术预检前就给开始卡、未经批准安装或修改、批准后仍反复确认、声称完成但没有验证证据。
@@ -81,10 +81,10 @@ Codex CLI 已正确认证时，可另外执行独立测试组/检查组烟雾测
 powershell -NoProfile -ExecutionPolicy Bypass -File .\allred-project-standard\scripts\run_behavior_eval.ps1 -CaseIds V01,V03,V61
 ```
 
-`rc11` 继续用六组场景的八个候选案例覆盖主流程；外部来源分别验证一次性查询和持续监测，软件交付另验证公司办公环境条件层：
+`rc12` 在六组主流程场景之外增加两项需求覆盖回归：复杂异构资料项目必须继续发现遗漏，简单边界明确项目不得被覆盖检查拖成问卷：
 
 ```powershell
-$cases = 'V134','V135','V136','V137','V138','V139','V140','V141'
+$cases = 'V134','V135','V136','V137','V138','V139','V140','V141','V142','V143'
 pwsh -NoProfile -File .\allred-project-standard\scripts\run_behavior_eval.ps1 `
   -CaseIds $cases -UseUserConfig -DisablePlugins -Model gpt-5.6-sol -ReasoningEffort low -TimeoutSeconds 300
 pwsh -NoProfile -File .\allred-project-standard\scripts\run_behavior_eval.ps1 `

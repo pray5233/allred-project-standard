@@ -339,3 +339,55 @@ Two failed pre-candidate runs were retained as harness evidence rather than hidd
 - direct blind-batch invocation exposed relative-path dependence; the wrapper now normalizes runner, suite, Lab, candidate, and baseline paths, normalizes JSON arrays for PowerShell 5.1, and requires exactly one result per requested case
 
 This gate promotes `0.8.0-rc11` to a user-pilot candidate only. Commit, publication, and stable-version promotion remain separate user-authorized actions.
+
+## 2026-09-01 Discovery Coverage Gate (`0.8.0-rc12` Candidate)
+
+### Problem And Users
+
+The accepted `rc11` flow deliberately removed fixed turn limits and repetitive questionnaires, but its deterministic gates validated only the intake items and decisions already recorded. A model could therefore close Q1-Q4, register two plausible decisions, omit other material-exposed areas, and reach READY too early. The affected users are ordinary and beginner-expression project users, especially on non-simple software or internal-process projects with heterogeneous materials, relationships, lifecycle rules, scale, and delivery dependencies.
+
+Success means:
+
+- no minimum or maximum question/turn count
+- no fixed user-visible domain questionnaire
+- every non-trivial new-project READY state accounts for workflow, information, lifecycle, operating scale, delivery/effects, and acceptance
+- all current evidence limitations participate in the latest review
+- omitted decisions cannot disappear merely because they were never added to the frontier
+- a bounded simple project still reaches one READY envelope without ceremonial questions
+
+### Benchmark Check
+
+| Source | Version/date | Why comparable | Reused path | Deliberate difference |
+| --- | --- | --- | --- | --- |
+| local accepted Allred baseline | `0.8.0-rc11`, 2026-09-01 | mature concentrated intake, frontier dependencies, and READY provenance | preserve the existing Q1-Q4 readiness and decision model | add completeness after evidence without changing user triggers or interview topology |
+| local dynamic project contract | `rc11`, checked 2026-09-01 | already owns workflow, working set, output, boundaries, and acceptance slots | reuse its slots and provenance instead of adding a second framework | serialize six broad internal coverage lenses only for deterministic READY validation |
+| OpenSpec baseline/change model | `main`, reviewed 2026-08-29 | separates accepted baseline from explicit unresolved change | require every final scope item and confirmed/deferred decision to remain linked | do not require OpenSpec installation, Node.js, or user-visible spec artifacts |
+| OpenAI `skill-creator` local reference | installed reference, checked 2026-08-29 | favors progressive disclosure and behavior evaluation over long entry instructions | keep the full review in references and validators, with compact runtime guards | no new dependency or ordinary-user trigger |
+
+Local references were sufficient for this design. No plugin, Skill, MCP server, library, or external package was added.
+
+### Decision
+
+Add an internal `discovery_coverage` state with three methods: contract-slot review, evidence-gap review, and counterexample review. Six broad lenses are always accounted for internally but are never rendered as six mandatory questions. Each lens is resolved, evidence-backed not applicable, explicitly deferred, open, or investigating. READY/EXECUTION now run `validate_discovery_coverage.ps1` and reject unresolved lenses, stale evidence review, ungrounded deferral/not-applicable states, or final decisions/scope absent from coverage.
+
+### Acceptance
+
+- `V142`: a heterogeneous legacy-template project must continue discovery after two early decisions and preserve template boundary, history, lifecycle, scale, acceptance, and candidate-technology gaps
+- `V143`: an exact bounded CSV project must close coverage internally and avoid another questionnaire
+- valid READY fixture passes the new validator and aggregate seven-validator gate
+- a fixture with an open lifecycle lens fails deterministically
+- route-context budgets remain within existing limits
+- source/release parity and low/high targeted behavior checks are required before publication
+
+### Validation Evidence (2026-09-01)
+
+- Quick candidate validation: 8/8 static steps passed; report at `allred-project-standard-validation/rc12/quick-final2-20260901/report.html`
+- official `quick_validate.py`: Standard and Lab both valid under the isolated UTF-8/PyYAML environment
+- `V142` heterogeneous-template coverage: low and xhigh passed on the final runtime rules
+- `V143` bounded simple project: low and xhigh passed; no coverage questionnaire and the trusted READY event loaded decision context
+- adjacent low cases `V127`, `V134`, `V135`, `V138`, and `V139` passed after the final routing fixes
+- shared-collaboration `V138`: low and xhigh passed on the same final event metadata; no unsupported numeric target and discovery-only deferral remained visible
+- source/release parity, PowerShell 5.1 structure, route budget, runtime generality, invariant ownership, and candidate harness passed
+- isolated installation from the final release package installed `0.8.0-rc12`, wrote a receipt, and passed installed-structure validation at `allred-project-standard-validation/install-v080rc12-final2-20260901`
+
+Residual scope: the complete 142-case low/xhigh dynamic matrix was not rerun. Publication, Git commit, and stable-version promotion remain separate user-authorized actions.

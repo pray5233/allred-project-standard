@@ -3881,6 +3881,58 @@
         "external-source mode",
         "office delivery selection"
       ]
+    },
+    {
+      "id": "V142",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "beginner",
+        "materials-evidence",
+        "adaptive-interview",
+        "discovery-coverage"
+      ],
+      "visible_turns": [
+        "allred新手项目：把一批结构不同的旧检验记录模板做成单人办公电脑使用的记录管理工具。模板在当前工程的 legacy-templates 目录；先只读分析，再和我确认方案，不开发。",
+        "主要解决录入和查找。每类检验对应一个模板，希望查看单个产品的全部记录并批量打印；保留原模板。"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E142_LEGACY_TEMPLATE_EVIDENCE",
+          "text": "保留现有模板版式，每种模板单独配置；产品和批次关联按你的推荐。"
+        }
+      ],
+      "artifact_labels": ["legacy-templates directory"],
+      "tool_event_ids": ["E142_LEGACY_TEMPLATE_EVIDENCE"],
+      "stop_condition": "after the first two product decisions, the coverage review asks the remaining consequential task-specific gaps instead of entering READY",
+      "forbidden_questions": [
+        "generic project size",
+        "technical framework selection",
+        "questions already answered by the user or templates",
+        "unrelated shared or external-source policy"
+      ]
+    },
+    {
+      "id": "V143",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "materials-evidence",
+        "workflow-efficiency",
+        "discovery-coverage"
+      ],
+      "visible_turns": [
+        "allred新项目：做一个单人离线使用的 CSV 排序工具。样例在 samples/input.csv；输入和输出字段、排序规则、原文件只读要求及验收样例都在 spec.md。先只读检查，确认无缺口后再让我批准开发。"
+      ],
+      "artifact_labels": ["samples/input.csv", "spec.md"],
+      "tool_event_ids": ["E143_BOUNDED_COVERAGE_READY"],
+      "stop_condition": "the internal coverage review closes from evidence and proceeds to one complete READY envelope without a ceremonial questionnaire",
+      "forbidden_questions": [
+        "history or multi-user behavior not present in the scope",
+        "future template or plugin extensibility",
+        "generic project tier",
+        "repeat supplied workflow or acceptance"
+      ]
     }
   ]
 }

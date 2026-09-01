@@ -81,6 +81,7 @@ $requiredCoverage = [ordered]@{
   'external-monitoring' = 1
   'shared-collaboration' = 1
   'company-office-delivery' = 1
+  'discovery-coverage' = 2
 }
 
 if ($testSuite -and $oracleSuite) {

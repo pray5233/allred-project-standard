@@ -30,6 +30,91 @@
       "limitations": "Integrated runtime behavior is not yet implemented."
     }
   ],
+  "discovery_coverage": {
+    "status": "complete",
+    "review_methods": [
+      "contract-slots",
+      "evidence-gaps",
+      "counterexample-sweep"
+    ],
+    "evidence_ids_reviewed": [
+      "E1"
+    ],
+    "areas": [
+      {
+        "id": "workflow",
+        "status": "resolved",
+        "summary": "The local user workflow and visible result are confirmed.",
+        "basis": ["U1", "D1"],
+        "open_item_ids": [],
+        "reason": "",
+        "consequence": "",
+        "revisit_condition": "",
+        "decision_ids": ["D1"],
+        "scope_ids": ["S1"]
+      },
+      {
+        "id": "information",
+        "status": "resolved",
+        "summary": "The supplied sample, external route, and credential information boundary are accounted for.",
+        "basis": ["U1", "E1", "D2", "D3"],
+        "open_item_ids": [],
+        "reason": "",
+        "consequence": "",
+        "revisit_condition": "",
+        "decision_ids": ["D2", "D3"],
+        "scope_ids": ["S2"]
+      },
+      {
+        "id": "lifecycle",
+        "status": "resolved",
+        "summary": "Credential persistence and the recommended clear-data behavior cover the current lifecycle boundary.",
+        "basis": ["U3", "E1", "D3"],
+        "open_item_ids": [],
+        "reason": "",
+        "consequence": "",
+        "revisit_condition": "",
+        "decision_ids": ["D3"],
+        "scope_ids": ["S2", "S3"]
+      },
+      {
+        "id": "operating-scale",
+        "status": "resolved",
+        "summary": "The current scope is limited to the supplied sample and its recognizable workflow verification.",
+        "basis": ["U1", "E1"],
+        "open_item_ids": [],
+        "reason": "",
+        "consequence": "",
+        "revisit_condition": "",
+        "decision_ids": [],
+        "scope_ids": ["S4"]
+      },
+      {
+        "id": "delivery-effects",
+        "status": "resolved",
+        "summary": "Desktop delivery, external access, protected credential storage, writes, and rollback are included in preflight.",
+        "basis": ["U2", "U3", "E1", "D1", "D2", "D3"],
+        "open_item_ids": [],
+        "reason": "",
+        "consequence": "",
+        "revisit_condition": "",
+        "decision_ids": ["D1", "D2", "D3"],
+        "scope_ids": ["S1", "S2", "S3"]
+      },
+      {
+        "id": "acceptance",
+        "status": "resolved",
+        "summary": "Acceptance uses the supplied sample and keeps integrated packaging and restart proof at the correct planned evidence level.",
+        "basis": ["U1", "E1"],
+        "open_item_ids": [],
+        "reason": "",
+        "consequence": "",
+        "revisit_condition": "",
+        "decision_ids": [],
+        "scope_ids": ["S4"]
+      }
+    ]
+  },
   "decisions": [
     {
       "id": "D1",

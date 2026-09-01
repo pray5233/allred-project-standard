@@ -36,7 +36,7 @@ After the shared parent is confirmed, explain once why authority, conflict, oper
 
 Use ID-free headings and one why-now/basis line per group. Classify each suffix before rendering: `Q` records current reality; include/allow/do choices are `D`. Each suffix bullet includes its own `影响：...` and `回复：...`; later group text or examples never substitute. Before sending, pipe the exact draft through `scripts/validate_question_packet.ps1`; after PASS send it unchanged or re-lint. Recommend only from project evidence or a comparable benchmark, otherwise stay neutral. Accept one natural-prose reply for the packet, and never hide or default questions.
 
-`Q` is current reality and `D` is future behavior. Unknown Q defers recommendations, not neutral D. Hosting is not availability; audit is not recovery. For discovery-only work, list every deferrable D and the exact later design, implementation, or acceptance work it blocks. Consequential questions are not automatically mandatory now.
+`Q` is current reality and `D` is future behavior. Unknown Q defers recommendations, not neutral D. Discovery-only packets list each deferrable D and the exact blocked design, implementation, or acceptance work; consequential questions are not automatically mandatory now. Without U/D provenance, never invent days, hours, counts, or retention periods; use `由你指定`.
 
 ## Conflict Audit And Recovery
 
