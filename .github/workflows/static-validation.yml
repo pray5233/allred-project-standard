@@ -61,19 +61,21 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Validate Windows PowerShell 5.1 compatibility
-        shell: powershell
+        shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          & .\allred-project-standard\scripts\check_skill_structure.ps1 `
+          & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File `
+            .\allred-project-standard\scripts\check_skill_structure.ps1 `
             -SkillRoot .\allred-project-standard
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Verify isolated installation
-        shell: powershell
+        shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $destination = Join-Path $PWD '_ci\install'
-          & .\install.ps1 -DestinationRoot $destination
+          & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File `
+            .\install.ps1 -DestinationRoot $destination
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $sourceVersion = (Get-Content .\allred-project-standard\VERSION -Raw -Encoding UTF8).Trim()
           $installedVersion = (Get-Content (Join-Path $destination 'allred-project-standard\VERSION') -Raw -Encoding UTF8).Trim()
