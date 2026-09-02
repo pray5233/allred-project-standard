@@ -2,7 +2,8 @@ param(
   [Parameter(ValueFromPipeline = $true)]
   [AllowEmptyString()]
   [string]$Text = '',
-  [string]$Path = ''
+  [string]$Path = '',
+  [switch]$PassThrough
 )
 
 begin {
@@ -32,6 +33,8 @@ end {
   $executionHeadingPattern = '(?i)(?:\u6267\u884c\u8fb9\u754c|execution\s+boundary)'
   $noGenerationPattern = '(?i)(?:(?:\u672c\u8f6e|\u5f53\u524d).{0,16}\u4e0d\u751f\u6210|do\s+not\s+generate|no\s+files?)'
   $confirmedDeferralPattern = '(?i)(?:\u5df2\u786e\u8ba4\u6682\u7f13|confirmed\s+defer)'
+  $exerciseDeferredItemPattern = '(?i)(?:\u7ec3\u4e60|\u5458\u5de5|\u9879\u76ee).{0,100}\u6682\u7f13\u9879'
+  $notCurriculumDeferralPattern = '(?i)(?:\u4e0d\u7b49\u4e8e|\u4e0d\u4ee3\u8868|\u4e0d\u662f).{0,60}(?:\u8bfe\u7a0b|\u6a21\u5757)'
   $failures = [System.Collections.Generic.List[string]]::new()
   $currentHeading = ''
   $sawNoGeneration = $false
@@ -45,6 +48,9 @@ end {
     if ($line -match $plainBoundaryHeadingPattern) {
       $currentHeading = $Matches['heading']
       continue
+    }
+    if ($currentHeading -match $deferralHeadingPattern -and $line -match $exerciseDeferredItemPattern -and $line -notmatch $notCurriculumDeferralPattern) {
+      $failures.Add('Exercise or project deferred-item practice was classified as curriculum deferral.') | Out-Null
     }
     if ($line -notmatch $noGenerationPattern) { continue }
 
@@ -72,5 +78,18 @@ end {
     exit 1
   }
 
-  'Training handoff lint: PASS'
+  if (-not $PassThrough) {
+    'Training handoff lint: PASS-CHECK-ONLY'
+    'Final handoff is not authorized. Rerun the exact final draft through the pipeline with -PassThrough.'
+  } else {
+    'Training handoff lint: PASS'
+    $bytes = [System.Text.UTF8Encoding]::new($false).GetBytes($draft)
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    try { $hash = ([System.BitConverter]::ToString($sha256.ComputeHash($bytes))).Replace('-', '').ToLowerInvariant() }
+    finally { $sha256.Dispose() }
+    "Training handoff SHA256: $hash"
+    '---BEGIN APPROVED TRAINING HANDOFF---'
+    $draft
+    '---END APPROVED TRAINING HANDOFF---'
+  }
 }

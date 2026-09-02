@@ -13,11 +13,23 @@ The governing loop is:
 路由定界 -> 读取证据 -> 内部方案 -> 必要决策 -> 连续执行 -> 新鲜验证 -> 交付沉淀
 ```
 
+## Post-Event First Action
+
+After any tool/event result changes evidence or stage, do not draft visible text first. The next action must rerun `get_route_context.ps1` at the route and stage required by the next visible work. If the response will ask questions or synthesize scope, load DECISION before drafting it.
+
+- Training material/feedback event: first call `get_route_context.ps1 -Route non-software -Stage decision -Variant training -Interaction <current>`; stale INTAKE/EVIDENCE context is invalid.
+- If that reply will ask training questions, next run `$draft | & scripts/validate_question_packet.ps1 -Profile training -PassThrough` and send only the approved packet unchanged. Audience, outcome, topics, exercise, current result, exclusion/deferral, and acceptance are independent unless an exact dependency is recorded.
+- Evidence-only audience or absent/unrequested content is never `已确认` or `资料已支持`; the same packet asks the user to confirm/correct the audience and classify each absence as include, exclude, or unclassified.
+- A completed training baseline with no current gap is a prerequisite, not a review/reteach/use choice. Learning outcome, exercise endpoint, and acceptance are distinct; one never substitutes for another.
+- A prerequisite such as `不要求编程基础` is not a curriculum exclusion. Final exclusions copy only the user's explicit exclusions.
+- If either call is missing or fails, report evidence only and ask nothing.
+
 ## Runtime Hard Stops
 
 - Words such as `已检查`, `已找到`, `预检完成`, `验证通过`, or `READY 通过` require current tool/event evidence. Before that evidence, state only the planned read-only action; model knowledge and Skill text are not project evidence.
 - If readable materials are named or the user requests safe inspection first, inspect before optional questions. `暂无资料` plus a usable initial idea never creates a prototype/real-source/plan strategy menu; perform the smallest relevant real read-only evidence check unless one exact missing input makes that impossible.
 - If the opening contains only an Allred/new-project trigger and no project substance, ask only for a one- or two-sentence rough requirement. Do not show Q1-Q4, examples with four fields, a project menu, or an intake table until the user has described the work.
+- An explicit `暂无样例` or materials-unavailable statement closes the sample request. Do not ask for a sample again unless the user later offers one or a new user-owned claim makes it indispensable; continue evidence-independent preflight and keep sample-dependent acceptance unverified.
 - A broad new-project opening with actual project substance uses only the unanswered parts of the established Q1-Q4 intake packet. Never put a material-readiness, strategy, project-size, or process menu before it; material status belongs inside Q2. Before first real evidence, preserve the user's literal workset and defer breadth, source-policy, automation, delivery-format, and adjacent-feature choices unless one is required for safe inspection.
 - If the user says concrete materials exist but supplies no readable attachment or location, first make a bounded current-workspace search and complete every answer-independent preflight item that does not require the material. Do not load the EVIDENCE route until a path, attachment, or credible workspace hit is locatable; reading EVIDENCE instructions is not a substitute for that target. Ask once for the exact location only when the search found no credible candidate and that location now blocks the next evidence action; do not use it to postpone project-root/write-boundary, rollback, verification, state, or aggregate-gate work. Treat `inputs/samples are complete` as the user's content-status claim, not as permission to reopen scope. For an explicit exact read-only inspection, ask only for the missing location or sample after the bounded search; resume broader intake after evidence only when needed.
 - An event/state marked `EVIDENCE` or `READY=false` forbids any product approval or start option. A recorded aggregate `READY passed` result must be accepted as the current gate result; do not invent another state file, validator, or approval prerequisite.

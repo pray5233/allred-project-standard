@@ -444,3 +444,38 @@ The second self-hosted `Changed` run selected 24 Standard cases. Nineteen passed
 The third self-hosted run reached `V132` after eight passing Standard cases. Its sampled blank values were incorrectly promoted from an observation to preliminary checker feasibility. The EVIDENCE guard now states that a pattern or anomaly proves only the observation unless matching semantics/rules support the checker or classifier claim. `V132` passed at low and xhigh after this correction.
 
 `Changed` is now a diagnostic breadth mode: replay, Lab, and Standard failures are recorded but do not stop the remaining affected cases. `Candidate/Release` remains the promotion gate and retains P0 fail-fast behavior. This separates “find all current problems” from “stop spending after a release blocker.”
+
+## 2026-09-02 Training Post-Evidence Decision Gate (`0.8.0-rc13` Candidate)
+
+### Problem And Success Criteria
+
+Repeated `V99` runs showed three cross-cutting failures: a model could synthesize after a tool event without reloading the actual stage, a training packet could omit consequential curriculum facets or reopen a completed prerequisite, and an evidence-only absence or inferred classroom limit could become a confirmed exclusion. Success requires the same user experience at low and xhigh reasoning without adding a fixed question count, a training-specific project example, or another user trigger.
+
+### Benchmarks
+
+| Source | Version/date | Reused path | Deliberate difference |
+| --- | --- | --- | --- |
+| local `get_route_context.ps1` stage gates | `0.8.0-rc13`, checked 2026-09-02 | exact route/stage reload before synthesis | elevate post-event reload to the entrypoint's first-action gate |
+| local `validate_question_packet.ps1` | existing shared-collaboration validator, checked 2026-09-02 | deterministic lint plus exact approved-text pass-through | add a `training` profile without changing generic packet behavior |
+| local `validate_training_handoff.ps1` | `0.8.0-rc13`, checked 2026-09-02 | exact final-draft lint, hash, and unchanged pass-through | retain a separate final-handoff gate instead of mixing question and delivery rules |
+| `V99` and `V135` behavior cases | current 142-case suite, 2026-09-02 | independent low/xhigh semantic review | keep concrete fixtures in tests while runtime rules remain domain-general |
+
+No plugin, Skill, MCP server, library, or external package was added.
+
+### Decision
+
+1. `SKILL.md` owns one high-salience post-event first action: reload the actual route/stage before visible questions or synthesis.
+2. Training DECISION packets must pass `validate_question_packet.ps1 -Profile training -PassThrough`. The profile checks audience correction, learning outcome, additional-topic path, exercise endpoint, current-result boundary, evidence-only absence classification, and acceptance without imposing a question or turn cap.
+3. The training packet rejects reopening a completed baseline unless a current evidenced or user-confirmed gap explicitly enables the escape switch.
+4. The packet rejects unconfirmed negative curriculum statements such as premature include/exclude decisions. Final deferral and exclusion lists remain user-owned; prerequisites, endpoints, risks, and execution limits stay in their proper sections.
+5. Final curriculum text still passes separately through `validate_training_handoff.ps1 -PassThrough` and is sent unchanged.
+
+### Validation Evidence
+
+- final Quick pipeline passed all eight static steps, including structure, invariants, runtime generality, route budget, Lab structure, and candidate harness
+- the generic question-packet fixtures still passed; training fixtures passed complete coverage and rejected both completed-baseline review and unconfirmed negative boundaries
+- `V99` passed at xhigh and then passed two consecutive independent low-effort replicas on the final runtime surface
+- adjacent training-route case `V135` passed at low and xhigh
+- source and release Standard files were synchronized before final release checks
+
+This evidence supports an `rc13` candidate commit and GitHub validation. Tagging or publishing `v0.8.0-rc13` remains a separate user-authorized action.

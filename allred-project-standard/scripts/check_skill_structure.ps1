@@ -54,10 +54,18 @@ if ($skillLines[2] -notmatch '^description:\s+\S') { Add-Failure 'Frontmatter de
 if ($skillLines[2].Length -gt 500) { Add-Failure 'Frontmatter description is too broad.' }
 if ($skillLines.Count -gt 260) { Add-Failure "SKILL.md exceeds entrypoint budget: $($skillLines.Count) lines." }
 
-foreach ($heading in @('## Runtime Hard Stops', '## Activation And Routing', '## Required Reading', '## Shared Invariants', '## Conversation Topology')) {
+foreach ($heading in @('## Post-Event First Action', '## Runtime Hard Stops', '## Activation And Routing', '## Required Reading', '## Shared Invariants', '## Conversation Topology')) {
   Require-Contains $skillText $heading $heading
 }
 Require-Contains $skillText 'allred-project-lab' 'maintainer Skill ownership'
+Require-Contains $skillText 'After any tool/event result changes evidence or stage' 'post-event route reload hard stop'
+Require-Contains $skillText '-Route non-software -Stage decision -Variant training' 'training event exact decision route'
+Require-Contains $skillText '$draft | & scripts/validate_question_packet.ps1 -Profile training -PassThrough' 'training event exact question-packet lint'
+Require-Contains $skillText 'Evidence-only audience or absent/unrequested content is never `已确认` or `资料已支持`' 'training evidence candidates remain unconfirmed'
+Require-Contains $skillText 'A completed training baseline with no current gap is a prerequisite, not a review/reteach/use choice' 'training completed baseline stays closed at entry'
+Require-Contains $skillText 'Learning outcome, exercise endpoint, and acceptance are distinct' 'training outcome and acceptance stay separate at entry'
+Require-Contains $skillText 'A prerequisite such as `不要求编程基础` is not a curriculum exclusion' 'training prerequisite does not become exclusion'
+Require-Contains $skillText 'If either call is missing or fails, report evidence only and ask nothing' 'training event missing-gate fallback'
 Require-Contains $skillText '-Overlays external-source|shared-collaboration|company-office-delivery' 'conditional overlay selector'
 Require-Contains $skillText 'only toggles beginner/standard expression' 'expression-only toggle boundary'
 Require-Contains $skillText 'Do not restate or re-ask its facts, materials, or decisions' 'expression toggle does not repeat pending questions'
@@ -189,23 +197,29 @@ Require-Contains $debugEvidence 'support versus weaken' 'bounded debug experimen
 
 $sharedDecision = (& $selectorPath -SkillRoot $SkillRoot -Route long-term -Stage decision -Overlays shared-collaboration) -join "`n"
 Require-Contains $sharedDecision '<!-- source: references\shared-collaboration.md -->' 'shared decision overlay routing'
-Require-Contains $sharedDecision 'Q is current reality; future behavior is D' 'shared current-fact versus future-decision separation'
-Require-Contains $sharedDecision 'Facts cover participants, workflow/records, and environment' 'shared current-fact coverage'
-Require-Contains $sharedDecision 'Keep create, edit, approve/close, reopen, and delete as separate suffixes' 'shared action-axis separation'
-Require-Match $sharedDecision '(?is)Each suffix bullet.{0,100}影响：.{0,100}回复：.{0,180}group text or examples never substitute' 'shared per-facet consequence and reply contract'
-Require-Contains $sharedDecision 'Pipe the exact draft through scripts/validate_question_packet.ps1; after PASS send it unchanged or re-lint' 'shared deterministic question-packet lint'
-Require-Contains $sharedDecision 'Allow one natural-prose reply' 'shared natural reply contract'
+Require-Contains $sharedDecision 'Begin with three independent current Qs: participants/responsibilities; records/workflow/source; use environment (location/devices/access/availability)' 'shared current-fact coverage'
+Require-Contains $sharedDecision 'Future behavior is D and cannot replace Q or mix current owner with future hosting' 'shared current-fact versus future-decision separation'
+Require-Contains $sharedDecision 'Create/edit/approve-close/reopen/delete stay separate' 'shared action-axis separation'
+Require-Contains $sharedDecision 'one why/basis per group, then each facet one compact question+影响+回复 line; never repeat a five-line mini-card' 'shared compact grouped rendering'
+Require-Contains $sharedDecision 'Lint via scripts/validate_question_packet.ps1; send only PASS draft' 'shared deterministic question-packet lint'
+Require-Contains $sharedDecision 'Natural prose reply allowed' 'shared natural reply contract'
 Require-Contains $sharedDecision "Shared hard stops: no invented days/hours/counts/retention; use '由你指定'" 'shared quantitative provenance hard stop'
 Require-Contains $sharedDecision "可暂缓任一项；对应设计/实现/验收保持未定，不开发" 'shared discovery deferral hard stop'
 Require-Match $sharedDecision '(?is)(ID-free groups|ID-free headings)' 'shared group-heading separation'
 
 $beginnerEvidence = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage evidence -Interaction beginner) -join "`n"
 Require-Contains $beginnerEvidence 'never echo internal English labels' 'beginner evidence plain-language guard'
+$beginnerIntake = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage intake -Interaction beginner) -join "`n"
+Require-Contains $beginnerIntake 'state one reversible planning assumption and what later evidence may change' 'beginner no-sample reversible assumption'
+$beginnerDecision = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage decision -Interaction beginner -ValidatedEventId E_FIXTURE_READY) -join "`n"
+Require-Contains $beginnerDecision 'Separate `已确认需求`, `待批准建议`, `技术检查结论`, `尚未验证`, and `验收`' 'beginner READY evidence and recommendation separation'
 
 $newProjectIntake = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage intake -Interaction standard) -join "`n"
 Require-Contains $newProjectIntake 'one packet-wide consequence sentence is insufficient' 'new-project intake per-group consequence lint'
 Require-Contains $newProjectIntake 'aggregate DECISION/READY without StatePath' 'intake trusted event handoff'
 Require-Contains $newProjectIntake 'never load EVIDENCE to find the target' 'intake material-location stage boundary'
+Require-Contains $newProjectIntake 'Track user/workflow/pain' 'new-project workflow pain intake'
+Require-Contains $newProjectIntake 'Explicitly unavailable material is closed; do not request it again' 'unavailable material is not re-requested'
 Require-Contains $newProjectIntake 'recognizable useful result -> acceptance evidence' 'new-project success effect coverage'
 Require-Contains $newProjectIntake 'do not search the workspace for it' 'intake guard respects explicitly unsupplied materials'
 Require-Contains $newProjectIntake 'Pending material postpones evidence-dependent recommendations, not independent intake' 'missing material preserves independent intake packet'
@@ -214,13 +228,19 @@ $office = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage evid
 Require-Contains $office '<!-- source: references\company-office-delivery.md -->' 'company office overlay routing'
 
 $trainingDecision = (& $selectorPath -SkillRoot $SkillRoot -Route non-software -Stage decision -Variant training) -join "`n"
+Require-Contains $trainingDecision 'omit future format unless it changes curriculum/acceptance' 'training current-result boundary excludes speculative format'
 Require-Contains $trainingDecision 'Existing handouts prove material exists, not learner completion.' 'training material-versus-completion evidence boundary'
-Require-Contains $trainingDecision "Same packet confirms each evidence-only absence/non-request as exclusion or leaves it unclassified; never call it '已确认'" 'training evidence-only exclusion confirmation'
-Require-Contains $trainingDecision 'No empty headings' 'training final-handoff empty-section lint'
-Require-Contains $trainingDecision "put requested 'none confirmed' in a nonempty boundary" 'training requested-empty-category rendering'
-Require-Contains $trainingDecision 'Defer only exact user-confirmed curriculum items' 'training deferral provenance allowlist'
-Require-Contains $trainingDecision 'Lint final draft with scripts/validate_training_handoff.ps1; after PASS send it unchanged or re-lint' 'training deterministic handoff lint'
-Require-Contains $trainingDecision 'No-file instruction belongs only under 执行边界' 'training current no-file execution boundary'
+Require-Contains $trainingDecision 'No empty heading' 'training final-handoff empty-section lint'
+Require-Contains $trainingDecision 'put requested `none confirmed` once in a nonempty boundary' 'training requested-empty-category rendering'
+Require-Contains $trainingDecision '$draft | & scripts/validate_question_packet.ps1 -Profile training -PassThrough' 'training deterministic question-packet lint'
+Require-Contains $trainingDecision '-AllowCompletedBaselineReview' 'training completed-baseline review escape is explicit'
+Require-Contains $trainingDecision 'Final defer/exclude lists copy only user-confirmed items' 'training final boundaries require user provenance'
+Require-Contains $trainingDecision 'never convert prerequisites, endpoints, risks, or execution limits' 'training inferred boundaries do not become exclusions'
+Require-Contains $trainingDecision 'Packets omit empty sections' 'training decision packet omits empty boundary sections'
+Require-Contains $trainingDecision "show '暂无已确认课程内容暂缓项' only in a requested final summary" 'training requested boundary summary remains explicit'
+Require-Contains $trainingDecision '$draft | & scripts/validate_training_handoff.ps1 -PassThrough' 'training deterministic handoff lint'
+Require-Contains $trainingDecision 'send only APPROVED text unchanged; re-lint edits' 'training passed text is final text'
+Require-Contains $trainingDecision 'No-file=in-chat' 'training current no-file execution boundary'
 
 $evidenceGuardOnly = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage evidence -GuardsOnly) -join "`n"
 Require-Contains $evidenceGuardOnly 'Current stage: EVIDENCE.' 'evidence guards-only routing'
@@ -254,6 +274,9 @@ if ($nonSoftwareIntake.Contains('Current route is existing or continuing work'))
 
 foreach ($trainingStage in @('intake', 'evidence')) {
   $trainingContext = (& $selectorPath -SkillRoot $SkillRoot -Route non-software -Variant training -Stage $trainingStage) -join "`n"
+  Require-Contains $trainingContext 'Training material-first hard stop:' "training $trainingStage material-first gate"
+  Require-Contains $trainingContext 'Training visible-packet gate after evidence:' "training $trainingStage visible-packet coverage gate"
+  Require-Contains $trainingContext 'ask confirm/correct audience and include/exclude/unclassified absence' "training $trainingStage evidence-candidate confirmation"
   Require-Contains $trainingContext 'Training handoff guard:' "training $trainingStage handoff guard"
   Require-Contains $trainingContext 'Training output-boundary lint:' "training $trainingStage output-boundary lint"
   Require-Contains $trainingContext 'Training topic-coverage lint:' "training $trainingStage topic-coverage lint"
@@ -264,32 +287,70 @@ Require-Contains $trainingEvidence '## Training Transition Hard Stop' 'training 
 Require-Contains $trainingEvidence 'GuardsOnly never substitutes for decision' 'training guards-only transition boundary'
 
 $trainingLint = Join-Path $SkillRoot 'scripts\validate_training_handoff.ps1'
+$trainingLintText = Get-Content -LiteralPath $trainingLint -Raw -Encoding UTF8
+Require-Contains $trainingLintText '[switch]$PassThrough' 'training handoff pass-through switch'
+Require-Contains $trainingLintText '---BEGIN APPROVED TRAINING HANDOFF---' 'training handoff approved-text begin marker'
+Require-Contains $trainingLintText 'Training handoff SHA256:' 'training handoff approved-text hash'
+Require-Contains $trainingLintText 'Exercise or project deferred-item practice was classified as curriculum deferral.' 'training exercise deferral separation'
 $trainingLintTemp = Join-Path ([System.IO.Path]::GetTempPath()) ('allred-training-lint-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Force -Path $trainingLintTemp | Out-Null
 try {
   $validTrainingDraft = Join-Path $trainingLintTemp 'valid.md'
   $validPlainTrainingDraft = Join-Path $trainingLintTemp 'valid-plain.txt'
   $invalidTrainingDraft = Join-Path $trainingLintTemp 'invalid.md'
+  $invalidExerciseDeferralDraft = Join-Path $trainingLintTemp 'invalid-exercise-deferral.md'
   [System.IO.File]::WriteAllText($validTrainingDraft, "## 范围边界`n`n- 课程内容暂无已确认暂缓项。`n`n## 当前执行边界`n`n本轮不生成文件；已批准交付不变。", [System.Text.UTF8Encoding]::new($false))
   [System.IO.File]::WriteAllText($validPlainTrainingDraft, "暂缓与排除`n`n暂无已确认的课程内容暂缓项。`n`n【执行边界】`n`n本轮不生成文件；已批准交付不变。", [System.Text.UTF8Encoding]::new($false))
   [System.IO.File]::WriteAllText($invalidTrainingDraft, "## 暂缓与排除`n`n- 已确认暂缓：本轮不生成文件。", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($invalidExerciseDeferralDraft, "## 暂缓与排除`n`n- 已确认暂缓：员工练习需要填写项目暂缓项。`n`n## 当前执行边界`n`n本轮不生成文件。", [System.Text.UTF8Encoding]::new($false))
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $trainingLint -Arguments @('-Path', $validTrainingDraft)) -ne 0) { Add-Failure 'Training handoff lint rejected valid execution-boundary placement.' }
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $trainingLint -Arguments @('-Path', $validPlainTrainingDraft)) -ne 0) { Add-Failure 'Training handoff lint rejected a valid plain-language execution heading.' }
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $trainingLint -Arguments @('-Path', $invalidTrainingDraft)) -eq 0) { Add-Failure 'Training handoff lint accepted no-generation as curriculum deferral.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $trainingLint -Arguments @('-Path', $invalidExerciseDeferralDraft)) -eq 0) { Add-Failure 'Training handoff lint accepted exercise-level deferred items as curriculum deferral.' }
+  $powerShellExecutable = (Get-Process -Id $PID).Path
+  $passThroughOutput = @(& $powerShellExecutable -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $trainingLint -Path $validTrainingDraft -PassThrough 2>&1 | ForEach-Object { [string]$_ })
+  if ($LASTEXITCODE -ne 0) { Add-Failure 'Training handoff pass-through rejected a valid draft.' }
+  $passThroughText = $passThroughOutput -join "`n"
+  Require-Contains $passThroughText 'Training handoff lint: PASS' 'training handoff pass-through PASS result'
+  Require-Contains $passThroughText '---BEGIN APPROVED TRAINING HANDOFF---' 'training handoff pass-through begin marker'
+  Require-Contains $passThroughText '---END APPROVED TRAINING HANDOFF---' 'training handoff pass-through end marker'
+  $approvedMatch = [regex]::Match($passThroughText, '(?s)---BEGIN APPROVED TRAINING HANDOFF---\r?\n(?<text>.*?)\r?\n---END APPROVED TRAINING HANDOFF---')
+  $expectedApproved = (Get-Content -LiteralPath $validTrainingDraft -Raw -Encoding UTF8) -replace "`r`n", "`n"
+  if (-not $approvedMatch.Success -or (($approvedMatch.Groups['text'].Value -replace "`r`n", "`n") -ne $expectedApproved.TrimEnd("`r", "`n"))) {
+    Add-Failure 'Training handoff pass-through did not preserve the exact approved draft.'
+  }
 } finally {
   if (Test-Path -LiteralPath $trainingLintTemp) { Remove-Item -LiteralPath $trainingLintTemp -Recurse -Force }
 }
 
 $questionLint = Join-Path $SkillRoot 'scripts\validate_question_packet.ps1'
+$questionLintText = Get-Content -LiteralPath $questionLint -Raw -Encoding UTF8
+Require-Contains $questionLintText "[ValidateSet('generic', 'training')]" 'question packet training profile'
+Require-Contains $questionLintText 'Training packet reopens a completed baseline without -AllowCompletedBaselineReview.' 'training completed-baseline lint'
+Require-Contains $questionLintText 'Training packet states a negative curriculum boundary before user confirmation.' 'training negative-boundary provenance lint'
+Require-Contains $questionLintText 'Training packet asks for a future artifact format that does not affect the current in-chat result.' 'training speculative-format lint'
+Require-Contains $questionLintText '---BEGIN APPROVED QUESTION PACKET---' 'question packet approved-text marker'
 $questionLintTemp = Join-Path ([System.IO.Path]::GetTempPath()) ('allred-question-lint-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Force -Path $questionLintTemp | Out-Null
 try {
   $validQuestionDraft = Join-Path $questionLintTemp 'valid.md'
   $invalidQuestionDraft = Join-Path $questionLintTemp 'invalid.md'
+  $validTrainingQuestionDraft = Join-Path $questionLintTemp 'training-valid.md'
+  $invalidTrainingQuestionDraft = Join-Path $questionLintTemp 'training-invalid.md'
+  $prematureTrainingBoundaryDraft = Join-Path $questionLintTemp 'training-premature-boundary.md'
+  $speculativeTrainingFormatDraft = Join-Path $questionLintTemp 'training-speculative-format.md'
   [System.IO.File]::WriteAllText($validQuestionDraft, "## Roles`n`n- **Question: Who submits?** Impact: controls the entry authority. Reply: name the role.`n- **Question: Who approves?**`n  Impact: controls when the record becomes final.`n  Reply: name the role and condition.", [System.Text.UTF8Encoding]::new($false))
   [System.IO.File]::WriteAllText($invalidQuestionDraft, "## Roles`n`n- **Question: Who submits?**`n  Why now: authority depends on this answer.`n  Basis: unknown.`n  Reply: name the role.", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($validTrainingQuestionDraft, "请确认或增删学员岗位。课程目标希望员工达到什么学习结果？除候选内容外还有哪些必讲主题需要补充？练习希望做到什么终点或成果？当前本轮只在对话中确认范围，不生成讲义或练习表。未请求内容请选择纳入、排除或暂不分类。怎样的验证证据算达到验收标准？", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($invalidTrainingQuestionDraft, "学员已完成基础培训。请选择安排简短复习还是独立复习环节。", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($prematureTrainingBoundaryDraft, "请确认或增删学员岗位。不包含财务内容。课程目标希望员工达到什么学习结果？除候选内容外还有哪些必讲主题需要补充？练习希望做到什么终点或成果？当前本轮只在对话中确认范围，不生成讲义或练习表。未请求内容请选择纳入、排除或暂不分类。怎样的验证证据算达到验收标准？", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($speculativeTrainingFormatDraft, "请确认或增删学员岗位。课程目标希望员工达到什么学习结果？除候选内容外还有哪些必讲主题需要补充？练习希望做到什么终点或成果？当前本轮只在对话中确认范围，不生成讲义或练习表。本次需要交付什么培训材料？未请求内容请选择纳入、排除或暂不分类。怎样的验证证据算达到验收标准？", [System.Text.UTF8Encoding]::new($false))
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $validQuestionDraft)) -ne 0) { Add-Failure 'Question packet lint rejected valid adjacent impact and reply guidance.' }
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidQuestionDraft)) -eq 0) { Add-Failure 'Question packet lint accepted why-now text as a substitute for facet impact.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $validTrainingQuestionDraft, '-Profile', 'training', '-PassThrough')) -ne 0) { Add-Failure 'Training question packet lint rejected complete concentrated coverage.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidTrainingQuestionDraft, '-Profile', 'training')) -eq 0) { Add-Failure 'Training question packet lint accepted reopening a completed baseline.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $prematureTrainingBoundaryDraft, '-Profile', 'training')) -eq 0) { Add-Failure 'Training question packet lint accepted an unconfirmed negative boundary.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $speculativeTrainingFormatDraft, '-Profile', 'training')) -eq 0) { Add-Failure 'Training question packet lint accepted a speculative future artifact decision.' }
 } finally {
   if (Test-Path -LiteralPath $questionLintTemp) { Remove-Item -LiteralPath $questionLintTemp -Recurse -Force }
 }
