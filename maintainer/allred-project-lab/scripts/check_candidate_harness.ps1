@@ -141,7 +141,9 @@ $failFastContracts = @(
   'if (-not $dynamicBlocked -and $selectedStandard.Count -gt 0)',
   "if (`$Mode -eq 'Candidate' -and -not `$dynamicBlocked)",
   "if (-not (Invoke-ValidationStep -Name 'candidate-behavior-high'",
-  "'-FailFastP0'"
+  "if (`$Mode -eq 'Candidate') { `$arguments.Add('-FailFastP0') }",
+  "if (-not `$replayPassed -and `$Mode -eq 'Candidate')",
+  "if (-not `$labPassed -and `$Mode -eq 'Candidate')"
 )
 foreach ($contract in $failFastContracts) {
   if (-not $candidateText.Contains($contract)) {
@@ -164,7 +166,7 @@ $comparisonOptions = [regex]::Match($candidateText, 'function Add-ComparisonOpti
 if (-not $comparisonOptions.Success -or $comparisonOptions.Groups['body'].Value.Contains('StatelessTurns')) {
   $failures.Add('Blind comparison options incorrectly include stateless behavior-turn flags.') | Out-Null
 }
-$candidateLowBlock = [regex]::Match($candidateText, '\$candidateLowRoot\s*=.*?if \(\$Mode -eq', [System.Text.RegularExpressions.RegexOptions]::Singleline)
+$candidateLowBlock = [regex]::Match($candidateText, '\$candidateLowRoot\s*=.*?\r?\nif \(\$Mode -eq ''Candidate'' -and -not \$dynamicBlocked\)', [System.Text.RegularExpressions.RegexOptions]::Singleline)
 if (-not $candidateLowBlock.Success -or -not $candidateLowBlock.Value.Contains('Add-BehaviorOptions -Arguments $arguments -Effort $LowReasoningEffort') -or $candidateLowBlock.Value.Contains('Add-ComparisonOptions -Arguments $arguments')) {
   $failures.Add('Candidate low behavior block does not use stateless behavior options.') | Out-Null
 }

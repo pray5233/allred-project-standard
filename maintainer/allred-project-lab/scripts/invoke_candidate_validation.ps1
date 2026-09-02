@@ -287,15 +287,18 @@ if ($Mode -ne 'Quick' -and -not $staticFailed) {
     $arguments = [System.Collections.Generic.List[string]]::new()
     foreach ($value in @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $LabRoot 'scripts\run_replay_eval.ps1'), '-LabRoot', $LabRoot, '-OutputRoot', $replayRoot, '-CaseIdsPath', $replayCaseIdsPath)) { $arguments.Add($value) }
     Add-DynamicOptions -Arguments $arguments -Effort $LowReasoningEffort
-    if (-not (Invoke-ValidationStep -Name 'fixed-record-replay' -FilePath $hostPowerShell -Arguments @($arguments))) { $dynamicBlocked = $true }
+    $replayPassed = Invoke-ValidationStep -Name 'fixed-record-replay' -FilePath $hostPowerShell -Arguments @($arguments)
+    if (-not $replayPassed -and $Mode -eq 'Candidate') { $dynamicBlocked = $true }
   }
 
   if (-not $dynamicBlocked -and $selectedLab.Count -gt 0) {
     $labRunRoot = Join-Path $OutputRoot 'lab-behavior-low'
     $arguments = [System.Collections.Generic.List[string]]::new()
-    foreach ($value in @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $LabRoot 'scripts\invoke_behavior_eval_batch.ps1'), '-RunnerPath', (Join-Path $StandardRoot 'scripts\run_behavior_eval.ps1'), '-SkillRoot', $LabRoot, '-SuiteRoot', $LabRoot, '-OutputRoot', $labRunRoot, '-CaseIdsPath', $labCaseIdsPath, '-FailFastP0')) { $arguments.Add($value) }
+    foreach ($value in @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $LabRoot 'scripts\invoke_behavior_eval_batch.ps1'), '-RunnerPath', (Join-Path $StandardRoot 'scripts\run_behavior_eval.ps1'), '-SkillRoot', $LabRoot, '-SuiteRoot', $LabRoot, '-OutputRoot', $labRunRoot, '-CaseIdsPath', $labCaseIdsPath)) { $arguments.Add($value) }
+    if ($Mode -eq 'Candidate') { $arguments.Add('-FailFastP0') }
     Add-BehaviorOptions -Arguments $arguments -Effort $LowReasoningEffort
-    if (-not (Invoke-ValidationStep -Name 'lab-behavior-low' -FilePath $hostPowerShell -Arguments @($arguments))) { $dynamicBlocked = $true }
+    $labPassed = Invoke-ValidationStep -Name 'lab-behavior-low' -FilePath $hostPowerShell -Arguments @($arguments)
+    if (-not $labPassed -and $Mode -eq 'Candidate') { $dynamicBlocked = $true }
   }
 
   if (-not $dynamicBlocked -and $selectedStandard.Count -gt 0) {
@@ -304,7 +307,8 @@ if ($Mode -ne 'Quick' -and -not $staticFailed) {
       if (-not (Import-ReusableBehaviorRun -Name 'candidate-behavior-low-reused' -SourceRoot $ReuseCandidateLowRoot -DestinationRoot $candidateLowRoot -ExpectedCaseIds @($selectedStandard) -ExpectedSkillRoot $StandardRoot -ExpectedSuiteRoot $StandardRoot -ExpectedReasoningEffort $LowReasoningEffort)) { $dynamicBlocked = $true }
     } else {
       $arguments = [System.Collections.Generic.List[string]]::new()
-      foreach ($value in @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $LabRoot 'scripts\invoke_behavior_eval_batch.ps1'), '-RunnerPath', (Join-Path $StandardRoot 'scripts\run_behavior_eval.ps1'), '-SkillRoot', $StandardRoot, '-SuiteRoot', $StandardRoot, '-OutputRoot', $candidateLowRoot, '-CaseIdsPath', $standardCaseIdsPath, '-FailFastP0')) { $arguments.Add($value) }
+      foreach ($value in @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $LabRoot 'scripts\invoke_behavior_eval_batch.ps1'), '-RunnerPath', (Join-Path $StandardRoot 'scripts\run_behavior_eval.ps1'), '-SkillRoot', $StandardRoot, '-SuiteRoot', $StandardRoot, '-OutputRoot', $candidateLowRoot, '-CaseIdsPath', $standardCaseIdsPath)) { $arguments.Add($value) }
+      if ($Mode -eq 'Candidate') { $arguments.Add('-FailFastP0') }
       Add-BehaviorOptions -Arguments $arguments -Effort $LowReasoningEffort
       if (-not (Invoke-ValidationStep -Name 'candidate-behavior-low' -FilePath $hostPowerShell -Arguments @($arguments))) { $dynamicBlocked = $true }
     }

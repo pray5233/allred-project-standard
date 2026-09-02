@@ -40,14 +40,14 @@
 
 范围建议：
 
-- 日常修改使用 `changed`。
+- 日常修改使用 `changed`；即使某个P0案例不通过，也继续完成本次影响集，便于一次发现全部问题。
 - 准备候选版使用 `release`。
 - 每周或大量规则变更后使用 `full-low`。
 - 稳定版前使用 `full-dual`。
 
 动态运行会上传完整测试组对话、命令结果、检查组判定和报告，保留30天。`InfrastructureFailure`仍表示环境或认证未完成，不能算Skill通过或失败。
 
-启用FailFast时，尚未执行的后续案例标记为 `NotRun`，并说明是前序P0未通过导致停止；它们不再被误报为 `InfrastructureFailure`。
+`release`候选门禁启用FailFast，尚未执行的后续案例标记为 `NotRun`；`changed`诊断模式不启用FailFast，会完成整个影响集。两者都不会把未执行案例误报为 `InfrastructureFailure`。
 
 安全边界：
 

@@ -440,3 +440,7 @@ The next candidate therefore makes three narrow changes: keep missing-location w
 - the self-hosted runner remains a separate authenticated execution environment; the repository contains no Codex credential or registration token.
 
 The second self-hosted `Changed` run selected 24 Standard cases. Nineteen passed before `V134` exposed two evidence-report defects: `GuardsOnly` was supplied as an interaction value, and unselected-domain negatives were repeated as user-visible “not in scope” statements. The active EVIDENCE guard now gives the exact switch syntax and treats negative mention itself as leakage. `V134` then passed at low; its preceding xhigh run already passed with the same core evidence behavior.
+
+The third self-hosted run reached `V132` after eight passing Standard cases. Its sampled blank values were incorrectly promoted from an observation to preliminary checker feasibility. The EVIDENCE guard now states that a pattern or anomaly proves only the observation unless matching semantics/rules support the checker or classifier claim. `V132` passed at low and xhigh after this correction.
+
+`Changed` is now a diagnostic breadth mode: replay, Lab, and Standard failures are recorded but do not stop the remaining affected cases. `Candidate/Release` remains the promotion gate and retains P0 fail-fast behavior. This separates “find all current problems” from “stop spending after a release blocker.”
