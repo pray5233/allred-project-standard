@@ -94,6 +94,9 @@ $batchWrapperText = Get-Content -LiteralPath (Join-Path $LabRoot 'scripts\invoke
 if (-not $batchWrapperText.Contains('exit [int]$runnerExitCode')) {
   $failures.Add('Behavior batch wrapper does not propagate the runner exit code.') | Out-Null
 }
+foreach ($failFastContract in @("status = 'NotRun'", 'Skipped after an earlier P0 case did not pass.', '$attemptedCaseIds.Contains($caseId)')) {
+  if (-not $batchWrapperText.Contains($failFastContract)) { $failures.Add("Behavior batch wrapper is missing fail-fast reporting contract: $failFastContract") | Out-Null }
+}
 if (-not $batchWrapperText.Contains('ModelProvider = $ModelProvider') -or -not $batchWrapperText.Contains('ProviderEnvKey = $ProviderEnvKey')) {
   $failures.Add('Behavior batch wrapper does not propagate provider selection without credentials.') | Out-Null
 }

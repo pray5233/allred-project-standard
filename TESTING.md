@@ -4,9 +4,9 @@
 
 ## 最简候选验证
 
-测试 `0.8.0-rc12` 候选时，不需要重复本仓库的全部行为清单。维护者完成结构、invariant、运行时通用性、路由隔离及低/高模型门禁后再提供安装候选。
+测试 `0.8.0-rc13` 候选时，不需要重复本仓库的全部行为清单。维护者完成结构、invariant、运行时通用性、路由隔离及低/高模型门禁后再提供安装候选。
 
-1. 安装或更新 Allred，确认 `VERSION` 为 `0.8.0-rc12`。
+1. 安装或更新 Allred，确认 `VERSION` 为 `0.8.0-rc13`。
 2. 新建一个 Codex 任务，按平时方式提出一个真实需求；不必预先安装 `find-skills` 或 `grilling`。
 3. 正常回答需要你决定的问题，不要为了测试故意配合 Skill。
 4. 只有出现以下情况时保留完整对话并反馈：首轮直接给出完整产品方案、重复询问已提供内容、样例证据替你决定功能、把 `继续/按推荐` 当作开发授权、技术预检前就给开始卡、未经批准安装或修改、批准后仍反复确认、声称完成但没有验证证据。
@@ -47,6 +47,8 @@
 
 动态运行会上传完整测试组对话、命令结果、检查组判定和报告，保留30天。`InfrastructureFailure`仍表示环境或认证未完成，不能算Skill通过或失败。
 
+启用FailFast时，尚未执行的后续案例标记为 `NotRun`，并说明是前序P0未通过导致停止；它们不再被误报为 `InfrastructureFailure`。
+
 安全边界：
 
 - 动态工作流使用 `workflow_dispatch`，不在外部Pull Request上运行。
@@ -59,7 +61,7 @@
 ```powershell
 pwsh -NoProfile -File .\maintainer\allred-project-lab\scripts\run_ci_behavior.ps1 `
   -Suite Changed `
-  -BaselineRef v0.8.0-rc11 `
+  -BaselineRef v0.8.0-rc12 `
   -Model gpt-5.6-sol
 ```
 

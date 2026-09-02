@@ -244,7 +244,7 @@ if ($validatedByEvent -and $Stage -eq 'decision') {
 }
 
 if ($Route -in $newProjectRoutes -and $Stage -eq 'intake') {
-  $stageGuards.intake += " Intake consequence lint: one packet-wide consequence sentence is insufficient. Give each visible group one short plain-language effect. Map user/current workflow -> actors, responsibility, and workflow boundary; materials/sample -> fields, cleanup/import evidence, and what can be verified; user idea/current scope -> included and deferred behavior; recognizable useful result -> acceptance evidence. Adapt or omit groups already answered; do not add questions merely to render this map."
+  $stageGuards.intake += " Material-location hard stop: search workspace once. No path/attachment/hit: remain INTAKE, ask exact location, and never load EVIDENCE to find the target. Intake consequence lint: one packet-wide consequence sentence is insufficient. Give each visible group one short plain-language effect. Map user/current workflow -> actors, responsibility, and workflow boundary; materials/sample -> fields, cleanup/import evidence, and what can be verified; user idea/current scope -> included and deferred behavior; recognizable useful result -> acceptance evidence. Adapt or omit groups already answered; do not add questions merely to render this map."
 }
 
 if ($Interaction -eq 'beginner' -and $Stage -eq 'intake') {

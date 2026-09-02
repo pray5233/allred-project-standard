@@ -17,7 +17,7 @@ on:
         description: Accepted baseline tag or commit
         required: true
         type: string
-        default: v0.8.0-rc11
+        default: v0.8.0-rc12
       model:
         description: Codex model available on the self-hosted runner
         required: true
@@ -101,13 +101,15 @@ jobs:
         shell: pwsh
         run: |
           $root = Join-Path $PWD ("_eval\{0}" -f '${{ github.run_id }}')
-          "## Allred behavior evaluation" >> $env:GITHUB_STEP_SUMMARY
-          "- Suite: `${{ inputs.suite }}`" >> $env:GITHUB_STEP_SUMMARY
-          "- Baseline: `${{ inputs.baseline_ref }}`" >> $env:GITHUB_STEP_SUMMARY
-          "- Model: `${{ inputs.model }}`" >> $env:GITHUB_STEP_SUMMARY
-          "- Artifact: `allred-evals-${{ github.run_id }}`" >> $env:GITHUB_STEP_SUMMARY
+          @(
+            '## Allred behavior evaluation'
+            '- Suite: ${{ inputs.suite }}'
+            '- Baseline: ${{ inputs.baseline_ref }}'
+            '- Model: ${{ inputs.model }}'
+            '- Artifact: allred-evals-${{ github.run_id }}'
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
           if (Test-Path (Join-Path $root 'report.md')) {
-            Get-Content (Join-Path $root 'report.md') -Encoding UTF8 >> $env:GITHUB_STEP_SUMMARY
+            Get-Content (Join-Path $root 'report.md') -Encoding UTF8 | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
           }
 
       - name: Upload behavior evidence

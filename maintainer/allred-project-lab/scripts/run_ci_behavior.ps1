@@ -4,7 +4,7 @@ param(
   [string]$RepoRoot = '',
   [string]$StandardRoot = '',
   [string]$LabRoot = '',
-  [string]$BaselineRef = 'v0.8.0-rc11',
+  [string]$BaselineRef = 'v0.8.0-rc12',
   [string]$Model = 'gpt-5.6-sol',
   [ValidateRange(1, 8)]
   [int]$MaxParallelCases = 3,

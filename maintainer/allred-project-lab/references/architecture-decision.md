@@ -424,3 +424,17 @@ Add two repository workflows:
 2. `behavior-evals.yml` runs only through `workflow_dispatch` on a self-hosted runner labeled `allred-eval`. The runner must already have Codex CLI authenticated. It uploads complete evidence and never runs on pull requests.
 
 Add `run_ci_behavior.ps1` as the testable orchestration owner. `Changed` uses impact-selected low evaluation, `Release` runs the candidate gate, `FullLow` evaluates all behavior cases at low reasoning, and `FullDual` evaluates all cases at low then xhigh. The workflows do not install Skills, change the user's active Codex configuration, publish releases, or promote a candidate.
+
+### First Self-Hosted Run Evidence (2026-09-02)
+
+The first `Changed` run selected 36 Standard cases, Lab `L01`, and fixed replays `R01-R06`. Replays and Lab passed. Fourteen Standard cases passed before `V130` returned Partial: it withheld READY correctly but did not maintain the material-location stage boundary consistently. FailFast stopped later batches; the wrapper incorrectly serialized 21 unattempted cases as infrastructure failures. The job-summary step also exposed a PowerShell backtick parsing defect.
+
+The next candidate therefore makes three narrow changes: keep missing-location work in INTAKE after a bounded workspace search, report fail-fast remainder as `NotRun`, and write GitHub summaries without backtick-sensitive strings. These are regression and harness corrections, not broader product-flow redesign.
+
+### RC13 Validation Evidence (2026-09-02)
+
+- `V130` passed at low and xhigh after the missing-location stage boundary was moved into the active INTAKE guard.
+- the corrected flow performs/requests only read-only preflight, does not treat route reading as a stage transition, and exposes no start option before aggregate READY.
+- a deterministic fail-fast smoke ran two attempted cases and marked the third as `NotRun`; no unattempted case was labeled `InfrastructureFailure`.
+- workflow YAML parsing and `actionlint 1.7.12` passed after the summary writer was changed to PowerShell `Out-File`.
+- the self-hosted runner remains a separate authenticated execution environment; the repository contains no Codex credential or registration token.

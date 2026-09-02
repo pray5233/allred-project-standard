@@ -61,10 +61,12 @@ $allResults = [System.Collections.Generic.List[object]]::new()
 $hasFailures = $false
 $stopAfterBatch = $false
 $firstConfig = $null
+$attemptedCaseIds = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 
 for ($offset = 0; $offset -lt $caseIds.Count -and -not $stopAfterBatch; $offset += $MaxParallelCases) {
   $last = [Math]::Min($offset + $MaxParallelCases - 1, $caseIds.Count - 1)
   $batch = @($caseIds[$offset..$last])
+  foreach ($caseId in $batch) { $attemptedCaseIds.Add($caseId) | Out-Null }
   $jobs = foreach ($caseId in $batch) {
     $partRoot = Join-Path $partsRoot $caseId
     $caseParameters = $parameters.Clone()
@@ -118,6 +120,8 @@ foreach ($caseId in $caseIds) {
   $matches = @($allResults | Where-Object { [string]$_.case_id -eq $caseId })
   if ($matches.Count -eq 1) {
     $orderedResults.Add($matches[0]) | Out-Null
+  } elseif ($matches.Count -eq 0 -and $stopAfterBatch -and -not $attemptedCaseIds.Contains($caseId)) {
+    $orderedResults.Add([pscustomobject]@{ case_id = $caseId; priority = $null; status = 'NotRun'; result = $null; first_divergent_turn = $null; report = $null; not_run_reason = 'Skipped after an earlier P0 case did not pass.' }) | Out-Null
   } else {
     $hasFailures = $true
     $orderedResults.Add([pscustomobject]@{ case_id = $caseId; priority = $null; status = 'InfrastructureFailure'; result = $null; first_divergent_turn = $null; report = $null; infrastructure_reason = "Parallel aggregation found $($matches.Count) results; expected exactly one." }) | Out-Null
