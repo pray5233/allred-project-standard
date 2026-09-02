@@ -506,4 +506,21 @@ The final runtime therefore adds high-salience generic boundaries for those owne
 - `V79` passed in two independent low replicas and at xhigh
 - PowerShell 5.1 and Quick validation passed after the final shared-environment boundary
 
+### Final Variance Audit (2026-09-02)
+
+Three explicit 26-case low-effort diagnostic batches were run outside baseline impact selection because the outer training repository and shallow release clone did not contain the `v0.8.0-rc12` tag. They used the same Standard case set selected by GitHub `Changed`, parallelism 3, user config, disabled plugins, stateless turns, and a 900-second timeout.
+
+The one-shot batch results varied materially even when the runtime hash was unchanged or the same case passed repeated targeted trials. Every sampled pass and non-pass transcript also contained the same unrelated remote MCP `HTTP 403`, so 403 presence alone cannot classify semantic quality. The diagnostic batches are retained as variance evidence rather than rewritten as passes.
+
+The final runtime changes remain justified by repeated case-level evidence:
+
+- training, exact-inspection, debugging, monitoring, shared-decision, office-delivery, semantic-source, and structured-record boundaries were implemented as generic route or validator contracts
+- `V124`, `V131`, `V133`, `V137`, `V138`, and `V142` passed at low and xhigh after their final owning changes
+- `V127` and `V139` each passed two independent low replicas and one xhigh run after their final owning changes
+- `V79` passed two independent low replicas and xhigh after current-environment versus future-platform separation
+- final `V142` evidence includes two passing low replicas plus a passing xhigh run on the current runtime hash after natural-language validator matching and post-evidence timing were corrected
+- Quick, PowerShell 5.1, route budgets, official validation, source/release parity, and isolated installation remain mandatory deterministic gates
+
+Release interpretation: the current tree is suitable for an `rc13` working candidate on `main`, but the one-shot 26-case run is not a valid 26/26 stable-release claim. The next Lab change should add preserved multi-trial results and explicit variance classification instead of treating one stochastic sample as the only release verdict. No `v0.8.0-rc13` tag or Release is authorized by this evidence.
+
 This evidence supports an `rc13` candidate commit and GitHub validation. Tagging or publishing `v0.8.0-rc13` remains a separate user-authorized action.

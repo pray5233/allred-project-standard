@@ -54,11 +54,15 @@ if ($skillLines[2] -notmatch '^description:\s+\S') { Add-Failure 'Frontmatter de
 if ($skillLines[2].Length -gt 500) { Add-Failure 'Frontmatter description is too broad.' }
 if ($skillLines.Count -gt 260) { Add-Failure "SKILL.md exceeds entrypoint budget: $($skillLines.Count) lines." }
 
-foreach ($heading in @('## Post-Event First Action', '## Runtime Hard Stops', '## Activation And Routing', '## Required Reading', '## Shared Invariants', '## Conversation Topology')) {
+foreach ($heading in @('## Post-Event First Action', '## Partial Reply First Action', '## Exact Inspection First Action', '## Runtime Hard Stops', '## Activation And Routing', '## Required Reading', '## Shared Invariants', '## Conversation Topology')) {
   Require-Contains $skillText $heading $heading
 }
 Require-Contains $skillText 'allred-project-lab' 'maintainer Skill ownership'
 Require-Contains $skillText 'After any tool/event result changes evidence or stage' 'post-event route reload hard stop'
+Require-Contains $skillText '$draft | & scripts/validate_question_packet.ps1 -Profile inspection-discovery -PassThrough' 'partial inspection reply deterministic lint'
+Require-Contains $skillText 'Before evidence, do not run this profile' 'inspection profile waits for evidence'
+Require-Contains $skillText 'never read/search validator source or expose lint, hashes, or approved-block mechanics' 'inspection lint stays internal'
+Require-Contains $skillText 'Until post-evidence PASS, do not show a first-release recommendation, plan, or technical preflight' 'partial inspection reply blocks recommendation'
 Require-Contains $skillText '-Route non-software -Stage decision -Variant training' 'training event exact decision route'
 Require-Contains $skillText '$draft | & scripts/validate_question_packet.ps1 -Profile training -PassThrough' 'training event exact question-packet lint'
 Require-Contains $skillText 'Evidence-only audience or absent/unrequested content is never `已确认` or `资料已支持`' 'training evidence candidates remain unconfirmed'
@@ -86,6 +90,12 @@ Require-Contains $skillText 'extensibility/configuration owner, historical handl
 Require-Contains $skillText 'never invent numeric targets or let a recommendation settle ownership' 'open lifecycle facets preserve provenance'
 Require-Contains $skillText 'an explicit state such as `relevant`, `irrelevant`, or `unknown`' 'semantic source state is explicit'
 Require-Contains $skillText 'Beginner-facing READY hides source trees' 'beginner READY hides implementation structure'
+Require-Contains $skillText 'Every visible INTAKE group states its own practical effect' 'new-project intake group effects are explicit'
+Require-Contains $skillText 'The user/workflow/pain group explicitly changes actors, responsibility, workflow boundary, and which pain to prioritize' 'new-project first-group consequence'
+Require-Contains $skillText 'one highest-value causal fork and one bounded experiment' 'debug evidence selects one experiment'
+Require-Contains $skillText 'State the observable result that supports versus weakens it' 'debug experiment has outcomes'
+Require-Contains $skillText 'For continuous monitoring evidence, load the `external-source` overlay with monitoring mode before synthesis' 'monitoring evidence exact overlay'
+Require-Contains $skillText 'Preserve the confirmed schedule, retained history, failure visibility and missed-run recovery, source-change behavior, and maintenance owner' 'monitoring consequences persist'
 Require-Contains $skillText '-Overlays external-source|shared-collaboration|company-office-delivery' 'conditional overlay selector'
 Require-Contains $skillText 'only toggles beginner/standard expression' 'expression-only toggle boundary'
 Require-Contains $skillText 'Do not restate or re-ask its facts, materials, or decisions' 'expression toggle does not repeat pending questions'
@@ -220,12 +230,12 @@ Require-Contains $debugEvidence 'support versus weaken' 'bounded debug experimen
 
 $sharedDecision = (& $selectorPath -SkillRoot $SkillRoot -Route long-term -Stage decision -Overlays shared-collaboration) -join "`n"
 Require-Contains $sharedDecision '<!-- source: references\shared-collaboration.md -->' 'shared decision overlay routing'
-Require-Contains $sharedDecision 'Begin with three independent current Qs: participants/responsibilities; records/workflow/source; use environment (location/devices/access/availability)' 'shared current-fact coverage'
-Require-Contains $sharedDecision 'Future behavior is D and cannot replace Q or mix current owner with future hosting' 'shared current-fact versus future-decision separation'
+Require-Contains $sharedDecision 'Begin with current Qs for participants/responsibilities, records/workflow/source, and location/devices/access/availability' 'shared current-fact coverage'
+Require-Contains $sharedDecision 'Future behavior, including final acceptance authority/process, is D' 'shared current-fact versus future-decision separation'
 Require-Contains $sharedDecision 'Create/edit/approve-close/reopen/delete stay separate' 'shared action-axis separation'
-Require-Contains $sharedDecision 'one why/basis per group, then each facet one compact question+影响+回复 line; never repeat a five-line mini-card' 'shared compact grouped rendering'
-Require-Contains $sharedDecision 'Lint via scripts/validate_question_packet.ps1; send only PASS draft' 'shared deterministic question-packet lint'
-Require-Contains $sharedDecision 'Natural prose reply allowed' 'shared natural reply contract'
+Require-Contains $sharedDecision 'Render five groups: one why/basis each; each facet question+影响+回复; no mini-cards' 'shared compact grouped rendering'
+Require-Contains $sharedDecision '$draft | & scripts/validate_question_packet.ps1 -Profile shared-collaboration -PassThrough' 'shared deterministic question-packet lint'
+Require-Contains $sharedDecision 'Prose allowed' 'shared natural reply contract'
 Require-Contains $sharedDecision "Shared hard stops: no invented days/hours/counts/retention; use '由你指定'" 'shared quantitative provenance hard stop'
 Require-Contains $sharedDecision "可暂缓任一项；对应设计/实现/验收保持未定，不开发" 'shared discovery deferral hard stop'
 Require-Match $sharedDecision '(?is)(ID-free groups|ID-free headings)' 'shared group-heading separation'
@@ -248,14 +258,26 @@ $newProjectIntake = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -
 Require-Contains $newProjectIntake 'one packet-wide consequence sentence is insufficient' 'new-project intake per-group consequence lint'
 Require-Contains $newProjectIntake 'aggregate DECISION/READY without StatePath' 'intake trusted event handoff'
 Require-Contains $newProjectIntake 'never load EVIDENCE to find the target' 'intake material-location stage boundary'
+Require-Contains $newProjectIntake "Descriptive label/'this local file' is not a target" 'intake descriptive label is not locatable target'
+Require-Contains $newProjectIntake 'Extensibility keeps separate future-addition support and configuration owner' 'intake extensibility support and owner separation'
+Require-Contains $newProjectIntake 'User/workflow/pain explicitly changes actors, responsibility, workflow boundary, and pain priority' 'intake first-group effect route guard'
 Require-Contains $newProjectIntake 'Track user/workflow/pain' 'new-project workflow pain intake'
 Require-Contains $newProjectIntake 'Explicitly unavailable material is closed; do not request it again' 'unavailable material is not re-requested'
-Require-Contains $newProjectIntake 'recognizable useful result -> acceptance evidence' 'new-project success effect coverage'
+Require-Contains $newProjectIntake 'useful result -> acceptance evidence' 'new-project success effect coverage'
 Require-Contains $newProjectIntake 'do not search the workspace for it' 'intake guard respects explicitly unsupplied materials'
 Require-Contains $newProjectIntake 'Pending material postpones evidence-dependent recommendations, not independent intake' 'missing material preserves independent intake packet'
 
 $office = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage evidence -Overlays company-office-delivery) -join "`n"
 Require-Contains $office '<!-- source: references\company-office-delivery.md -->' 'company office overlay routing'
+$officeRedirect = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage decision -Overlays company-office-delivery) -join "`n"
+Require-Contains $officeRedirect 'Office redirect: representative environment evidence is enough to compare feasible employee-facing routes now' 'office redirect performs route comparison'
+Require-Contains $officeRedirect 'Technical implementation stays Codex-owned' 'office redirect preserves technical ownership'
+Require-Contains $officeRedirect 'actual opening workflow on the representative office computer' 'office redirect target-environment acceptance'
+
+$inspectionEvidence = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage evidence -Variant inspection -Interaction beginner) -join "`n"
+Require-Contains $inspectionEvidence '$draft | & scripts/validate_question_packet.ps1 -Profile inspection-discovery -PassThrough' 'inspection deterministic question-packet lint'
+Require-Contains $inspectionEvidence 'first-release fixed/current scope versus future additions, configuration owner, history, correction/void, record/print scale, search acceptance, print acceptance' 'inspection complete discovery facets'
+Require-Contains $inspectionEvidence 'An example is not confirmation; never supply numeric targets' 'inspection acceptance provenance'
 
 $trainingDecision = (& $selectorPath -SkillRoot $SkillRoot -Route non-software -Stage decision -Variant training) -join "`n"
 Require-Contains $trainingDecision 'omit future format unless it changes curriculum/acceptance' 'training current-result boundary excludes speculative format'
@@ -274,23 +296,24 @@ Require-Contains $trainingDecision 'No-file=in-chat' 'training current no-file e
 
 $evidenceGuardOnly = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage evidence -GuardsOnly) -join "`n"
 Require-Contains $evidenceGuardOnly 'Current stage: EVIDENCE.' 'evidence guards-only routing'
-Require-Contains $evidenceGuardOnly 'never the first/only route load' 'evidence route entry requires full context'
-Require-Contains $evidenceGuardOnly 'Post-result exact call: get_route_context.ps1 -Route <route> -Stage evidence -Interaction <standard|beginner> -GuardsOnly' 'post-event exact guards-only routing'
-Require-Contains $evidenceGuardOnly 'Then reload normal evidence context' 'post-event synthesis requires full evidence context'
-Require-Contains $evidenceGuardOnly 'Artifact-location hard stop:' 'missing inspection target evidence stop'
-Require-Contains $evidenceGuardOnly 'a label is not a target' 'descriptive artifact label is not locatable evidence'
-Require-Contains $evidenceGuardOnly 'ask only for its location/sample' 'narrow missing-target question'
-Require-Contains $evidenceGuardOnly 'Report observations, limits, and write boundary before another action' 'post-event evidence report ordering'
-Require-Contains $evidenceGuardOnly "Output filter: omit unselected-domain negatives; saying 'not in scope' is leakage" 'post-event conditional-overlay isolation'
-Require-Contains $evidenceGuardOnly 'An observed pattern/anomaly proves only observation, not checker/classifier feasibility without matching semantics/rules' 'observed anomaly cannot prove checker feasibility'
-Require-Contains $evidenceGuardOnly 'Preserve active-contract capabilities and gaps at facet level' 'named negative evidence coverage'
-Require-Contains $evidenceGuardOnly 'Evidence-quantifier lint:' 'evidence population and subgroup boundary'
-Require-Contains $evidenceGuardOnly 'an aggregate does not prove each subgroup' 'aggregate evidence cannot expand to subgroups'
-Require-Contains $evidenceGuardOnly 'Temp outputs are disposable evidence, not project artifacts' 'isolated evidence artifact classification'
-Require-Contains $evidenceGuardOnly 'Before render/extract disclose unchanged originals/project and temp evidence only in isolated system temp' 'pre-inspection disposable evidence disclosure'
-Require-Contains $evidenceGuardOnly 'Unless blocked, continue authorized read-only work' 'post-report read-only continuation'
+Require-Contains $evidenceGuardOnly 'Full route before GuardsOnly' 'evidence route entry requires full context'
+Require-Contains $evidenceGuardOnly 'Post-result call: get_route_context.ps1 -Route <route> -Stage evidence -Interaction <standard|beginner> -GuardsOnly' 'post-event exact guards-only routing'
+Require-Contains $evidenceGuardOnly 'Reload full evidence before synthesis' 'post-event synthesis requires full evidence context'
+Require-Contains $evidenceGuardOnly 'Missing target: label != target; ask location/sample' 'missing inspection target evidence stop'
+Require-Contains $evidenceGuardOnly 'Report observations, limits, write boundary before another action' 'post-event evidence report ordering'
+Require-Contains $evidenceGuardOnly "Omit unselected-domain negatives; 'not in scope' leaks" 'post-event conditional-overlay isolation'
+Require-Contains $evidenceGuardOnly 'Pattern/anomaly proves observation only; checker feasibility needs matching semantics/rules' 'observed anomaly cannot prove checker feasibility'
+Require-Contains $evidenceGuardOnly 'Preserve contract gaps by facet' 'named negative evidence coverage'
+Require-Contains $evidenceGuardOnly 'Preserve sample/subgroup/count/uncertainty' 'evidence population and subgroup boundary'
+Require-Contains $evidenceGuardOnly 'aggregate does not prove each subgroup' 'aggregate evidence cannot expand to subgroups'
+Require-Contains $evidenceGuardOnly 'Temp outputs are disposable evidence' 'isolated evidence artifact classification'
+Require-Contains $evidenceGuardOnly 'Before render/extract disclose unchanged originals/project; temp evidence only in isolated system temp' 'pre-inspection disposable evidence disclosure'
+Require-Contains $evidenceGuardOnly 'Unless blocked, continue read-only work' 'post-report read-only continuation'
 Require-Contains $evidenceGuardOnly 'Trusted DECISION/READY event: call get_route_context.ps1 -Route new-standard -Stage decision -ValidatedEventId <ID>' 'trusted event exact decision route'
-Require-Contains $evidenceGuardOnly 'Script search is not a stage transition' 'decision route cannot be replaced by source search'
+Require-Contains $evidenceGuardOnly 'Script search is not a transition' 'decision route cannot be replaced by source search'
+Require-Contains $evidenceGuardOnly 'Open structured-record facets: (1) first-release current/fixed types vs future additions; (2) who configures additions' 'structured-record open-facet preservation'
+Require-Contains $evidenceGuardOnly 'No numeric defaults' 'structured-record numeric provenance'
+Require-Contains $evidenceGuardOnly 'No first-release synthesis until answered/deferred' 'structured-record discovery blocks early synthesis'
 if ($evidenceGuardOnly.Contains('<!-- source:')) { Add-Failure 'Guards-only routing loaded reference sections.' }
 
 $knowledgeEvidenceGuard = (& $selectorPath -SkillRoot $SkillRoot -Route non-software -Variant knowledge -Stage evidence -GuardsOnly) -join "`n"
@@ -356,7 +379,10 @@ try {
 
 $questionLint = Join-Path $SkillRoot 'scripts\validate_question_packet.ps1'
 $questionLintText = Get-Content -LiteralPath $questionLint -Raw -Encoding UTF8
-Require-Contains $questionLintText "[ValidateSet('generic', 'training')]" 'question packet training profile'
+Require-Contains $questionLintText "[ValidateSet('generic', 'training', 'shared-collaboration', 'inspection-discovery')]" 'question packet profiles'
+Require-Contains $questionLintText 'Shared packet classifies future final-acceptance authority as current fact Q instead of user-owned D.' 'shared final-acceptance decision lint'
+Require-Contains $questionLintText 'project-practice content-design contrast' 'training content-design contrast lint'
+Require-Contains $questionLintText 'Inspection discovery packet is missing' 'inspection discovery coverage lint'
 Require-Contains $questionLintText 'Training packet reopens a completed baseline without -AllowCompletedBaselineReview.' 'training completed-baseline lint'
 Require-Contains $questionLintText 'Training packet states a negative curriculum boundary before user confirmation.' 'training negative-boundary provenance lint'
 Require-Contains $questionLintText 'Training packet asks for a future artifact format that does not affect the current in-chat result.' 'training speculative-format lint'
@@ -367,17 +393,29 @@ try {
   $validQuestionDraft = Join-Path $questionLintTemp 'valid.md'
   $invalidQuestionDraft = Join-Path $questionLintTemp 'invalid.md'
   $validTrainingQuestionDraft = Join-Path $questionLintTemp 'training-valid.md'
+  $validSharedQuestionDraft = Join-Path $questionLintTemp 'shared-valid.md'
+  $invalidSharedAcceptanceDraft = Join-Path $questionLintTemp 'shared-invalid-acceptance.md'
+  $validInspectionQuestionDraft = Join-Path $questionLintTemp 'inspection-valid.md'
+  $invalidInspectionQuestionDraft = Join-Path $questionLintTemp 'inspection-invalid.md'
   $invalidTrainingQuestionDraft = Join-Path $questionLintTemp 'training-invalid.md'
   $prematureTrainingBoundaryDraft = Join-Path $questionLintTemp 'training-premature-boundary.md'
   $speculativeTrainingFormatDraft = Join-Path $questionLintTemp 'training-speculative-format.md'
   [System.IO.File]::WriteAllText($validQuestionDraft, "## Roles`n`n- **Question: Who submits?** Impact: controls the entry authority. Reply: name the role.`n- **Question: Who approves?**`n  Impact: controls when the record becomes final.`n  Reply: name the role and condition.", [System.Text.UTF8Encoding]::new($false))
   [System.IO.File]::WriteAllText($invalidQuestionDraft, "## Roles`n`n- **Question: Who submits?**`n  Why now: authority depends on this answer.`n  Basis: unknown.`n  Reply: name the role.", [System.Text.UTF8Encoding]::new($false))
-  [System.IO.File]::WriteAllText($validTrainingQuestionDraft, "请确认或增删学员岗位。课程目标希望员工达到什么学习结果？除候选内容外还有哪些必讲主题需要补充？练习希望做到什么终点或成果？当前本轮只在对话中确认范围，不生成讲义或练习表。未请求内容请选择纳入、排除或暂不分类。怎样的验证证据算达到验收标准？", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($validTrainingQuestionDraft, "这是跨岗位项目实践内容设计，不是软件架构。请确认或增删学员岗位。课程目标希望员工达到什么学习结果？除候选内容外还有哪些必讲主题需要补充？练习希望做到什么终点或成果？当前本轮只在对话中确认范围，不生成讲义或练习表。未请求内容请选择纳入、排除或暂不分类。怎样的验证证据算达到验收标准？", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($validSharedQuestionDraft, "- **Question: Who submits?** Impact: controls entry. Reply: name the role.`n- **D5. 谁负责最终验收并确认投入使用？** Impact: controls release authority. Reply: choose a role or defer.", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($invalidSharedAcceptanceDraft, "- **Question: Who submits?** Impact: controls entry. Reply: name the role.`n- **Q5. 当前项目由谁作最终验收并确认投入使用？** Impact: controls release authority. Reply: name the role.", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($validInspectionQuestionDraft, "请确认第一版只支持当前固定模板，还是保留未来新增入口？未来新增模板由谁配置和维护？历史纸质记录是补录、索引扫描还是不录？错误记录采用更正还是作废并保留痕迹？每年记录量和单次批量打印多少份？查询等待多少秒可以接受？打印多少份时顺序、版式一致且不漏页不串页？", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($invalidInspectionQuestionDraft, "请确认未来新增模板由谁配置？历史纸质记录是否补录？错误记录采用更正还是作废？每年多少记录？查询等待多少秒可以接受？", [System.Text.UTF8Encoding]::new($false))
   [System.IO.File]::WriteAllText($invalidTrainingQuestionDraft, "学员已完成基础培训。请选择安排简短复习还是独立复习环节。", [System.Text.UTF8Encoding]::new($false))
   [System.IO.File]::WriteAllText($prematureTrainingBoundaryDraft, "请确认或增删学员岗位。不包含财务内容。课程目标希望员工达到什么学习结果？除候选内容外还有哪些必讲主题需要补充？练习希望做到什么终点或成果？当前本轮只在对话中确认范围，不生成讲义或练习表。未请求内容请选择纳入、排除或暂不分类。怎样的验证证据算达到验收标准？", [System.Text.UTF8Encoding]::new($false))
   [System.IO.File]::WriteAllText($speculativeTrainingFormatDraft, "请确认或增删学员岗位。课程目标希望员工达到什么学习结果？除候选内容外还有哪些必讲主题需要补充？练习希望做到什么终点或成果？当前本轮只在对话中确认范围，不生成讲义或练习表。本次需要交付什么培训材料？未请求内容请选择纳入、排除或暂不分类。怎样的验证证据算达到验收标准？", [System.Text.UTF8Encoding]::new($false))
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $validQuestionDraft)) -ne 0) { Add-Failure 'Question packet lint rejected valid adjacent impact and reply guidance.' }
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidQuestionDraft)) -eq 0) { Add-Failure 'Question packet lint accepted why-now text as a substitute for facet impact.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $validSharedQuestionDraft, '-Profile', 'shared-collaboration', '-PassThrough')) -ne 0) { Add-Failure 'Shared question packet lint rejected a valid final-acceptance decision.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidSharedAcceptanceDraft, '-Profile', 'shared-collaboration')) -eq 0) { Add-Failure 'Shared question packet lint accepted future final acceptance as current fact.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $validInspectionQuestionDraft, '-Profile', 'inspection-discovery', '-PassThrough')) -ne 0) { Add-Failure 'Inspection question packet lint rejected complete discovery coverage.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidInspectionQuestionDraft, '-Profile', 'inspection-discovery')) -eq 0) { Add-Failure 'Inspection question packet lint accepted incomplete discovery coverage.' }
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $validTrainingQuestionDraft, '-Profile', 'training', '-PassThrough')) -ne 0) { Add-Failure 'Training question packet lint rejected complete concentrated coverage.' }
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidTrainingQuestionDraft, '-Profile', 'training')) -eq 0) { Add-Failure 'Training question packet lint accepted reopening a completed baseline.' }
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $prematureTrainingBoundaryDraft, '-Profile', 'training')) -eq 0) { Add-Failure 'Training question packet lint accepted an unconfirmed negative boundary.' }
