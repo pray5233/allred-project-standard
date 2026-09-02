@@ -488,4 +488,22 @@ Post-fix evidence on the final local runtime surface:
 - `V142` passed at low, then passed two independent xhigh replicas
 - PowerShell 5.1, Quick validation, route budgets, source/release parity, official validation, and isolated installation remained passing before the follow-up push
 
+The second self-hosted `Changed` sweep on commit `5b1c0af` again completed all 26 Standard cases, `L01`, and `R01-R06`. It reported 18 Pass, 6 Partial, and 2 Fail. The remaining variants were cross-route presentation and stage-ownership gaps rather than new domain rules:
+
+- beginner READY exposed source-tree implementation paths
+- training intake omitted the plain-language contrast with software architecture
+- exact read-only inspection announced work without a locatable target
+- office delivery did not say that technical implementation remains Codex-owned
+- evidence summaries dropped an unverified candidate path or explicit semantic state
+- shared intake frontloaded future governance/platform choices or omitted sensitivity facts
+- partial decision follow-up omitted previously exposed extensibility owner, history, correction lifecycle, scale, or measurable acceptance
+- one training final merged text from failed and passed lint drafts
+
+The final runtime therefore adds high-salience generic boundaries for those ownership errors while preserving route budgets and the mature intake topology. Final targeted evidence on the same local snapshot:
+
+- `V121`, `V124`, `V131`, `V139`, `V61`, and `V99` passed at low
+- `V142` passed at low and xhigh
+- `V79` passed in two independent low replicas and at xhigh
+- PowerShell 5.1 and Quick validation passed after the final shared-environment boundary
+
 This evidence supports an `rc13` candidate commit and GitHub validation. Tagging or publishing `v0.8.0-rc13` remains a separate user-authorized action.

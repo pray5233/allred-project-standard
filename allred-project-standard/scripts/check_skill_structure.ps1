@@ -65,6 +65,8 @@ Require-Contains $skillText 'Evidence-only audience or absent/unrequested conten
 Require-Contains $skillText 'A completed training baseline with no current gap is a prerequisite, not a review/reteach/use choice' 'training completed baseline stays closed at entry'
 Require-Contains $skillText 'Learning outcome, exercise endpoint, and acceptance are distinct' 'training outcome and acceptance stay separate at entry'
 Require-Contains $skillText 'A prerequisite such as `不要求编程基础` is not a curriculum exclusion' 'training prerequisite does not become exclusion'
+Require-Contains $skillText 'the visible final reply is exactly the approved block, including its execution boundary' 'training final reply preserves approved execution boundary'
+Require-Contains $skillText 'never merge a failed draft with a passed draft' 'training passed and failed drafts never merge'
 Require-Contains $skillText 'If either call is missing or fails, report evidence only and ask nothing' 'training event missing-gate fallback'
 Require-Contains $skillText 'An unvalidated new-project DECISION call is not a user-facing blocker' 'premature decision redirects without exposing internals'
 Require-Contains $skillText 'a partial reply re-presents every unanswered sibling before technical preflight' 'partial decision siblings precede preflight'
@@ -72,6 +74,18 @@ Require-Contains $skillText 'A recommendation that someone should not act does n
 Require-Contains $skillText 'Scale or volume input does not settle measurable acceptance' 'scale does not replace acceptance'
 Require-Contains $skillText 'do not call EVIDENCE or begin read-only/technical preflight' 'partial reply cannot escape through evidence preflight'
 Require-Contains $skillText 'Immediately show every remaining consequential sibling' 'partial reply immediately renders remaining siblings'
+Require-Contains $skillText 'An exact read-only inspection needs a locatable path, attachment, or sample' 'exact inspection requires target'
+Require-Contains $skillText 'Selecting a shared-tracking parent alone remains INTAKE' 'shared parent remains intake'
+Require-Contains $skillText 'sensitivity explicitly covers current volume, frequency, variation, and highest-impact pain' 'shared intake sensitivity coverage'
+Require-Contains $skillText 'these facts size the shared update boundary, evidence sample, and later acceptance' 'shared intake sensitivity consequence'
+Require-Contains $skillText 'Shared INTAKE environment means current location, devices, access conditions, availability, and sensitivity only' 'shared intake current environment boundary'
+Require-Contains $skillText 'Planned platform, vendor, shared drive, internal system, hosting, and future access ownership are DECISION topics after evidence' 'shared intake defers platform decisions'
+Require-Contains $skillText 'implementation details remain Codex-owned' 'technical implementation stays Codex-owned'
+Require-Contains $skillText 'A candidate delivery or integration path remains visibly unverified' 'candidate path persists until integration'
+Require-Contains $skillText 'extensibility/configuration owner, historical handling, correction/void lifecycle, operating scale, or measurable acceptance' 'open lifecycle facets remain independent'
+Require-Contains $skillText 'never invent numeric targets or let a recommendation settle ownership' 'open lifecycle facets preserve provenance'
+Require-Contains $skillText 'an explicit state such as `relevant`, `irrelevant`, or `unknown`' 'semantic source state is explicit'
+Require-Contains $skillText 'Beginner-facing READY hides source trees' 'beginner READY hides implementation structure'
 Require-Contains $skillText '-Overlays external-source|shared-collaboration|company-office-delivery' 'conditional overlay selector'
 Require-Contains $skillText 'only toggles beginner/standard expression' 'expression-only toggle boundary'
 Require-Contains $skillText 'Do not restate or re-ask its facts, materials, or decisions' 'expression toggle does not repeat pending questions'
@@ -193,6 +207,9 @@ if ($shared.Contains('references\external-source.md')) { Add-Failure 'Shared ove
 
 $sharedIntake = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage intake -Overlays shared-collaboration) -join "`n"
 Require-Contains $sharedIntake '## Intake Handoff' 'shared intake-only guidance'
+Require-Contains $sharedIntake 'Remain INTAKE; do not load shared DECISION yet' 'shared intake blocks future governance'
+Require-Contains $sharedIntake 'plus sensitivity: volume, frequency, variation, highest-impact pain' 'shared intake route sensitivity coverage'
+Require-Contains $sharedIntake 'Never ask planned platform/vendor/shared drive/internal system/hosting or future access ownership in INTAKE' 'shared intake route defers platform choices'
 if ($sharedIntake.Contains('## Evidence And Ownership') -or $sharedIntake.Contains('## Decision Packet')) {
   Add-Failure 'Shared intake route leaked later-stage collaboration guidance.'
 }
@@ -219,6 +236,7 @@ $beginnerIntake = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -St
 Require-Contains $beginnerIntake 'state one reversible planning assumption and what later evidence may change' 'beginner no-sample reversible assumption'
 $beginnerDecision = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage decision -Interaction beginner -ValidatedEventId E_FIXTURE_READY) -join "`n"
 Require-Contains $beginnerDecision 'Separate `已确认需求`, `待批准建议`, `技术检查结论`, `尚未验证`, and `验收`' 'beginner READY evidence and recommendation separation'
+Require-Contains $beginnerDecision 'Beginner READY rendering: hide source trees' 'beginner decision hides implementation internals'
 $decisionRedirect = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage decision -Interaction standard) -join "`n"
 Require-Contains $decisionRedirect '## Decision Redirect Guard' 'unvalidated new-project decision redirect'
 Require-Contains $decisionRedirect 'next load get_route_context.ps1 -Route new-standard -Stage intake -Interaction <current>' 'first-packet redirect to intake'
@@ -286,6 +304,7 @@ if ($nonSoftwareIntake.Contains('Current route is existing or continuing work'))
 
 foreach ($trainingStage in @('intake', 'evidence')) {
   $trainingContext = (& $selectorPath -SkillRoot $SkillRoot -Route non-software -Variant training -Stage $trainingStage) -join "`n"
+  Require-Contains $trainingContext 'Training plain-language contrast: this is cross-role project-practice content design, not software architecture.' "training $trainingStage content-design contrast"
   Require-Contains $trainingContext 'Training material-first hard stop:' "training $trainingStage material-first gate"
   Require-Contains $trainingContext 'Training visible-packet gate after evidence:' "training $trainingStage visible-packet coverage gate"
   Require-Contains $trainingContext 'ask confirm/correct audience and include/exclude/unclassified absence' "training $trainingStage evidence-candidate confirmation"
