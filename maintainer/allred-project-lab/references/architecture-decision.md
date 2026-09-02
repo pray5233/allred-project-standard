@@ -438,3 +438,5 @@ The next candidate therefore makes three narrow changes: keep missing-location w
 - a deterministic fail-fast smoke ran two attempted cases and marked the third as `NotRun`; no unattempted case was labeled `InfrastructureFailure`.
 - workflow YAML parsing and `actionlint 1.7.12` passed after the summary writer was changed to PowerShell `Out-File`.
 - the self-hosted runner remains a separate authenticated execution environment; the repository contains no Codex credential or registration token.
+
+The second self-hosted `Changed` run selected 24 Standard cases. Nineteen passed before `V134` exposed two evidence-report defects: `GuardsOnly` was supplied as an interaction value, and unselected-domain negatives were repeated as user-visible “not in scope” statements. The active EVIDENCE guard now gives the exact switch syntax and treats negative mention itself as leakage. `V134` then passed at low; its preceding xhigh run already passed with the same core evidence behavior.
