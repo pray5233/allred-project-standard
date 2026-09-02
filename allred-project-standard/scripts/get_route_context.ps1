@@ -57,7 +57,18 @@ if (-not $MetricsOnly -and $Route -in $newProjectRoutes -and $Stage -in @('decis
     if ($ValidatedEventId -notmatch '^E[0-9A-Za-z_-]+$') { throw 'ValidatedEventId must be the exact current trusted tool/event ID.' }
     $validatedByEvent = $true
   } elseif ([string]::IsNullOrWhiteSpace($StatePath)) {
-    throw "StatePath is required before loading the $Stage stage for a non-trivial new project. If the current trusted event reports aggregate DECISION/READY, rerun with -ValidatedEventId <exact event ID>; otherwise keep the state package under isolated session temp."
+    if ($Stage -eq 'decision') {
+      @(
+        '## Decision Redirect Guard'
+        ''
+        'DECISION is not validated. Do not expose this internal gate as a user blocker, do not show a partial decision packet, and do not start technical preflight.'
+        'If this is the first broad new-project packet and user/workflow, materials, initial idea/must-haves, or useful result is missing, next load get_route_context.ps1 -Route new-standard -Stage intake -Interaction <current> and ask the complete concentrated INTAKE packet.'
+        'If the user answered only part of an existing packet, preserve every still-consequential sibling and re-present them now with their original meaning before any technical preflight. A recommendation about who should not act does not answer who owns configuration; scale inputs do not replace measurable acceptance targets. Never replace siblings with "少量待确认事项", postpone them until after preflight, or restart generic intake.'
+        'Use -StatePath only after the aggregate DECISION gate passes, or -ValidatedEventId only for the exact trusted aggregate event.'
+      )
+      exit 0
+    }
+    throw 'StatePath is required before loading EXECUTION for a non-trivial new project.'
   } else {
     $targetStage = if ($Stage -eq 'decision') { 'DECISION' } else { 'EXECUTION' }
     $validator = Join-Path $PSScriptRoot 'invoke_validation_gate.ps1'

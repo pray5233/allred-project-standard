@@ -478,4 +478,14 @@ No plugin, Skill, MCP server, library, or external package was added.
 - adjacent training-route case `V135` passed at low and xhigh
 - source and release Standard files were synchronized before final release checks
 
+The first post-push self-hosted `Changed` sweep on commit `363689f` completed all 26 selected Standard cases, `L01`, and `R01-R06`. Twenty-four Standard cases passed; `V127` and `V142` exposed one shared new-project stage defect. An unvalidated new-project DECISION call could surface an internal gate instead of the initial concentrated INTAKE packet, or a partial reply could escape through EVIDENCE/preflight while still-consequential siblings remained open.
+
+The final correction replaces the missing-state DECISION exception with a deterministic redirect guard: initial missing facts return to INTAKE, while partial replies re-present every unanswered sibling before technical preflight. A partial reply with formulable siblings also cannot escape through EVIDENCE. Recommendations do not settle the responsible owner, and scale inputs do not replace measurable acceptance targets.
+
+Post-fix evidence on the final local runtime surface:
+
+- `V127` passed at low and xhigh
+- `V142` passed at low, then passed two independent xhigh replicas
+- PowerShell 5.1, Quick validation, route budgets, source/release parity, official validation, and isolated installation remained passing before the follow-up push
+
 This evidence supports an `rc13` candidate commit and GitHub validation. Tagging or publishing `v0.8.0-rc13` remains a separate user-authorized action.

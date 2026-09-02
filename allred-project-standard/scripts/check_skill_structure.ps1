@@ -66,6 +66,12 @@ Require-Contains $skillText 'A completed training baseline with no current gap i
 Require-Contains $skillText 'Learning outcome, exercise endpoint, and acceptance are distinct' 'training outcome and acceptance stay separate at entry'
 Require-Contains $skillText 'A prerequisite such as `不要求编程基础` is not a curriculum exclusion' 'training prerequisite does not become exclusion'
 Require-Contains $skillText 'If either call is missing or fails, report evidence only and ask nothing' 'training event missing-gate fallback'
+Require-Contains $skillText 'An unvalidated new-project DECISION call is not a user-facing blocker' 'premature decision redirects without exposing internals'
+Require-Contains $skillText 'a partial reply re-presents every unanswered sibling before technical preflight' 'partial decision siblings precede preflight'
+Require-Contains $skillText 'A recommendation that someone should not act does not settle the unanswered owner' 'negative recommendation does not settle owner'
+Require-Contains $skillText 'Scale or volume input does not settle measurable acceptance' 'scale does not replace acceptance'
+Require-Contains $skillText 'do not call EVIDENCE or begin read-only/technical preflight' 'partial reply cannot escape through evidence preflight'
+Require-Contains $skillText 'Immediately show every remaining consequential sibling' 'partial reply immediately renders remaining siblings'
 Require-Contains $skillText '-Overlays external-source|shared-collaboration|company-office-delivery' 'conditional overlay selector'
 Require-Contains $skillText 'only toggles beginner/standard expression' 'expression-only toggle boundary'
 Require-Contains $skillText 'Do not restate or re-ask its facts, materials, or decisions' 'expression toggle does not repeat pending questions'
@@ -213,6 +219,12 @@ $beginnerIntake = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -St
 Require-Contains $beginnerIntake 'state one reversible planning assumption and what later evidence may change' 'beginner no-sample reversible assumption'
 $beginnerDecision = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage decision -Interaction beginner -ValidatedEventId E_FIXTURE_READY) -join "`n"
 Require-Contains $beginnerDecision 'Separate `已确认需求`, `待批准建议`, `技术检查结论`, `尚未验证`, and `验收`' 'beginner READY evidence and recommendation separation'
+$decisionRedirect = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage decision -Interaction standard) -join "`n"
+Require-Contains $decisionRedirect '## Decision Redirect Guard' 'unvalidated new-project decision redirect'
+Require-Contains $decisionRedirect 'next load get_route_context.ps1 -Route new-standard -Stage intake -Interaction <current>' 'first-packet redirect to intake'
+Require-Contains $decisionRedirect 're-present them now with their original meaning before any technical preflight' 'partial-packet sibling preservation redirect'
+Require-Contains $decisionRedirect 'does not answer who owns configuration; scale inputs do not replace measurable acceptance targets' 'redirect preserves owner and acceptance facets'
+if ($decisionRedirect.Contains('Current stage: DECISION. Validation passed.')) { Add-Failure 'Unvalidated decision route exposed validated DECISION context.' }
 
 $newProjectIntake = (& $selectorPath -SkillRoot $SkillRoot -Route new-standard -Stage intake -Interaction standard) -join "`n"
 Require-Contains $newProjectIntake 'one packet-wide consequence sentence is insufficient' 'new-project intake per-group consequence lint'
