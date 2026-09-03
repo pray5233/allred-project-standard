@@ -32,9 +32,13 @@ Build a private decision tree for the current approved outcome, not the product'
 | current-outcome impact | what scope, behavior, risk, delivery, or acceptance changes |
 | state | unresolved, investigating, frontier, confirmed, deferred, rejected, or conflict |
 
-The frontier contains all unresolved user-owned nodes whose parent dependencies are settled and whose answers matter to the current outcome. Ask the whole readable frontier in one round. A child whose options depend on an open frontier node waits for a later round.
+The frontier contains all unresolved user-owned nodes whose parent dependencies are settled and whose answers matter to the current outcome. Keep the whole frontier internally, but show only one readable dependency-valid slice at a time. A child whose options depend on an open frontier node waits for a later round.
 
 The semantic skeleton in `SKILL.md` is a coverage lint, not a mandatory visible questionnaire. Add a node only when its answer changes the current outcome; remove answered, inspectable, irrelevant, and safely deferred nodes.
+
+## Readable Frontier Slice
+
+Keep the full frontier internal. Ordinary packet: at most four priority `Q/D`, one line each and one reply; queued count only, unresolved. Never name or settle an unshown item. Validate with `scripts/validate_question_packet.ps1 -Profile decision-frontier -PassThrough`.
 
 ## Fact-Finding Queue
 
@@ -49,14 +53,8 @@ Do not require a subagent for ordinary work. Use local tools directly for small 
 
 ## Frontier Round
 
-For each visible node, preserve the existing `Q/D` and recommendation rules from `references/交互与确认规则.md`. A compact round must still expose:
+For each visible node, keep dependency, basis, ownership, and deferral fields internally. Show only its stable ID, plain-language question, one short impact, compact options, and an inline recommendation marker when evidence supports one. Surface dependency or safety/cost/privacy detail only when needed to understand that choice. Never print separate `为什么现在问/当前依据/建议/影响/选择/回复` paragraphs for every node.
 
-- stable ID and plain-language question
-- exact parent dependency or `None`
-- why the answer matters now
-- inspected basis, labeled guess, or no recommendation
-- materially different options and custom answer
-- whether deferral is safe and what it blocks
 
 After each user answer or evidence event, update only affected nodes, recompute the frontier, and keep settled decisions stable. Do not keep grilling after every material current-outcome node is confirmed, evidence-backed, or explicitly deferred.
 

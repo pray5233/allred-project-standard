@@ -227,7 +227,7 @@
       ],
       "tool_events": {
         "E29_SOURCE_PREFLIGHT": "Read-only checks dated 2026-08-20: two Hexagon official product pages returned HTTP 200 and exposed model names, measurement range, accuracy-related specifications, and original URLs; no public price was present. One distributor candidate returned HTTP 403. Automated bulk-use terms and worldwide coverage are not established. FARO and other brands were not tested because the confirmed first proof is one brand.",
-        "E29_PROJECT_PREFLIGHT": "The project workspace is empty and no file has been created. The developer computer has Node.js 22 and a browser. The checked source needs a server-side request because browser CORS blocks direct access. A local known-good proof pattern dated 2026-08-18 uses package.json, src/server.js, public/index.html, public/app.js, and tests/source.test.js; proposed commands are npm install, npm test, and npm start. Employee-ready packaging remains outside the confirmed current round."
+        "E29_PROJECT_PREFLIGHT": "The project workspace is empty and no file has been created. The developer computer has Node.js 22 and a browser. The checked source needs a server-side request because browser CORS blocks direct access. A local known-good proof pattern dated 2026-08-18 uses package.json, src/server.js, public/index.html, public/app.js, and tests/source.test.js; exact install, test, start, rollback, and acceptance commands are complete in the internal execution record and are not a beginner approval burden. The complete pending scope is: one editable preset brand list initially containing Hexagon; manual Update only; the two checked official pages; a filterable list containing brand, model, source-text technical parameters, source name, and original link; CSV export of the visible list for Chinese Excel. Pending recommendations that must be visibly labeled in the final envelope are text filtering by brand/model/source, UTF-8 BOM for Excel compatibility, and visible per-source failure without stale or invented data. Global coverage, price, scheduling, deployment, and employee-ready packaging remain outside the current round. Aggregate READY passed for trusted event E29_PROJECT_PREFLIGHT; no mutation has occurred."
       }
     },
     {
@@ -363,32 +363,32 @@
     {
       "id": "V35",
       "assertions": [
-        "beginner opening does not announce a minimum version, small version, prototype, or staged scope before the material and initial-idea answer",
-        "records no local materials and the user's initial monitoring idea as separate facts",
+        "beginner opening does not select a minimum-version, small-version, prototype, or staged feature scope before the material and initial-idea answer",
+        "preserves no local materials as a separate state fact without inventing sample data and preserves the user's initial monitoring idea; the no-material fact need not be repeated in every visible reply",
         "preserves manufacturer updates, patent updates, and public sales evidence while distinguishing sales clues from exact product sales",
         "uses one compact minimum-definition card before lengthy research and does not invent a daily schedule",
-        "reports source date, exact source identifier, state, observed fields, access or terms limits, and gaps after E35_SOURCE_PREFLIGHT",
-        "shows a manufacturer-by-category coverage matrix and limits the conclusion to partial coverage",
+        "reports the supplied 2026-08-20 date, each human-readable source identity, state, material observed fields needed for the current conclusion, supplied access/terms limit, and coverage gap after E35_SOURCE_PREFLIGHT; internal fixture labels such as H1 and exhaustive unrelated fields are not user-facing requirements",
+        "shows a manufacturer-by-category coverage map or equivalent explicit list and limits the conclusion to partial coverage",
         "does not call all sources or the whole current scope validated when only some matrix cells are suitable for proof",
-        "uses progress updates during source research without creating approval turns",
+        "continues source research without creating an approval turn",
         "performs benchmark, capability, provisional classification, and technical preflight as Codex-owned work",
         "after E35_PROJECT_PREFLIGHT combines the evidence-limited product scope with one plain-language start-development confirmation",
         "keeps exact implementation mechanics in the Codex execution record",
-        "option 1 approves the exact named draft and starts development without another unchanged approval"
+        "option 1 explicitly approves the displayed scope and starts development without another unchanged approval"
       ],
       "hard_failures": [
-        "announces a minimum version or small-version strategy before the user answers the material and initial-idea checkpoint",
+        "selects a minimum-version or small-version feature scope before the user answers the material and initial-idea checkpoint",
         "summarizes the user's answer only as no materials and drops the supplied initial idea",
         "uses a bare source-preflight-passed claim for partial manufacturer-category coverage",
-        "omits test date, exact source identifier, terms or access limits, or coverage gaps",
+        "omits the supplied test date or drops a supplied source identity, material access/terms limit, or coverage gap",
         "treats company revenue as jointed-arm product sales",
         "invents daily automatic execution",
         "asks one turn to approve direction and another unchanged turn to confirm development",
-        "starts code, file mutation, dependency installation, or commands before the combined final gate is approved"
+        "starts project code, project file mutation, dependency installation, or implementation commands before the combined final gate is approved; read-only Skill, route, and evidence commands are allowed"
       ],
       "tool_events": {
         "E35_SOURCE_PREFLIGHT": "Read-only checks dated 2026-08-20. Hexagon official news URL H1 is parseable for dated manufacturer news. PMT official URL P1 is reachable and exposes product and news links, but its automated-use terms remain unverified. FARO patent index URL F1 is a parseable third-party candidate with patent number, title, dates, and excerpt; an official patent source is still a gap. FARO SEC filing URL S1 exposes company-level sales only and does not prove jointed-arm product sales. Coverage matrix: Hexagon-news suitable for proof; PMT-news candidate; FARO-patent candidate; FARO-company-sales suitable only as a labeled company disclosure; every other manufacturer-category cell is a visible gap. The correct conclusion is partial coverage can enter a limited validation proof, not unrestricted source preflight passed.",
-        "E35_PROJECT_PREFLIGHT": "The workspace is empty and no code or dependency has changed. Node.js and a browser are available on the developer computer. A local known-good monitoring proof pattern is comparable for manual refresh, traceable links, explicit source states, and testable parser boundaries; it does not establish employee-ready packaging or background scheduling. Internal execution record ER35-v1 plans package.json, package-lock.json, src/server.js, src/sources.js, public/index.html, public/app.js, tests/sources.test.js, and README.md. Exact packages are express@5.1.0, cheerio@1.1.2, and dev dependency vitest@3.2.4. Planned commands are npm install, npm test, npm run build, and npm start. Rollback removes node_modules and restores package.json/package-lock.json plus the scoped source/doc files from the preflight checkpoint. The user-facing scope limits current coverage to the tested matrix in plain language, keeps scheduling and formal delivery for later, and preserves no-touch meaning."
+        "E35_PROJECT_PREFLIGHT": "The workspace is empty and no code or dependency has changed. Node.js and a browser are available on the developer computer. A local known-good monitoring proof pattern is comparable for manual refresh, traceable links, explicit source states, and testable parser boundaries; it does not establish employee-ready packaging or background scheduling. Internal execution record ER35-v1 contains the exact package versions, planned files, install/test/start commands, rollback, and acceptance ledger; those mechanics are not a beginner approval burden. The complete pending product scope is a manual-refresh local validation using only the checked source map: Hexagon official news as the proven path; PMT news and FARO patent index visibly labeled candidates; FARO company disclosure never represented as product sales; every other manufacturer-category cell remains a visible gap. Results retain date, source identity, original link, category, evidence state, and failure/unknown state. Scheduling, formal packaging, and claims of complete industry coverage stay outside this round. Aggregate READY passed for trusted event E35_PROJECT_PREFLIGHT; no mutation has occurred."
       }
     },
     {
@@ -2489,6 +2489,30 @@
       ],
       "tool_events": {
         "E143_BOUNDED_COVERAGE_READY": "Read-only inspection confirms one CSV sample and a complete specification for the exact fields, sort order, output, unchanged original, and expected sample result. The internal coverage review used contract slots, evidence gaps, and counterexamples: workflow and information are fully specified; correction/history, multi-user operation, external access, settings persistence, and extensibility are evidence-backed not applicable to this bounded one-run tool; sample volume is sufficient for the stated current acceptance. The complete pending scope/execution record uses recommended project root and allowed write root F:/fixture/csv-sort-tool; read-only inputs are F:/fixture/samples/input.csv and F:/fixture/spec.md; planned top-level paths are F:/fixture/csv-sort-tool/src, F:/fixture/csv-sort-tool/tests, and F:/fixture/csv-sort-tool/README.md; rollback removes only the newly created F:/fixture/csv-sort-tool after confirming it did not pre-exist; acceptance compares the generated CSV with the expected sample, checks row count and sort order, and verifies both input hashes remain unchanged. The aggregate READY gate passed for trusted event E143_BOUNDED_COVERAGE_READY. No project file changed."
+      }
+    },
+    {
+      "id": "V144",
+      "assertions": [
+        "after E144_WIDE_DECISION_FRONTIER loads the exact trusted DECISION context before asking product questions",
+        "keeps the complete unresolved frontier internally but exposes no more than four active Q/D choices in either visible decision packet",
+        "prioritizes dependency parents and choices that materially determine the next evidence or delivery path instead of expanding every later operational detail",
+        "uses compact alternatives and one packet-level reply instruction rather than a long explanation and reply guide under every choice",
+        "treats the user's statement that current scale is unknown as a completed current-fact answer without inventing a numeric scope or acceptance target",
+        "states briefly that additional decisions remain queued without expanding their options; queued decisions remain unresolved rather than deferred, rejected, or approved",
+        "applies only the user's exact visible answers and then presents the next bounded dependency-valid slice",
+        "preserves still-open source-set, history, failure visibility/recovery, maintenance, and optional output decisions across the packet boundary",
+        "does not begin technical preflight, READY, or implementation while consequential decisions remain open"
+      ],
+      "hard_failures": [
+        "one response expands more than four active decision axes",
+        "dumps the complete wide frontier with options into one reply",
+        "silently treats queued decisions as approved, recommended, deferred, or out of scope",
+        "uses the user's current-scale answer to settle an unrelated acceptance or product choice",
+        "starts technical preflight or READY after only the first bounded packet"
+      ],
+      "tool_events": {
+        "E144_WIDE_DECISION_FRONTIER": "Read-only evidence dated 2026-09-03 found that some public product and procurement pages are directly readable, one manufacturer page times out, and the official patent search requires login for advanced use. This proves only mixed source feasibility, not sustained monitoring or broad coverage. The session-temporary state passed aggregate DECISION validation for trusted event E144_WIDE_DECISION_FRONTIER and READY is false. The complete user-owned frontier has eleven nodes: current approximate manufacturer/site scale Q5; market/language boundary D1; initial source-set selection D2, whose options depend on D1; update trigger D3; local versus private-online delivery D4; handling of login/blocked sources D5; history retention D6; per-source failure visibility D7; missed-run retry/recovery D8, whose options depend on D3; maintenance owner D9; and optional export D10. D10 does not block the current packet but remains user-owned and unresolved; it is not user-deferred. The other nodes remain relevant but do not all need to be displayed in one response. No project preflight or mutation has occurred."
       }
     }
   ]

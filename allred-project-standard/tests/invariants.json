@@ -48,8 +48,8 @@
       "priority": "P0",
       "owner": "references/决策前沿与Skill交接.md",
       "owner_section": "Internal Frontier Model",
-      "behavior_cases": ["V79", "V81", "V120"],
-      "enforcement": ["scripts/validate_decision_frontier.ps1"]
+      "behavior_cases": ["V79", "V81", "V120", "V144"],
+      "enforcement": ["scripts/validate_decision_frontier.ps1", "scripts/validate_question_packet.ps1"]
     },
     {
       "id": "INV-DISCOVERY-COVERAGE",

@@ -65,6 +65,7 @@ Require-Contains $skillText 'never read/search validator source or expose lint, 
 Require-Contains $skillText 'Until post-evidence PASS, do not show a first-release recommendation, plan, or technical preflight' 'partial inspection reply blocks recommendation'
 Require-Contains $skillText '-Route non-software -Stage decision -Variant training' 'training event exact decision route'
 Require-Contains $skillText '$draft | & scripts/validate_question_packet.ps1 -Profile training -PassThrough' 'training event exact question-packet lint'
+Require-Contains $skillText '$draft | & scripts/validate_question_packet.ps1 -Profile decision-frontier -PassThrough' 'ordinary decision packet cognitive-load lint'
 Require-Contains $skillText 'Evidence-only audience or absent/unrequested content is never `已确认` or `资料已支持`' 'training evidence candidates remain unconfirmed'
 Require-Contains $skillText 'A completed training baseline with no current gap is a prerequisite, not a review/reteach/use choice' 'training completed baseline stays closed at entry'
 Require-Contains $skillText 'Learning outcome, exercise endpoint, and acceptance are distinct' 'training outcome and acceptance stay separate at entry'
@@ -73,11 +74,13 @@ Require-Contains $skillText 'the visible final reply is exactly the approved blo
 Require-Contains $skillText 'never merge a failed draft with a passed draft' 'training passed and failed drafts never merge'
 Require-Contains $skillText 'If either call is missing or fails, report evidence only and ask nothing' 'training event missing-gate fallback'
 Require-Contains $skillText 'An unvalidated new-project DECISION call is not a user-facing blocker' 'premature decision redirects without exposing internals'
-Require-Contains $skillText 'a partial reply re-presents every unanswered sibling before technical preflight' 'partial decision siblings precede preflight'
+Require-Contains $skillText 'a partial reply presents the next bounded sibling slice before technical preflight' 'partial decision siblings precede preflight'
+Require-Contains $skillText 'is a completed current-fact answer with value unknown' 'explicit unknown closes a factual question'
 Require-Contains $skillText 'A recommendation that someone should not act does not settle the unanswered owner' 'negative recommendation does not settle owner'
 Require-Contains $skillText 'Scale or volume input does not settle measurable acceptance' 'scale does not replace acceptance'
 Require-Contains $skillText 'do not call EVIDENCE or begin read-only/technical preflight' 'partial reply cannot escape through evidence preflight'
-Require-Contains $skillText 'Immediately show every remaining consequential sibling' 'partial reply immediately renders remaining siblings'
+Require-Contains $skillText 'Immediately show the next readable dependency-valid slice' 'partial reply immediately renders a bounded sibling slice'
+Require-Contains $skillText 'Never inspect/search validator source' 'question lint failure does not trigger validator-source inspection'
 Require-Contains $skillText 'An exact read-only inspection needs a locatable path, attachment, or sample' 'exact inspection requires target'
 Require-Contains $skillText 'Selecting a shared-tracking parent alone remains INTAKE' 'shared parent remains intake'
 Require-Contains $skillText 'sensitivity explicitly covers current volume, frequency, variation, and highest-impact pain' 'shared intake sensitivity coverage'
@@ -379,7 +382,14 @@ try {
 
 $questionLint = Join-Path $SkillRoot 'scripts\validate_question_packet.ps1'
 $questionLintText = Get-Content -LiteralPath $questionLint -Raw -Encoding UTF8
-Require-Contains $questionLintText "[ValidateSet('generic', 'training', 'shared-collaboration', 'inspection-discovery')]" 'question packet profiles'
+Require-Contains $questionLintText "[ValidateSet('generic', 'decision-frontier', 'training', 'shared-collaboration', 'inspection-discovery')]" 'question packet profiles'
+Require-Contains $questionLintText 'Decision frontier packet exposes' 'decision packet active-node budget'
+Require-Contains $questionLintText 'non-empty lines; maximum 18' 'decision packet line budget'
+Require-Contains $questionLintText 'Decision frontier packet exceeds 1800 visible characters.' 'decision packet visible-length budget'
+Require-Contains $questionLintText 'needs exactly one compact reply instruction' 'decision packet single reply instruction'
+Require-Contains $questionLintText 'prints internal dependency/basis/recommendation fields' 'decision packet hides internal metadata'
+Require-Contains $questionLintText 'queue summary must contain only the remaining count' 'queued decisions keep unresolved state'
+Require-Contains $questionLintText 'assigns defer/exclude state outside a visible choice' 'unshown queued decision state lint'
 Require-Contains $questionLintText 'Shared packet classifies future final-acceptance authority as current fact Q instead of user-owned D.' 'shared final-acceptance decision lint'
 Require-Contains $questionLintText 'project-practice content-design contrast' 'training content-design contrast lint'
 Require-Contains $questionLintText 'Inspection discovery packet is missing' 'inspection discovery coverage lint'
@@ -392,6 +402,14 @@ New-Item -ItemType Directory -Force -Path $questionLintTemp | Out-Null
 try {
   $validQuestionDraft = Join-Path $questionLintTemp 'valid.md'
   $invalidQuestionDraft = Join-Path $questionLintTemp 'invalid.md'
+  $validDecisionFrontierDraft = Join-Path $questionLintTemp 'decision-frontier-valid.md'
+  $invalidDecisionFrontierDraft = Join-Path $questionLintTemp 'decision-frontier-too-many.md'
+  $invalidDecisionLengthDraft = Join-Path $questionLintTemp 'decision-frontier-too-long.md'
+  $invalidDecisionReplyDraft = Join-Path $questionLintTemp 'decision-frontier-repeated-reply.md'
+  $invalidDecisionQueueDraft = Join-Path $questionLintTemp 'decision-frontier-queue-state.md'
+  $invalidDecisionQueueIdsDraft = Join-Path $questionLintTemp 'decision-frontier-queue-ids.md'
+  $invalidDecisionUnshownStateDraft = Join-Path $questionLintTemp 'decision-frontier-unshown-state.md'
+  $invalidDecisionMetadataDraft = Join-Path $questionLintTemp 'decision-frontier-internal-metadata.md'
   $validTrainingQuestionDraft = Join-Path $questionLintTemp 'training-valid.md'
   $validSharedQuestionDraft = Join-Path $questionLintTemp 'shared-valid.md'
   $invalidSharedAcceptanceDraft = Join-Path $questionLintTemp 'shared-invalid-acceptance.md'
@@ -402,6 +420,15 @@ try {
   $speculativeTrainingFormatDraft = Join-Path $questionLintTemp 'training-speculative-format.md'
   [System.IO.File]::WriteAllText($validQuestionDraft, "## Roles`n`n- **Question: Who submits?** Impact: controls the entry authority. Reply: name the role.`n- **Question: Who approves?**`n  Impact: controls when the record becomes final.`n  Reply: name the role and condition.", [System.Text.UTF8Encoding]::new($false))
   [System.IO.File]::WriteAllText($invalidQuestionDraft, "## Roles`n`n- **Question: Who submits?**`n  Why now: authority depends on this answer.`n  Basis: unknown.`n  Reply: name the role.", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($validDecisionFrontierDraft, "【需要你确认】`n- D1. 信息范围？影响：决定后续证据边界。选项：1 当前地区（推荐）/ 2 扩大地区 / 3 自定义。`n- D2. 更新方式？影响：决定是否需要后台运行。选项：1 手动（推荐）/ 2 打开时 / 3 定时。`n- D3. 使用位置？影响：决定交付和维护。选项：1 本机（推荐）/ 2 私有在线 / 3 自定义。`n- D4. 受限来源？影响：决定登录和失败边界。选项：1 转人工（推荐）/ 2 跳过 / 3 自定义。`n回复：可以说'全部按推荐'，或只写需要修改的项，例如 D2=2。`n后续仍有 4 项，将在本组确认后继续集中询问。", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($invalidDecisionFrontierDraft, "- D1. 范围？影响：决定范围。`n- D2. 更新？影响：决定运行方式。`n- D3. 交付？影响：决定环境。`n- D4. 来源？影响：决定边界。`n- D5. 历史？影响：决定存储。`n回复：逐项回答。", [System.Text.UTF8Encoding]::new($false))
+  $longDecisionText = "- D1. 范围？影响：决定范围。`n回复：选择 1 或自定义。`n" + (('说明' * 1000) -join '')
+  [System.IO.File]::WriteAllText($invalidDecisionLengthDraft, $longDecisionText, [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($invalidDecisionReplyDraft, "- D1. 范围？影响：决定范围。`n回复：D1=1。`n- D2. 更新？影响：决定运行方式。`n回复：D2=1。", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($invalidDecisionQueueDraft, "- D1. 范围？影响：决定范围。选项：1 当前 / 2 扩大。`n回复：D1=1。`n后续仍有 3 项：历史、维护、导出；导出可暂缓。", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($invalidDecisionQueueIdsDraft, "- D1. 范围？影响：决定范围。`n- D2. 更新？影响：决定运行方式。`n- D3. 交付？影响：决定环境。`n- D4. 来源？影响：决定边界。`n回复：D1=1，D2-D4按推荐；后续 D5、D6、D7 之后处理。", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($invalidDecisionUnshownStateDraft, "- D1. 范围？影响：决定范围。选项：1 当前 / 2 扩大。`n回复：D1=1。其余 3 项后续处理；交付方式可暂缓。", [System.Text.UTF8Encoding]::new($false))
+  [System.IO.File]::WriteAllText($invalidDecisionMetadataDraft, "D1. 范围？`ndependency: None`n为什么现在问：决定来源。`n影响：1 当前 / 2 扩大。`n回复：D1=1。", [System.Text.UTF8Encoding]::new($false))
   [System.IO.File]::WriteAllText($validTrainingQuestionDraft, "这是跨岗位项目实践内容设计，不是软件架构。请确认或增删学员岗位。课程目标希望员工达到什么学习结果？除候选内容外还有哪些必讲主题需要补充？练习希望做到什么终点或成果？当前本轮只在对话中确认范围，不生成讲义或练习表。未请求内容请选择纳入、排除或暂不分类。怎样的验证证据算达到验收标准？", [System.Text.UTF8Encoding]::new($false))
   [System.IO.File]::WriteAllText($validSharedQuestionDraft, "- **Question: Who submits?** Impact: controls entry. Reply: name the role.`n- **D5. 谁负责最终验收并确认投入使用？** Impact: controls release authority. Reply: choose a role or defer.", [System.Text.UTF8Encoding]::new($false))
   [System.IO.File]::WriteAllText($invalidSharedAcceptanceDraft, "- **Question: Who submits?** Impact: controls entry. Reply: name the role.`n- **Q5. 当前项目由谁作最终验收并确认投入使用？** Impact: controls release authority. Reply: name the role.", [System.Text.UTF8Encoding]::new($false))
@@ -412,6 +439,14 @@ try {
   [System.IO.File]::WriteAllText($speculativeTrainingFormatDraft, "请确认或增删学员岗位。课程目标希望员工达到什么学习结果？除候选内容外还有哪些必讲主题需要补充？练习希望做到什么终点或成果？当前本轮只在对话中确认范围，不生成讲义或练习表。本次需要交付什么培训材料？未请求内容请选择纳入、排除或暂不分类。怎样的验证证据算达到验收标准？", [System.Text.UTF8Encoding]::new($false))
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $validQuestionDraft)) -ne 0) { Add-Failure 'Question packet lint rejected valid adjacent impact and reply guidance.' }
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidQuestionDraft)) -eq 0) { Add-Failure 'Question packet lint accepted why-now text as a substitute for facet impact.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $validDecisionFrontierDraft, '-Profile', 'decision-frontier', '-PassThrough')) -ne 0) { Add-Failure 'Decision-frontier lint rejected a compact four-node packet.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidDecisionFrontierDraft, '-Profile', 'decision-frontier')) -eq 0) { Add-Failure 'Decision-frontier lint accepted more than four active nodes.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidDecisionLengthDraft, '-Profile', 'decision-frontier')) -eq 0) { Add-Failure 'Decision-frontier lint accepted an overlong visible packet.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidDecisionReplyDraft, '-Profile', 'decision-frontier')) -eq 0) { Add-Failure 'Decision-frontier lint accepted repeated per-node reply instructions.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidDecisionQueueDraft, '-Profile', 'decision-frontier')) -eq 0) { Add-Failure 'Decision-frontier lint accepted a state-changing queue summary.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidDecisionQueueIdsDraft, '-Profile', 'decision-frontier')) -eq 0) { Add-Failure 'Decision-frontier lint accepted queued decision IDs as extra active nodes.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidDecisionUnshownStateDraft, '-Profile', 'decision-frontier')) -eq 0) { Add-Failure 'Decision-frontier lint accepted defer state for an unshown queued item.' }
+  if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidDecisionMetadataDraft, '-Profile', 'decision-frontier')) -eq 0) { Add-Failure 'Decision-frontier lint accepted internal dependency and basis labels.' }
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $validSharedQuestionDraft, '-Profile', 'shared-collaboration', '-PassThrough')) -ne 0) { Add-Failure 'Shared question packet lint rejected a valid final-acceptance decision.' }
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $invalidSharedAcceptanceDraft, '-Profile', 'shared-collaboration')) -eq 0) { Add-Failure 'Shared question packet lint accepted future final acceptance as current fact.' }
   if ((Invoke-IsolatedScriptExitCode -ScriptPath $questionLint -Arguments @('-Path', $validInspectionQuestionDraft, '-Profile', 'inspection-discovery', '-PassThrough')) -ne 0) { Add-Failure 'Inspection question packet lint rejected complete discovery coverage.' }

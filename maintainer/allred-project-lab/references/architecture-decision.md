@@ -569,3 +569,67 @@ Local references and retained run evidence were sufficient. No plugin, Skill, MC
 - Standard and Lab Quick checks, PowerShell 5.1, official validation, source/release parity, and isolated installation remain required before publication
 
 This is a Lab evaluation-system change only. It does not modify `allred-project-standard`, its trigger words, requirement collection, question depth, or project execution behavior. No `v0.8.0-rc13` tag or GitHub Release is authorized by this change.
+
+## 2026-09-03 Readable Decision Frontier (`0.8.0-rc14` Candidate)
+
+### Problem And Success Criteria
+
+A real external-monitoring project produced one post-evidence reply containing twelve separately expanded fact/decision axes and dozens of options. The content was individually relevant, but the user could not reasonably answer it as one message. Existing rules said to ask the whole readable frontier and re-present every consequential sibling, while no validator measured visible decision load. The model therefore optimized for fewer rounds by turning one response into a specification document.
+
+Success means:
+
+- retain the complete user-owned frontier and discovery depth
+- show no more than four active ordinary `Q/D` nodes in one visible packet
+- prioritize parent and highest-rework decisions without converting queued nodes into defaults or deferrals
+- keep one compact reply instruction for the packet and avoid repeated option essays
+- continue with another bounded group after the user answers instead of beginning technical preflight early
+- preserve specialized training, inspection, and shared-collaboration coverage contracts
+
+### Benchmark Check
+
+| Source | Version/date | Why comparable | Reused path | Deliberate difference |
+| --- | --- | --- | --- | --- |
+| accepted Allred market-information cases `V29`, `V30`, and `V35` | current suite, checked 2026-09-03 | these cases already require concentrated choices, evidence-first source handling, and no serial lifecycle questionnaire | keep multiple co-answerable decisions together and retain later choices in state | add a per-response load limit when the frontier is much wider than these known-good packets |
+| local `skill-creator` guidance | installed reference, checked 2026-09-03 | recommends progressive disclosure, observable invariants, and narrow corrections instead of accumulating scenario rules | move the general packet budget into one reference, one route guard, and one deterministic validator | no product-specific manufacturer/source rule and no new Skill dependency |
+| user-supplied rc13 interaction record | 2026-09-03 | direct evidence of the failure shape on an ordinary external-monitoring project | preserve all twelve decisions but split the visible frontier by dependency and impact | the concrete product domain appears only in regression evidence, not runtime instructions |
+
+Local references and the supplied interaction record were sufficient. No plugin, library, MCP server, external search, or dependency was added.
+
+### Decision
+
+1. The internal frontier remains complete. The visible ordinary packet is a slice of two to four dependency-valid nodes, with four as a hard maximum.
+2. Parents and choices that alter the next evidence, delivery, safety, cost, or maintenance path come first. Remaining nodes are summarized only by count and remain unresolved.
+3. `validate_question_packet.ps1 -Profile decision-frontier` rejects more than four active nodes, sixteen option rows, eighteen non-empty lines, 1800 visible characters, an overlong block, repeated reply instructions, visible internal dependency/basis fields, or a queue summary that changes unresolved state.
+4. Partial answers advance only the named visible envelope. The next bounded slice appears before technical preflight; waiting for that slice is not user deferral.
+5. An explicitly permitted unknown answer closes a factual `Q` as confirmed-unknown without inventing a numeric value. Packet lint counts only a decision block's own non-empty lines, excluding the shared reply/queue footer, and a failed lint may not trigger source inspection.
+6. `V144` reproduces a wide, dependency-bearing external-monitoring frontier and checks two consecutive visible packets. Existing `V29`, `V30`, `V35`, `V137`, `V142`, and `V143` remain adjacent regressions.
+
+### Acceptance Metrics
+
+- deterministic lint accepts a compact four-node packet and rejects five-node, overlong, repeated-reply, state-changing queue, and over-1800-character packets
+- route-context budgets and PowerShell 5.1 checks remain within their existing gates
+- `V144` passes at low and xhigh without exposing more than four active choices in either response
+- adjacent market-information, monitoring, partial-reply, inspection, and bounded-simple-project cases do not regress
+- source/release parity, official validation, isolated installation, and multi-trial evidence remain required before publication
+
+This change creates local candidate `0.8.0-rc14`. Published `v0.8.0-rc13` remains immutable until rc14 completes behavioral validation and receives separate publication authorization.
+
+### Validation Evidence
+
+- the user-supplied rc13 packet was deterministically rejected with 12 active decision nodes and 41 separately rendered option rows
+- fixed lint fixtures pass for a compact four-node packet and reject five-node, over-1800-character, over-18-line, repeated-reply, queued-ID, unshown-state, and internal-metadata packets
+- `V144` passed at low and xhigh on the final runtime; the low run rendered two packets with 4 decisions each, 601/506 characters, and 16/15 non-empty lines
+- the final packets used one reply instruction, recorded current scale as confirmed unknown, preserved 7 then 3 queued decisions, and did not enter preflight or READY
+- adjacent low-effort cases `V29`, `V35`, `V137`, `V142`, and `V143` passed after obsolete menu-style inputs and contradictory internal-label Oracle requirements were updated to the current natural-language and trusted-event contracts
+- earlier `V144` Fail/Partial rounds are retained as evidence for repeated reply instructions, queued decision state leakage, extra queued IDs, and confirmed-unknown recounting; they were not rewritten as passes
+- final Quick validation passed all eight steps; PowerShell 7 and Windows PowerShell 5.1 structure checks, route budgets, official validation, source/release parity, and isolated installation of `0.8.0-rc14` passed
+
+Evidence paths:
+
+- final `V144` low: `C:\Users\Administrator\AppData\Local\Temp\allred-rc14-v144-low-r7-20260903-201020`
+- final `V144` xhigh: `C:\Users\Administrator\AppData\Local\Temp\allred-rc14-v144-xhigh-20260903-201727`
+- final `V35` low: `C:\Users\Administrator\AppData\Local\Temp\allred-rc14-v35-final-low-20260903-212732`
+- final Quick report: `C:\Users\Administrator\AppData\Local\Temp\allred-rc14-final-quick-20260903-213542\report.html`
+- isolated install: `C:\Users\Administrator\AppData\Local\Temp\allred-rc14-final-install-20260903-214120`
+
+Release interpretation: `rc14` is a validated local candidate for this interaction fix. Git commit, GitHub push, tag, and Release remain separate user-authorized actions.

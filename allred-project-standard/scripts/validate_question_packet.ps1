@@ -3,7 +3,7 @@ param(
   [AllowEmptyString()]
   [string]$Text = '',
   [string]$Path = '',
-  [ValidateSet('generic', 'training', 'shared-collaboration', 'inspection-discovery')]
+  [ValidateSet('generic', 'decision-frontier', 'training', 'shared-collaboration', 'inspection-discovery')]
   [string]$Profile = 'generic',
   [switch]$AllowCompletedBaselineReview,
   [switch]$AllowFutureFormatDecision,
@@ -26,7 +26,7 @@ end {
   if ($Path) {
     $resolved = (Resolve-Path -LiteralPath $Path).Path
     $draft = Get-Content -LiteralPath $resolved -Raw -Encoding UTF8
-  } elseif ($Profile -eq 'training') {
+  } else {
     $draft = $chunks -join "`n"
   }
   if ([string]::IsNullOrWhiteSpace($draft)) { throw 'Question packet draft is empty.' }
@@ -34,18 +34,22 @@ end {
   $lines = @($draft -split "`r?`n")
   $questionPrefix = '(?i)(?:\u95ee\u9898|question)\s*[:\uFF1A]'
   $bulletQuestion = '^\s*[-*]\s+.*[?\uFF1F]'
+  $stableIdQuestion = '(?i)^\s*(?:[-*]\s+)?(?:\*\*)?(?:\x60)?(?:Q|D)[0-9][0-9A-Za-z_-]*(?:\x60)?(?:\*\*)?\s*(?:[\.\u3001:\uFF1A]|\s)'
+  $numberedBoldQuestion = '^\s*[1-9][0-9]*[\.\u3001\)]\s+\*\*[^*]+\*\*'
   $impact = '(?i)(?:\u5f71\u54cd|impact|effect)\s*[:\uFF1A]'
   $reply = '(?i)(?:\u56de\u590d|reply)\s*[:\uFF1A]'
+  $decisionReply = '(?i)(?:(?:\u56de\u590d|reply)\s*[:\uFF1A]|(?:\u76f4\u63a5|\u53ef\u4ee5).{0,60}(?:\u56de\u7b54|\u56de\u590d))'
+  $packetImpact = '(?i)(?:(?:\u5f71\u54cd|\u51b3\u5b9a).{0,40}(?:\u65b9\u6848|\u8303\u56f4|\u8def\u5f84|\u884c\u4e3a|\u4ea4\u4ed8|\u9a8c\u6536|\u4e0b\u4e00\u6b65)|(?:\u65b9\u6848|\u8303\u56f4|\u8def\u5f84|\u884c\u4e3a|\u4ea4\u4ed8|\u9a8c\u6536|\u4e0b\u4e00\u6b65).{0,40}(?:\u5f71\u54cd|\u51b3\u5b9a))'
   $questionLines = [System.Collections.Generic.List[int]]::new()
 
   for ($i = 0; $i -lt $lines.Count; $i++) {
-    if ($lines[$i] -match $questionPrefix -or $lines[$i] -match $bulletQuestion) {
+    if ($lines[$i] -match $questionPrefix -or $lines[$i] -match $bulletQuestion -or $lines[$i] -match $stableIdQuestion -or ($Profile -eq 'decision-frontier' -and $lines[$i] -match $numberedBoldQuestion)) {
       $questionLines.Add($i) | Out-Null
     }
   }
 
   $failures = [System.Collections.Generic.List[string]]::new()
-  if ($Profile -in @('generic', 'shared-collaboration')) {
+  if ($Profile -in @('generic', 'decision-frontier', 'shared-collaboration')) {
     if ($questionLines.Count -eq 0) {
       $failures.Add('No independently answerable question block was found.') | Out-Null
     }
@@ -53,11 +57,45 @@ end {
     for ($i = 0; $i -lt $questionLines.Count; $i++) {
       $start = $questionLines[$i]
       $next = if ($i + 1 -lt $questionLines.Count) { $questionLines[$i + 1] } else { $lines.Count }
-      $end = [Math]::Min($next - 1, $start + 6)
+      $actualEnd = $next - 1
+      if ($Profile -eq 'decision-frontier') {
+        for ($j = $start + 1; $j -le $actualEnd; $j++) {
+          if ($lines[$j] -match $decisionReply -or $lines[$j] -match '(?i)(?:\u540e\u7eed|\u5269\u4f59|\u5176\u4f59|\u56de\u7b54\u540e).{0,40}(?:\u9879|\u8282\u70b9|\u95ee\u9898|\u5904\u7406|\u786e\u8ba4)') { $actualEnd = $j - 1; break }
+        }
+      }
+      $end = [Math]::Min($actualEnd, $start + 7)
       $segment = if ($end -ge $start) { ($lines[$start..$end] -join "`n") } else { $lines[$start] }
       $lineNumber = $start + 1
-      if ($segment -notmatch $impact) { $failures.Add("Question block at line $lineNumber has no adjacent impact statement.") | Out-Null }
-      if ($segment -notmatch $reply) { $failures.Add("Question block at line $lineNumber has no adjacent reply guidance.") | Out-Null }
+      if ($segment -notmatch $impact -and -not ($Profile -eq 'decision-frontier' -and $draft -match $packetImpact)) { $failures.Add("Question block at line $lineNumber has no adjacent impact statement.") | Out-Null }
+      if ($Profile -ne 'decision-frontier' -and $segment -notmatch $reply) { $failures.Add("Question block at line $lineNumber has no adjacent reply guidance.") | Out-Null }
+      $blockNonEmptyLines = if ($actualEnd -ge $start) { @($lines[$start..$actualEnd] | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }).Count } else { 0 }
+      if ($Profile -eq 'decision-frontier' -and $blockNonEmptyLines -gt 4) { $failures.Add("Decision block at line $lineNumber is too long for one readable choice.") | Out-Null }
+    }
+    if ($Profile -eq 'decision-frontier') {
+      $activeIds = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+      foreach ($match in [regex]::Matches($draft, '(?i)(?<![A-Za-z0-9_])(?:Q|D)[0-9][0-9A-Za-z_-]*(?![A-Za-z0-9_])')) { $activeIds.Add($match.Value) | Out-Null }
+      $activeNodeCount = [Math]::Max($questionLines.Count, $activeIds.Count)
+      if ($activeNodeCount -gt 4) { $failures.Add("Decision frontier packet exposes $activeNodeCount active nodes; maximum 4 per visible packet.") | Out-Null }
+      $optionLines = @($lines | Where-Object { $_ -match '^\s*(?:[-*]\s+)?[1-9][0-9]*[\.\u3001\)]\s+' })
+      if ($optionLines.Count -gt 16) { $failures.Add("Decision frontier packet contains $($optionLines.Count) option rows; maximum 16 per visible packet.") | Out-Null }
+      $nonEmptyLines = @($lines | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+      if ($nonEmptyLines.Count -gt 18) { $failures.Add("Decision frontier packet contains $($nonEmptyLines.Count) non-empty lines; maximum 18 per visible packet.") | Out-Null }
+      if ($draft.Trim().Length -gt 1800) { $failures.Add("Decision frontier packet exceeds 1800 visible characters.") | Out-Null }
+      $replyCount = [regex]::Matches($draft, $decisionReply).Count
+      if ($replyCount -ne 1) { $failures.Add("Decision frontier packet needs exactly one compact reply instruction; found $replyCount.") | Out-Null }
+      if ($draft -match '(?im)(?:^\s*(?:\u4e3a\u4ec0\u4e48\u73b0\u5728\u95ee|\u5f53\u524d\u4f9d\u636e|\u5f53\u524d\u731c\u6d4b|\u5efa\u8bae)(?:/[^:\uFF1A\r\n]+)*\s*[:\uFF1A]|\bdependency\s*[:\uFF1A])') {
+        $failures.Add('Decision frontier packet prints internal dependency/basis/recommendation fields; keep them internal and mark recommendations inline.') | Out-Null
+      }
+      foreach ($queueLine in @($lines | Where-Object { $_ -match '(?i)(?:\u540e\u7eed|\u5269\u4f59|\u4ecd\u6709|\u8fd8\u6709|queued).{0,50}(?:[0-9]+|\u82e5\u5e72).{0,12}(?:\u9879|\u8282\u70b9|\u95ee\u9898|nodes?|items?)' })) {
+        if ($queueLine -match '(?i)(?:\u6682\u7f13|\u6392\u9664|\u4e0d\u505a|\u6309\u63a8\u8350|\u5df2\u786e\u8ba4|defer|exclude|approve)' -or $queueLine -match '(?:\u9879|\u8282\u70b9|\u95ee\u9898|nodes?|items?)\s*[:\uFF1A]') {
+          $failures.Add('Decision frontier queue summary must contain only the remaining count and next-step wording; queued items stay unresolved.') | Out-Null
+        }
+      }
+      foreach ($stateLine in $lines) {
+        if ($stateLine -match '(?i)(?:(?:\u53ef|\u53ef\u4ee5|\u5efa\u8bae|\u9ed8\u8ba4|\u5148)\s*(?:\u660e\u786e)?\s*\u6682\u7f13|\u6682\u4e0d\u505a|\u4e0d\u7eb3\u5165|\u6392\u9664)' -and $stateLine -notmatch '(?i)(?:\u9009\u62e9|\u9009\u9879|options?)\s*[:\uFF1A]') {
+          $failures.Add('Decision frontier packet assigns defer/exclude state outside a visible choice; queued items may be reported only by count.') | Out-Null
+        }
+      }
     }
     if ($Profile -eq 'shared-collaboration') {
       $futureAcceptanceAsFact = '(?im)^\s*[-*]?\s*\**Q[0-9A-Za-z_-]*[\.\s].*(?:\u6700\u7ec8\u9a8c\u6536|\u6295\u5165\u4f7f\u7528|\u9a8c\u6536\u8d23\u4efb|final\s+acceptance)'

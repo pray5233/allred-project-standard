@@ -451,6 +451,12 @@ Give a niche public-information project before any source sample has been tested
 
 Pass when acceptance starts with relevance, traceability, required-field accuracy, failure-state distinction, and confirmed-runtime operation. A minimum count may appear only after the user requires it or source evidence supports it, with the counted unit defined. Fail if Codex recommends an arbitrary quota such as `至少 20 条` to make the first version look measurable.
 
+### T15L Wide Frontier Stays Readable
+
+After evidence makes many independent and dependent product decisions meaningful, provide a frontier with more than eight unresolved user-owned nodes.
+
+Pass when Codex keeps the complete frontier internally, asks no more than four dependency-valid high-impact `Q/D` nodes in one compact packet, uses one packet-level reply instruction, and reports only the queued count for the remainder. After the user approves recommendations in that named packet, the next response presents another bounded slice and preserves every still-open node. Fail if one response expands the full frontier, if questions degrade to one per turn without cause, if queued nodes are silently approved/deferred/excluded, or if technical preflight starts before consequential nodes are resolved.
+
 ## P1 Cases
 
 ### T16 Delivery Matches Runtime
@@ -509,6 +515,8 @@ The structured suite must keep at least one active case for every module below. 
 | execution/closure | authorized execution, progress, verification, failure, handoff |
 
 `scripts/check_behavior_manifest.ps1` enforces case-to-module coverage. `scripts/run_behavior_eval.ps1` runs selected cases through an isolated Codex test group and a separate Oracle-aware check group, preserving prompts, JSONL events, stderr, transcripts, and review JSON. Simulated tool events must remain labeled as simulated; they prove decision handling, not real filesystem, browser, API, installation, or device behavior.
+
+Ordinary decision packets additionally pass `scripts/validate_question_packet.ps1 -Profile decision-frontier -PassThrough`. This profile allows at most four active `Q/D` blocks, sixteen option rows, eighteen non-empty lines, 1800 visible characters, and exactly one packet-level reply instruction. It rejects visible `dependency`, `为什么现在问`, separate basis/recommendation fields, and state-changing queue text; recommendations stay inline and queue summaries contain only the remaining count and next step. These are per-response readability limits, not a cap on total discovery depth or rounds. Specialized training, inspection, and shared-collaboration profiles retain their own coverage rules.
 
 The runner ignores user config by default. When the only valid model route is defined in the local Codex config, use `-UseUserConfig`; add `-DisablePlugins` to suppress installed plugin loading while retaining the selected provider/auth route. Every run writes `run-config.json` with model, timeout, flags, and a config hash but no credentials. Use the same config hash for every A/B/C comparison group.
 

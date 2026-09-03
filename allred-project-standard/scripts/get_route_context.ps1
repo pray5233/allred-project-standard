@@ -244,7 +244,7 @@ $stageGuards = @{
     "## Active Route Guard`n`nCurrent route is existing or continuing work. Inspect the current project evidence before asking factual questions. Do not restart new-project discovery or add a ceremonial start gate when the exact safe local work is already authorized."
   }
   evidence = "## Active Stage Guard`n`nCurrent stage: EVIDENCE. Omit unselected-domain negatives; 'not in scope' leaks. Full route before GuardsOnly. Missing target: label != target; ask location/sample. Before render/extract disclose unchanged originals/project; temp evidence only in isolated system temp. Post-result call: get_route_context.ps1 -Route <route> -Stage evidence -Interaction <standard|beginner> -GuardsOnly. Reload full evidence before synthesis. Report observations, limits, write boundary before another action. Pattern/anomaly proves observation only; checker feasibility needs matching semantics/rules. Preserve contract gaps by facet. Preserve sample/subgroup/count/uncertainty; aggregate does not prove each subgroup. Temp outputs are disposable evidence. Unless blocked, continue read-only work. Trusted DECISION/READY event: call get_route_context.ps1 -Route new-standard -Stage decision -ValidatedEventId <ID>. Script search is not a transition. Open structured-record facets: (1) first-release current/fixed types vs future additions; (2) who configures additions; history; correction/void; scale; search acceptance; print acceptance. No numeric defaults. No first-release synthesis until answered/deferred. No mutation."
-  decision = "## Active Stage Guard`n`nCurrent stage: DECISION. Validation passed. Unanswered facets stay visible or have exact dependency/deferral reasons; how does not settle scope/owner, and new children do not replace them. Complete coverage and READY before final card. No mutation."
+  decision = "## Active Stage Guard`n`nDECISION passed. Full frontier internal. Max four priority Q/D, one reply; queue count, unresolved. how does not settle scope/owner. Coverage before READY. No mutation."
   'external-read' = "## Active Stage Guard`n`nCurrent internal stage: EXTERNAL-READ. Apply trust, privacy, and network boundaries. For a semantic sample, show each inspected title/ID/link and name the result for every dimension required by the active project contract, even when another mismatch already rejects the sample. Mark unavailable required dimensions unknown; do not merge axes or imply them from titles. Counts or summaries never replace sample identity. This stage does not approve product behavior or mutation."
   execution = "## Active Stage Guard`n`nCurrent internal stage: EXECUTION. Stage, frontier, READY-scope, and exact authorization validation have passed. Proceed only inside that approved scope and effects envelope; return only the affected item to DECISION for material scope change."
   verification = "## Active Stage Guard`n`nCurrent internal stage: VERIFICATION. Verify promises with fresh evidence and do not expand scope or infer release actions."
@@ -271,6 +271,10 @@ if ($Interaction -eq 'beginner' -and $Stage -eq 'evidence') {
 }
 if ($Interaction -eq 'beginner' -and $Stage -eq 'decision') {
   $stageGuards.decision += ' Beginner READY rendering: hide source trees, top-level implementation paths, filenames, commands, package/version details, record IDs, and hash mechanics. Show project location, allowed write boundary, protected originals, rollback, delivery consequences, and acceptance.'
+}
+
+if ($Stage -eq 'decision' -and 'shared-collaboration' -notin $Overlays -and -not ($Route -eq 'non-software' -and $Variant -eq 'training')) {
+  $stageGuards.decision += ' Lint: `$draft | & scripts/validate_question_packet.ps1 -Profile decision-frontier -PassThrough`; send APPROVED unchanged.'
 }
 
 if ($Route -eq 'non-software' -and $Variant -eq 'training' -and $Stage -in @('intake', 'evidence')) {

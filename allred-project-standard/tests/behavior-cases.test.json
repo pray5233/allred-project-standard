@@ -526,7 +526,7 @@
       "visible_turns": [
         "新手项目：我想做一个关节臂测量机的市场信息搜寻工具。",
         "暂无资料。我的初版想法是自动搜寻，但我还没确定要搜产品资料、新闻还是价格。",
-        "D1=产品型号与技术参数；D2=全球中英文公开来源；D3=一个品牌、1-3个真实来源；D4=先在当前开发电脑验证。"
+        "我自己使用，目前逐个查官网最费时间。第一版搜产品型号与技术参数，使用全球中英文公开来源；先用一个品牌、1-3个真实来源在当前开发电脑验证。输入品牌后能列出真实型号、关键参数和原文链接供我核对，就算第一版有用。"
       ],
       "post_event_turns": [
         {
@@ -746,8 +746,7 @@
       ],
       "visible_turns": [
         "新手项目：我要做一个自动收集汇总关节臂测量机行业信息的app",
-        "4 行业内主流厂家的最新动态、专利更新、市场销售情况",
-        "1"
+        "我自己使用，目前靠逐个官网和公开记录搜索，费时间也容易遗漏；暂无本地资料。第一版必须汇总行业主流厂家的最新动态、专利更新和有原文依据的公开销售线索，保留来源并区分来源状态；能从已验证来源手动刷新看到真实内容并供我核对，就算有用。后台定时和正式交付方式先不确定。"
       ],
       "post_event_turns": [
         {
@@ -3932,6 +3931,36 @@
         "future template or plugin extensibility",
         "generic project tier",
         "repeat supplied workflow or acceptance"
+      ]
+    },
+    {
+      "id": "V144",
+      "priority": "P0",
+      "modules": [
+        "new-project",
+        "external-source",
+        "external-monitoring",
+        "adaptive-interview",
+        "interaction-confirmation",
+        "workflow-efficiency"
+      ],
+      "visible_turns": [
+        "allred新项目：我想做一个持续收集行业产品、专利、公开采购和展会动态的 APP。",
+        "我自己使用，现在要逐个查看官网和公开记录；暂无本地资料。第一版要减少重复搜索并保留原文链接，能及时看到可信的新动态就算有用。"
+      ],
+      "post_event_turns": [
+        {
+          "after": "E144_WIDE_DECISION_FRONTIER",
+          "text": "规模暂不确定；范围先按中国中文；每天自动更新；先在本机使用。"
+        }
+      ],
+      "artifact_labels": [],
+      "tool_event_ids": ["E144_WIDE_DECISION_FRONTIER"],
+      "stop_condition": "a broad evidence-created frontier is handled in readable dependency-ordered packets without dropping or auto-settling queued decisions",
+      "forbidden_questions": [
+        "more than four active decision axes in one visible packet",
+        "one question per turn when several choices fit together",
+        "technical framework or source-code layout"
       ]
     }
   ]
