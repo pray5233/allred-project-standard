@@ -16,7 +16,9 @@ foreach ($relative in @(
   'tests\behavior-cases.test.json',
   'tests\behavior-cases.oracle.json',
   'tests\review-result.schema.json',
+  'tests\behavior-trial-aggregation-fixtures.json',
   'scripts\check_behavior_manifest.ps1',
+  'scripts\aggregate_behavior_trials.ps1',
   'scripts\check_candidate_harness.ps1',
   'scripts\invoke_candidate_validation.ps1',
   'scripts\run_ci_behavior.ps1'

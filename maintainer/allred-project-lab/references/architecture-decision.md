@@ -524,3 +524,48 @@ The final runtime changes remain justified by repeated case-level evidence:
 Release interpretation: the current tree is suitable for an `rc13` working candidate on `main`, but the one-shot 26-case run is not a valid 26/26 stable-release claim. The next Lab change should add preserved multi-trial results and explicit variance classification instead of treating one stochastic sample as the only release verdict. No `v0.8.0-rc13` tag or Release is authorized by this evidence.
 
 This evidence supports an `rc13` candidate commit and GitHub validation. Tagging or publishing `v0.8.0-rc13` remains a separate user-authorized action.
+
+## 2026-09-03 Multi-Trial Consistency Gate
+
+### Problem And Success Criteria
+
+The `rc13` variance audit proved that one complete behavior sweep can disagree with targeted reruns on the same runtime surface. A single response therefore cannot decide whether a Skill defect is stable, stochastic, or caused by unavailable infrastructure. The maintainer needs repeatable release evidence without increasing ordinary Allred project runtime or adding more user-facing rules.
+
+Success means:
+
+- preserve every independent transcript and reviewer result rather than overwriting retries
+- run the first trial for each selected case and retry only cases that do not initially pass
+- require repeated evidence for a release candidate while keeping Changed-mode cost bounded
+- distinguish stable pass, stable fail, model variance, infrastructure-only uncertainty, and fail-fast NotRun cases
+- never let majority voting hide a repeated hard failure
+- retain the existing summary fields, canonical transcript path, bounded parallelism, baseline comparison, and release automation
+
+### Benchmark Check
+
+| Source | Version/date | Why comparable | Reused path | Deliberate difference |
+| --- | --- | --- | --- | --- |
+| local `run_behavior_eval.ps1` and accepted Lab harness | `0.8.0-rc13`, checked 2026-09-03 | already separates test group, Oracle-aware check group, transcripts, hashes, and infrastructure status | keep each runner invocation immutable and aggregate outside the evaluator | do not change the mature Standard runtime or behavior Oracle |
+| local `skill-creator` guidance | installed reference, checked 2026-09-03 | recommends realistic independent forward tests and observable invariants instead of wording checks | preserve raw trials and verify the deterministic coordinator with fixed fixtures | no subagent requirement and no new dependency |
+| final `rc13` variance audit | three 26-case low-effort batches, 2026-09-02 | direct evidence that one-shot verdicts vary under the same runtime hash | use conditional retries and explicit variance classification | diagnostic mode may accept one clean pass; release mode requires repeated agreement |
+
+Local references and retained run evidence were sufficient. No plugin, Skill, MCP server, library, credential, or external package was added.
+
+### Decision
+
+1. Add `aggregate_behavior_trials.ps1` as the deterministic owner of consistency classification. It reads independent `trial-NN` results, reviewer hard failures, runtime hashes, and stable configuration fingerprints.
+2. `invoke_behavior_eval_batch.ps1` runs trials sequentially within a case and cases concurrently within the existing bound. The default diagnostic profile is one initial trial plus up to two retries; the Candidate profile is two initial trials plus one conditional retry with two-result agreement.
+3. Only a clean semantic majority with no `Fail` verdict, no hard-failure evidence, and one runtime/configuration surface is `StablePass`. The same hard failure twice is immediately `StableFail`; one hard failure mixed with passes or any runtime/configuration drift remains `Variable`. Missing config, transcript, or review evidence is infrastructure failure. Pure infrastructure evidence is `InfrastructureInconclusive`.
+4. P0 fail-fast occurs after aggregate classification, not after the first stochastic result. Unattempted cases remain `NotRun`.
+5. Preserve the first semantic trial at the legacy case path for blind comparison, while keeping every trial under the case directory. This avoids selecting the best retry after seeing its verdict. Candidate reuse additionally validates the trial policy.
+6. Reports show consistency counts for every behavior run. Fixed aggregator fixtures and a fake runner test retry scheduling without model calls.
+
+### Acceptance Metrics
+
+- fixed fixtures pass for stable pass, stable fail, split variance, pure infrastructure, majority pass, non-hidden Fail/hard-failure evidence, and runtime-surface drift
+- fake-runner tests prove one-shot pass, conditional retry, repeated hard-failure convergence, infrastructure exhaustion, bounded parallelism, and P0 NotRun behavior
+- Changed defaults remain `1 + up to 2`; Candidate defaults are `2 + up to 1` with agreement `2`
+- reusable candidate evidence rejects an older or mismatched trial policy
+- reports retain per-case trial counts, outcome counts, runtime/config fingerprints, first divergence, and review paths
+- Standard and Lab Quick checks, PowerShell 5.1, official validation, source/release parity, and isolated installation remain required before publication
+
+This is a Lab evaluation-system change only. It does not modify `allred-project-standard`, its trigger words, requirement collection, question depth, or project execution behavior. No `v0.8.0-rc13` tag or GitHub Release is authorized by this change.

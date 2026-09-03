@@ -6,6 +6,8 @@ param(
   [string]$LabRoot = '',
   [string]$BaselineRef = 'v0.8.0-rc12',
   [string]$Model = 'gpt-5.6-sol',
+  [ValidateSet('Auto', 'Diagnostic', 'Release')]
+  [string]$TrialProfile = 'Auto',
   [ValidateRange(1, 8)]
   [int]$MaxParallelCases = 3,
   [ValidateRange(30, 3600)]
@@ -28,6 +30,12 @@ if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
 }
 $OutputRoot = [System.IO.Path]::GetFullPath($OutputRoot)
 New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
+$effectiveTrialProfile = if ($TrialProfile -ne 'Auto') { $TrialProfile } elseif ($Suite -eq 'Release') { 'Release' } else { 'Diagnostic' }
+$trialSettings = if ($effectiveTrialProfile -eq 'Release') {
+  @{ InitialTrials = 2; RetryTrials = 1; MinimumAgreement = 2 }
+} else {
+  @{ InitialTrials = 1; RetryTrials = 2; MinimumAgreement = 1 }
+}
 
 $codex = Get-Command 'codex' -ErrorAction SilentlyContinue
 if ($null -eq $codex) { throw 'Codex CLI is not available on this runner.' }
@@ -59,6 +67,9 @@ if ($Suite -in @('Changed', 'Release')) {
     LowReasoningEffort = 'low'
     HighReasoningEffort = 'xhigh'
     MaxParallelCases = $MaxParallelCases
+    InitialTrials = $trialSettings.InitialTrials
+    RetryTrials = $trialSettings.RetryTrials
+    MinimumAgreement = $trialSettings.MinimumAgreement
     TimeoutSeconds = $TimeoutSeconds
     OutputRoot = $OutputRoot
   }
@@ -87,6 +98,9 @@ foreach ($effort in $efforts) {
     DisablePlugins = $true
     StatelessTurns = $true
     MaxParallelCases = $MaxParallelCases
+    InitialTrials = $trialSettings.InitialTrials
+    RetryTrials = $trialSettings.RetryTrials
+    MinimumAgreement = $trialSettings.MinimumAgreement
     TimeoutSeconds = $TimeoutSeconds
   }
   Invoke-AllredCiCommand -FilePath $batch -Parameters $parameters
@@ -94,5 +108,6 @@ foreach ($effort in $efforts) {
 
 "Allred CI behavior evaluation: PASS"
 "Suite: $Suite"
+"Trial profile: $effectiveTrialProfile ($($trialSettings.InitialTrials) initial, $($trialSettings.RetryTrials) retry, agreement $($trialSettings.MinimumAgreement))"
 "Cases: $($caseIds.Count)"
 "Output: $OutputRoot"

@@ -32,9 +32,9 @@ pwsh -NoProfile -File scripts\invoke_candidate_validation.ps1 -Mode Candidate -B
 ```
 
 - `Quick` runs dependency-free structure, invariant, route, and harness checks.
-- `Changed` resolves affected cases from Git changes, then runs fixed-record replay and only the selected behavior cases.
-- `Candidate` adds the release matrix, low/high runs, old/new blind comparison, write-boundary probe, official validation, isolated installation, and source/release parity.
-- Treat infrastructure failures as inconclusive. Do not convert a missing login, invalid key, timeout, or unavailable validator into a Skill pass or fail.
+- `Changed` resolves affected cases from Git changes, then runs fixed-record replay and only the selected behavior cases. A non-pass is automatically retried and reported as stable, variable, or infrastructure-inconclusive evidence.
+- `Candidate` adds the release matrix, low/high multi-trial consistency runs, old/new blind comparison, write-boundary probe, official validation, isolated installation, and source/release parity.
+- Treat infrastructure failures as inconclusive. Do not convert a missing login, invalid key, timeout, or unavailable validator into a Skill pass or fail, and do not treat one stochastic pass as stable release evidence.
 - The generated `report.html` is the default review artifact. Ask the user for one final real-machine pilot only after the candidate pipeline passes.
 
 For the Lab's own maintenance scenario, run the target Skill's evaluator with separate suite ownership:

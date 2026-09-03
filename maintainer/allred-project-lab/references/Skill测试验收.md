@@ -122,7 +122,7 @@ pwsh -NoProfile -File .agents\skills\allred-project-lab\scripts\invoke_candidate
   -Mode Candidate -BaselineRef <accepted-ref>
 ```
 
-The pipeline writes `validation-summary.json`, step logs, raw transcripts, reviewer results, `report.md`, and `report.html` under a timestamped temporary directory by default.
+The pipeline writes `validation-summary.json`, step logs, per-trial raw transcripts, reviewer results, per-case `aggregate.json`, `report.md`, and `report.html` under a timestamped temporary directory by default.
 
 Case selection follows four layers:
 
@@ -133,7 +133,7 @@ Case selection follows four layers:
 
 Fixed replay records are not generated conversations. They are immutable examples used to check whether the independent reviewer still rejects known failures and accepts known-good behavior. A replay mismatch means the evaluation system is not trustworthy enough to judge a release.
 
-`Changed` reduces iteration time; it is not release evidence. `Candidate` adds low/high behavior runs, accepted-baseline execution, blind comparison, first-turn mutation probing, PowerShell compatibility, official `quick_validate.py`, isolated installation, and source/release parity. A material baseline win, any changed P0 failure, stale or missing parity, or replay mismatch blocks promotion.
+`Changed` reduces iteration time; it is not release evidence. It runs one initial trial and automatically retries a `Partial`, `Fail`, or infrastructure failure up to two times. `Candidate` uses two initial trials plus one conditional retry, requires two agreeing semantic results, and adds accepted-baseline execution, blind comparison, first-turn mutation probing, PowerShell compatibility, official `quick_validate.py`, isolated installation, and source/release parity. A material baseline win, stable P0 failure, unresolved P0 variance, stale or missing parity, or replay mismatch blocks promotion.
 
 Manual validation is retained only at the end: after `Candidate` passes, run one representative task on the experiment machine and report any interaction issue. Do not ask the user to reproduce the entire internal matrix.
 
@@ -514,7 +514,20 @@ The runner ignores user config by default. When the only valid model route is de
 
 When the config contains multiple providers or a desktop-local proxy is unsuitable for child CLI runs, pass `-ModelProvider <name> -ProviderEnvKey <environment-variable-name>` together with `-UseUserConfig`. Set that environment variable before launching the evaluator. Reports record only the provider and variable names, never the secret value. Omitting both parameters preserves the normal configured route.
 
-Candidate validation runs independent behavior and blind-comparison cases in bounded batches with `-MaxParallelCases 3` by default. A case's visible turns, tool events, and reviewer remain sequential and isolated. P0 fail-fast is evaluated after each behavior batch, so a failing batch prevents later batches while up to two already-started peers may finish. Blind comparison completes every selected case so the release report is not truncated. Use `-MaxParallelCases 1` to reproduce a strictly serial run or reduce provider pressure.
+Candidate validation runs independent behavior and blind-comparison cases in bounded batches with `-MaxParallelCases 3` by default. A case's visible turns, tool events, reviewer, and retries remain sequential and isolated; different case IDs may run concurrently. P0 fail-fast is evaluated only after the current case batch reaches an aggregate verdict, so one stochastic first failure is retried before later batches are stopped. Up to two already-started peers may finish. Blind comparison completes every selected case so the release report is not truncated. Use `-MaxParallelCases 1` to reproduce a strictly serial run or reduce provider pressure.
+
+Every case preserves `trial-01`, `trial-02`, and later trial directories independently. The aggregate records Pass/Partial/Fail/InfrastructureFailure counts, runtime and configuration fingerprints, first divergence, reviewer paths, repeated hard-failure signatures, and whether the agreement threshold was met. Compatibility `status/result` fields remain available, but release decisions use `aggregate_result`:
+
+- `StablePass`: the required pass count has a semantic majority with no `Fail` verdict and no observed hard failure. A 2-pass/1-partial result may pass while retaining `has_variance=true`.
+- `StableFail`: non-passes have the required majority, or the same hard failure appears in at least two trials.
+- `Variable`: evidence is split, insufficient, or a single hard failure prevents a majority from being called stable.
+- `InfrastructureInconclusive`: every attempted trial failed before a semantic verdict. A shared `HTTP 403` string is not enough by itself; classification follows the runner's actual infrastructure status.
+
+A semantic trial is valid only when its run config, transcript, and parseable review are all preserved. Missing evidence is counted as infrastructure failure. Trials with different runtime-surface or stable configuration fingerprints remain `Variable`; results from different execution surfaces are never combined into a stable verdict.
+
+The legacy `<run>/<case>/transcript.json` path points to the first semantic trial, not the best-scoring retry. Blind comparison therefore remains deterministic and cannot hide an early semantic deviation; all other trials remain available beside it.
+
+The diagnostic profile is `-InitialTrials 1 -RetryTrials 2 -MinimumAgreement 1`. The release profile is `-InitialTrials 2 -RetryTrials 1 -MinimumAgreement 2`. `run_ci_behavior.ps1 -TrialProfile Auto` selects diagnostic behavior for `Changed`, `FullLow`, and `FullDual`, and release behavior for `Release`. Direct batch calls may override all three values.
 
 Candidate low/high behavior runs may be generated concurrently and imported with `-ReuseCandidateLowRoot` and `-ReuseCandidateHighRoot` after exact case-set plus Skill/test/Oracle hash checks. A frozen baseline transcript set may be imported with `-ReuseBaselineRoot` only when its exact case set, baseline `SKILL.md`, current visible test inputs, provider, model, reasoning effort, plugin/config flags, and user-config hash match. Its old Oracle verdict is not release evidence; the current blind comparison rereviews the immutable transcripts against the current Oracle.
 
@@ -531,7 +544,8 @@ Skill version/commit:
 Test environment:
 Cases run:
 Observed behavior:
-Pass/Partial/Fail:
+StablePass/StableFail/Variable/InfrastructureInconclusive:
+Trial counts and consistency threshold:
 First divergence:
 Owning file changed:
 Regression cases rerun:

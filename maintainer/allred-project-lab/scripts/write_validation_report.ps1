@@ -22,6 +22,7 @@ function Join-Display([object[]]$Items) {
   if (@($Items).Count -eq 0) { return '-' }
   return (@($Items) -join ', ')
 }
+$behaviorProperties = if ($summary.behavior_evidence) { @($summary.behavior_evidence.PSObject.Properties | Where-Object { $null -ne $_.Value }) } else { @() }
 
 $markdown = [System.Collections.Generic.List[string]]::new()
 $markdown.Add('# Allred Candidate Validation Report')
@@ -47,6 +48,18 @@ foreach ($step in @($summary.steps)) {
   $log = if ($step.log) { "[$([System.IO.Path]::GetFileName($step.log))]($(Get-ReportRelativeLink $step.log))" } else { '-' }
   $markdown.Add("| $($step.name) | $($step.status) | $($step.exit_code) | $duration | $log |")
 }
+if ($behaviorProperties.Count -gt 0) {
+  $markdown.Add('')
+  $markdown.Add('## Behavior Consistency')
+  $markdown.Add('')
+  $markdown.Add('| Run | Cases | Stable pass | Stable fail | Variable | Infrastructure | Not run |')
+  $markdown.Add('| --- | ---: | ---: | ---: | ---: | ---: | ---: |')
+  foreach ($property in $behaviorProperties) {
+    $evidence = $property.Value
+    if ($null -eq $evidence) { continue }
+    $markdown.Add("| $($property.Name) | $($evidence.total_cases) | $($evidence.counts.StablePass) | $($evidence.counts.StableFail) | $($evidence.counts.Variable) | $($evidence.counts.InfrastructureInconclusive) | $($evidence.counts.NotRun) |")
+  }
+}
 if (@($summary.failures).Count -gt 0) {
   $markdown.Add('')
   $markdown.Add('## Failures')
@@ -66,10 +79,19 @@ foreach ($path in @($summary.impact.changed_paths)) { $markdown.Add("- $path") }
 [System.IO.File]::WriteAllLines($MarkdownPath, $markdown, [System.Text.UTF8Encoding]::new($false))
 
 $rows = foreach ($step in @($summary.steps)) {
-  $statusClass = if ($step.status -eq 'Pass') { 'pass' } elseif ($step.status -eq 'Skipped') { 'skip' } else { 'fail' }
+  $statusClass = if ($step.status -eq 'Pass') { 'pass' } elseif ($step.status -in @('Skipped', 'Inconclusive')) { 'skip' } else { 'fail' }
   $logCell = if ($step.log) { "<a href='$(Get-ReportRelativeLink $step.log)'>log</a>" } else { '-' }
   "<tr><td>$(Encode-Html $step.name)</td><td class='$statusClass'>$(Encode-Html $step.status)</td><td>$($step.exit_code)</td><td>$($step.duration_ms) ms</td><td>$logCell</td></tr>"
 }
+$behaviorRows = @()
+if ($behaviorProperties.Count -gt 0) {
+  $behaviorRows = foreach ($property in $behaviorProperties) {
+    $evidence = $property.Value
+    if ($null -eq $evidence) { continue }
+    "<tr><td>$(Encode-Html $property.Name)</td><td>$($evidence.total_cases)</td><td class='pass'>$($evidence.counts.StablePass)</td><td class='fail'>$($evidence.counts.StableFail)</td><td class='skip'>$($evidence.counts.Variable)</td><td class='skip'>$($evidence.counts.InfrastructureInconclusive)</td><td>$($evidence.counts.NotRun)</td></tr>"
+  }
+}
+$behaviorHtml = if (@($behaviorRows).Count -eq 0) { '<p>No behavior run was recorded.</p>' } else { '<table><thead><tr><th>Run</th><th>Cases</th><th>Stable pass</th><th>Stable fail</th><th>Variable</th><th>Infrastructure</th><th>Not run</th></tr></thead><tbody>' + (@($behaviorRows) -join "`n") + '</tbody></table>' }
 $failureHtml = if (@($summary.failures).Count -eq 0) { '<p>None.</p>' } else { '<ul>' + ((@($summary.failures) | ForEach-Object { '<li>' + (Encode-Html $_) + '</li>' }) -join '') + '</ul>' }
 $changedHtml = if (@($summary.impact.changed_paths).Count -eq 0) { '<p>None.</p>' } else { '<ul>' + ((@($summary.impact.changed_paths) | ForEach-Object { '<li><code>' + (Encode-Html $_) + '</code></li>' }) -join '') + '</ul>' }
 $resultClass = if ($summary.result -eq 'PASS') { 'pass' } elseif ($summary.result -eq 'INCONCLUSIVE') { 'skip' } else { 'fail' }
@@ -92,6 +114,7 @@ body{font-family:Segoe UI,Microsoft YaHei,sans-serif;max-width:1180px;margin:32p
 </div>
 <h2>Steps</h2>
 <table><thead><tr><th>Step</th><th>Status</th><th>Exit</th><th>Duration</th><th>Evidence</th></tr></thead><tbody>$($rows -join "`n")</tbody></table>
+<h2>Behavior Consistency</h2>$behaviorHtml
 <h2>Failures</h2>$failureHtml
 <h2>Changed Paths</h2>$changedHtml
 <p><a href="$(Get-ReportRelativeLink $MarkdownPath)">Open Markdown report</a></p>

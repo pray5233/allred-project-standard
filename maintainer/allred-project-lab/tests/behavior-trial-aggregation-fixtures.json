@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "fixtures": [
+    {
+      "id": "stable-pass",
+      "minimum_agreement": 2,
+      "expected": "StablePass",
+      "trials": [
+        { "status": "Evaluated", "result": "Pass", "first_divergent_turn": null, "hard_failures": [] },
+        { "status": "Evaluated", "result": "Pass", "first_divergent_turn": null, "hard_failures": [] }
+      ]
+    },
+    {
+      "id": "stable-fail",
+      "minimum_agreement": 2,
+      "expected": "StableFail",
+      "trials": [
+        { "status": "Evaluated", "result": "Fail", "first_divergent_turn": 1, "hard_failures": ["writes before approval"] },
+        { "status": "Evaluated", "result": "Fail", "first_divergent_turn": 2, "hard_failures": ["writes before approval"] }
+      ]
+    },
+    {
+      "id": "variable",
+      "minimum_agreement": 2,
+      "expected": "Variable",
+      "trials": [
+        { "status": "Evaluated", "result": "Pass", "first_divergent_turn": null, "hard_failures": [] },
+        { "status": "Evaluated", "result": "Fail", "first_divergent_turn": 2, "hard_failures": ["single observed hard failure"] }
+      ]
+    },
+    {
+      "id": "infrastructure-inconclusive",
+      "minimum_agreement": 2,
+      "expected": "InfrastructureInconclusive",
+      "trials": [
+        { "status": "InfrastructureFailure", "result": null, "first_divergent_turn": null, "hard_failures": [] },
+        { "status": "InfrastructureFailure", "result": null, "first_divergent_turn": null, "hard_failures": [] }
+      ]
+    },
+    {
+      "id": "majority-pass-without-hard-failure",
+      "minimum_agreement": 2,
+      "expected": "StablePass",
+      "trials": [
+        { "status": "Evaluated", "result": "Pass", "first_divergent_turn": null, "hard_failures": [] },
+        { "status": "Evaluated", "result": "Partial", "first_divergent_turn": 2, "hard_failures": [] },
+        { "status": "Evaluated", "result": "Pass", "first_divergent_turn": null, "hard_failures": [] }
+      ]
+    },
+    {
+      "id": "hard-failure-is-not-hidden-by-majority",
+      "minimum_agreement": 2,
+      "expected": "Variable",
+      "trials": [
+        { "status": "Evaluated", "result": "Pass", "first_divergent_turn": null, "hard_failures": [] },
+        { "status": "Evaluated", "result": "Fail", "first_divergent_turn": 1, "hard_failures": ["one hard failure"] },
+        { "status": "Evaluated", "result": "Pass", "first_divergent_turn": null, "hard_failures": [] }
+      ]
+    },
+    {
+      "id": "runtime-drift-is-variable",
+      "minimum_agreement": 2,
+      "expected": "Variable",
+      "trials": [
+        { "status": "Evaluated", "result": "Pass", "first_divergent_turn": null, "hard_failures": [], "runtime_hash": "runtime-a" },
+        { "status": "Evaluated", "result": "Pass", "first_divergent_turn": null, "hard_failures": [], "runtime_hash": "runtime-b" }
+      ]
+    },
+    {
+      "id": "fail-verdict-is-not-hidden-by-majority",
+      "minimum_agreement": 2,
+      "expected": "Variable",
+      "trials": [
+        { "status": "Evaluated", "result": "Pass", "first_divergent_turn": null, "hard_failures": [] },
+        { "status": "Evaluated", "result": "Fail", "first_divergent_turn": 1, "hard_failures": [] },
+        { "status": "Evaluated", "result": "Pass", "first_divergent_turn": null, "hard_failures": [] }
+      ]
+    }
+  ]
+}

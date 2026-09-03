@@ -20,6 +20,12 @@ param(
   [bool]$StatelessBehaviorTurns = $true,
   [ValidateRange(1, 8)]
   [int]$MaxParallelCases = 3,
+  [ValidateRange(1, 5)]
+  [int]$InitialTrials = 1,
+  [ValidateRange(0, 5)]
+  [int]$RetryTrials = 2,
+  [ValidateRange(1, 5)]
+  [int]$MinimumAgreement = 1,
   [ValidateRange(30, 3600)]
   [int]$TimeoutSeconds = 300,
   [string]$ReuseCandidateLowRoot = '',
@@ -65,8 +71,9 @@ function Invoke-ValidationStep {
     $text = (@($output | ForEach-Object { $_.ToString() }) -join "`n")
     Write-Utf8File -Path $logPath -Text $text
     $stopwatch.Stop()
-    $infrastructurePattern = 'InfrastructureFailure|INVALID_API_KEY|authentication(?:\s+is)?\s+required|not\s+logged\s+in|timed\s+out|network\s+(?:is\s+)?unavailable|connection\s+(?:failed|refused|timed\s+out)'
-    $status = if ($exitCode -in $AllowedExitCodes) { 'Pass' } elseif ($text -match $infrastructurePattern) { 'Inconclusive' } else { 'Fail' }
+    $infrastructurePattern = 'InfrastructureFailure|InfrastructureInconclusive|INVALID_API_KEY|authentication(?:\s+is)?\s+required|not\s+logged\s+in|timed\s+out|network\s+(?:is\s+)?unavailable|connection\s+(?:failed|refused|timed\s+out)'
+    $semanticFailurePattern = 'StableFail|Variable|NotRun'
+    $status = if ($exitCode -in $AllowedExitCodes) { 'Pass' } elseif ($exitCode -eq 3 -or ($text -match $infrastructurePattern -and $text -notmatch $semanticFailurePattern)) { 'Inconclusive' } else { 'Fail' }
     Add-StepResult -Name $Name -Status $status -ExitCode $exitCode -DurationMs $stopwatch.ElapsedMilliseconds -Log $logPath
     return ($status -eq 'Pass')
   } catch {
@@ -91,7 +98,7 @@ function Import-ReusableBehaviorRun {
     $actualIds = @($items.case_id | Sort-Object -Unique)
     $expectedIds = @($ExpectedCaseIds | Sort-Object -Unique)
     if ((Compare-Object $expectedIds $actualIds).Count -gt 0) { throw 'Reusable behavior run does not cover the exact selected case set.' }
-    if (@($items | Where-Object { $_.status -ne 'Evaluated' -or $_.result -ne 'Pass' }).Count -gt 0) { throw 'Reusable behavior run contains a non-passing case.' }
+    if (@($items | Where-Object { $_.status -ne 'Evaluated' -or $_.result -ne 'Pass' -or $_.aggregate_result -ne 'StablePass' }).Count -gt 0) { throw 'Reusable behavior run contains a non-stable case.' }
     $skillHash = (Get-FileHash -LiteralPath (Join-Path $ExpectedSkillRoot 'SKILL.md') -Algorithm SHA256).Hash.ToLowerInvariant()
     $runtimeHash = Get-RuntimeSurfaceHash -Root $ExpectedSkillRoot
     $testHash = (Get-FileHash -LiteralPath (Join-Path $ExpectedSuiteRoot 'tests\behavior-cases.test.json') -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -100,6 +107,7 @@ function Import-ReusableBehaviorRun {
     if ($Model -and $config.model_override -ne $Model) { throw 'Reusable candidate model does not match.' }
     if ($config.model_provider_override -ne $ModelProvider -or $config.provider_env_key_name -ne $ProviderEnvKey) { throw 'Reusable candidate provider selection does not match.' }
     if ($config.reasoning_effort_override -ne $ExpectedReasoningEffort -or [bool]$config.use_user_config -ne [bool]$UseUserConfig -or [bool]$config.disable_plugins -ne [bool]$DisablePlugins -or [bool]$config.stateless_turns -ne [bool]$StatelessBehaviorTurns) { throw 'Reusable candidate runtime configuration does not match.' }
+    if ([int]$config.initial_trials -ne $InitialTrials -or [int]$config.retry_trials -ne $RetryTrials -or [int]$config.minimum_agreement -ne $MinimumAgreement) { throw 'Reusable candidate trial policy does not match.' }
     if ($UseUserConfig) {
       $codexHome = if ([string]::IsNullOrWhiteSpace($env:CODEX_HOME)) { Join-Path $HOME '.codex' } else { $env:CODEX_HOME }
       $userConfigPath = Join-Path $codexHome 'config.toml'
@@ -144,6 +152,7 @@ function Import-ReusableBaselineTranscripts {
     if ($Model -and $config.model_override -ne $Model) { throw 'Reusable baseline model does not match.' }
     if ($config.model_provider_override -ne $ModelProvider -or $config.provider_env_key_name -ne $ProviderEnvKey) { throw 'Reusable baseline provider selection does not match.' }
     if ($config.reasoning_effort_override -ne $LowReasoningEffort -or [bool]$config.use_user_config -ne [bool]$UseUserConfig -or [bool]$config.disable_plugins -ne [bool]$DisablePlugins -or [bool]$config.stateless_turns -ne [bool]$StatelessBehaviorTurns) { throw 'Reusable baseline runtime configuration does not match.' }
+    if ([int]$config.initial_trials -ne 1 -or [int]$config.retry_trials -ne 0 -or [int]$config.minimum_agreement -ne 1) { throw 'Reusable baseline trial policy does not match.' }
     if ($UseUserConfig) {
       $codexHome = if ([string]::IsNullOrWhiteSpace($env:CODEX_HOME)) { Join-Path $HOME '.codex' } else { $env:CODEX_HOME }
       $userConfigPath = Join-Path $codexHome 'config.toml'
@@ -199,10 +208,29 @@ function Add-DynamicOptions {
 }
 
 function Add-BehaviorOptions {
-  param([System.Collections.Generic.List[string]]$Arguments, [string]$Effort)
+  param([System.Collections.Generic.List[string]]$Arguments, [string]$Effort, [switch]$Baseline)
   Add-DynamicOptions -Arguments $Arguments -Effort $Effort
   $Arguments.Add('-MaxParallelCases'); $Arguments.Add([string]$MaxParallelCases)
+  $Arguments.Add('-InitialTrials'); $Arguments.Add([string]$(if ($Baseline) { 1 } else { $InitialTrials }))
+  $Arguments.Add('-RetryTrials'); $Arguments.Add([string]$(if ($Baseline) { 0 } else { $RetryTrials }))
+  $Arguments.Add('-MinimumAgreement'); $Arguments.Add([string]$(if ($Baseline) { 1 } else { $MinimumAgreement }))
   if ($StatelessBehaviorTurns) { $Arguments.Add('-StatelessTurns') }
+}
+
+function Get-BehaviorAggregateEvidence {
+  param([string]$Root)
+  if ([string]::IsNullOrWhiteSpace($Root) -or -not (Test-Path -LiteralPath (Join-Path $Root 'summary.json'))) { return $null }
+  $items = @(Get-Content -LiteralPath (Join-Path $Root 'summary.json') -Raw -Encoding UTF8 | ConvertFrom-Json)
+  $counts = [ordered]@{}
+  foreach ($name in @('StablePass', 'StableFail', 'Variable', 'InfrastructureInconclusive', 'NotRun')) {
+    $counts[$name] = @($items | Where-Object aggregate_result -eq $name).Count
+  }
+  return [pscustomobject]@{
+    root = $Root
+    total_cases = $items.Count
+    counts = $counts
+    cases = @($items | ForEach-Object { [pscustomobject]@{ case_id = $_.case_id; priority = $_.priority; aggregate_result = $_.aggregate_result; trial_count = $_.trial_count; counts = $_.counts; has_variance = $_.has_variance; first_divergent_turn = $_.first_divergent_turn; report = $_.report } })
+  }
 }
 
 function Add-ComparisonOptions {
@@ -212,6 +240,10 @@ function Add-ComparisonOptions {
 }
 
 $startedAt = [DateTime]::UtcNow
+$candidateModeDefaults = $Mode -eq 'Candidate'
+if ($candidateModeDefaults -and -not $PSBoundParameters.ContainsKey('InitialTrials')) { $InitialTrials = 2 }
+if ($candidateModeDefaults -and -not $PSBoundParameters.ContainsKey('RetryTrials')) { $RetryTrials = 1 }
+if ($candidateModeDefaults -and -not $PSBoundParameters.ContainsKey('MinimumAgreement')) { $MinimumAgreement = 2 }
 $UseUserConfig = -not [bool]$IgnoreUserConfig
 $DisablePlugins = -not [bool]$EnablePlugins
 $RepoRoot = (Resolve-Path -LiteralPath $RepoRoot).Path
@@ -225,6 +257,10 @@ $steps = [System.Collections.Generic.List[object]]::new()
 $failures = [System.Collections.Generic.List[string]]::new()
 $inconclusive = $false
 $hostPowerShell = (Get-Process -Id $PID).Path
+$labRunRoot = ''
+$candidateLowRoot = ''
+$candidateHighRoot = ''
+$baselineLowRoot = ''
 
 $impactPath = Join-Path $OutputRoot 'impact.json'
 $resolveArgs = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $LabRoot 'scripts\resolve_impacted_cases.ps1'), '-RepoRoot', $RepoRoot, '-StandardRoot', $StandardRoot, '-LabRoot', $LabRoot, '-BaselineRef', $BaselineRef, '-IncludeAdjacent', '-OutputPath', $impactPath)
@@ -356,7 +392,7 @@ if ($Mode -eq 'Candidate' -and -not $dynamicBlocked) {
     } else {
       $arguments = [System.Collections.Generic.List[string]]::new()
       foreach ($value in @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $LabRoot 'scripts\invoke_behavior_eval_batch.ps1'), '-RunnerPath', (Join-Path $StandardRoot 'scripts\run_behavior_eval.ps1'), '-SkillRoot', $baselineSkillRoot, '-SuiteRoot', $StandardRoot, '-OutputRoot', $baselineLowRoot, '-CaseIdsPath', $standardCaseIdsPath)) { $arguments.Add($value) }
-      Add-BehaviorOptions -Arguments $arguments -Effort $LowReasoningEffort
+      Add-BehaviorOptions -Arguments $arguments -Effort $LowReasoningEffort -Baseline
       $baselineRan = Invoke-ValidationStep -Name 'baseline-behavior-low' -FilePath $hostPowerShell -Arguments @($arguments) -AllowedExitCodes @(0, 2)
     }
     $baselineCompletenessLog = Join-Path $logsRoot 'baseline-transcript-completeness.log'
@@ -435,6 +471,12 @@ if ($Mode -eq 'Candidate' -and -not $dynamicBlocked) {
 $finishedAt = [DateTime]::UtcNow
 $failed = @($steps | Where-Object status -eq 'Fail').Count -gt 0
 $result = if ($failed) { 'FAIL' } elseif ($inconclusive) { 'INCONCLUSIVE' } else { 'PASS' }
+$behaviorEvidence = [ordered]@{
+  lab_low = Get-BehaviorAggregateEvidence -Root $labRunRoot
+  candidate_low = Get-BehaviorAggregateEvidence -Root $candidateLowRoot
+  candidate_high = Get-BehaviorAggregateEvidence -Root $candidateHighRoot
+  baseline_low = Get-BehaviorAggregateEvidence -Root $baselineLowRoot
+}
 $summary = [ordered]@{
   schema_version = 1
   mode = $Mode
@@ -452,6 +494,9 @@ $summary = [ordered]@{
     use_user_config = [bool]$UseUserConfig
     plugins_enabled = -not [bool]$DisablePlugins
     max_parallel_cases = $MaxParallelCases
+    initial_trials = $InitialTrials
+    retry_trials = $RetryTrials
+    minimum_agreement = $MinimumAgreement
     stateless_behavior_turns = [bool]$StatelessBehaviorTurns
     exact_case_selection = [bool]$ExactCaseSelection
   }
@@ -462,6 +507,7 @@ $summary = [ordered]@{
     replay_case_ids = @($selectedReplay | Sort-Object)
   }
   steps = @($steps)
+  behavior_evidence = $behaviorEvidence
   failures = @($failures)
 }
 $summaryPath = Join-Path $OutputRoot 'validation-summary.json'
