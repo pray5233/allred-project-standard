@@ -40,8 +40,14 @@ Skill maintenance belongs to `allred-project-lab`. Do not run ordinary project i
 
 ## Required Reading
 
+Before loading context, keep routine script/record repairs internal. Report a
+problem when it changes the user's result or blocks useful work, using its
+practical consequence. Continue authorized inspection while repairing mechanics.
+
 Run `scripts/get_route_context.ps1 -Route <route> -Stage <stage> -Interaction standard|beginner` for the current stage. Stages: `intake`, `evidence`, `decision`, `ready`, `external-read`, `execution`, `verification`. Load `ready` only for the complete final scope/start envelope; its delivery and execution-record detail is not needed for each question round.
 
+- Pass named PowerShell parameters directly. Select applicable overlays from the evidence using the mapping below and include `-Overlays` in the same stage call, for example `-Overlays shared-collaboration`. Inspecting general context does not load an overlay. Revisit that selection only when new evidence changes applicability.
+- Conditional overlays add no user triggers: `external-source` for actual external sourcing (`-ExternalMode one-time` or `monitoring`); `shared-collaboration` for shared authority over the same live state; `company-office-delivery` for evidenced office-computer constraints. Multiple readers, files, departments, or beginner wording alone do not select them. Unselected domains remain silent.
 - Read the selected context once per route/stage/variant/overlay combination. Reuse unchanged references after tool results; update project state instead of rereading instructions.
 - Keep discovery in a cumulative conversational record as described in `references/内部记录生成.md`. Preserve source words, answered meanings and unresolved facets after material changes; asking a question does not require a state file. Before the final start envelope, materialize the existing schema with `scripts/update_project_state.ps1`; `scripts/build_start_record.ps1` derives the execution record. Reuse an existing state incrementally. Neither helper grants approval; do not copy passing fixtures.
 - Load newly relevant stages or capabilities before using them. `-GuardsOnly` refreshes a stage already read; it does not substitute for first reading.
@@ -73,12 +79,10 @@ completed exit status and output before deciding whether a retry is needed.
 | long-term / document work | `references/长期任务模式.md`, `references/非软件项目模式.md` |
 | acceptance / evidence / writes | `references/本轮验收与复盘.md`, `references/证据等级说明.md`, `references/写入边界说明.md` |
 
-Conditional overlays add no user triggers. Load `external-source` only for actual external sourcing, with `one-time` or `monitoring` as appropriate; `shared-collaboration` only for shared authority over the same live state; `company-office-delivery` only for evidenced office-computer constraints. Multiple readers, files, departments, or beginner wording alone do not select them. Unselected domains remain silent, including in tool-result summaries.
-
 ## Runtime Hard Stops
 
 - Claims such as inspected, verified, preflight complete, or validation passed need actual matching evidence. Source existence, metadata, HTTP success, or a component check does not prove the integrated product. Keep untested routes visibly candidate.
-- Read locatable user materials before evidence-dependent recommendations. A descriptive label is not a path. For an exact inspection, do one bounded search; if nothing is locatable, ask only for that target.
+- Read locatable user materials before evidence-dependent recommendations. For an explicit list of inspection targets, cover each relevant target or state the missing one; a summary referring to an artifact is indirect evidence, not inspection of that artifact. A descriptive label is not a path. For an exact inspection, do one bounded search; if nothing is locatable, ask only for that target.
 - A user saying promised materials have not yet been supplied is not a reason to search as if they were present. Ask for their location together with other still-missing independent intake facts.
 - An explicit no-material/no-sample answer closes that request. Continue available evidence work and preserve sample-dependent uncertainty.
 - User decisions, scope, exclusions, first-release omissions, numbers, and acceptance targets require their own authority. Absence, silence, sample findings, or a neighboring answer never supplies it.

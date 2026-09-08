@@ -7,7 +7,11 @@ This work preserves material-first discovery, adaptive questioning, inherited
 delegation, and actual scope/start authorization. It adds no user trigger,
 domain branch, interview quota or mandatory third-party Skill.
 
-The published comparison baseline is `d888fab` (`v0.8.0-rc13`). The unpublished
+The GitHub main baseline is `d888fab9a7d45f89878633e8ad86165166e57b90`
+(file version `0.8.0-rc14`, without a release tag at that commit). The actual
+`v0.8.0-rc13` Release tag resolves to
+`6c1b604170d2645769602fdfbb018b19853cce3f`. These are separate baselines; branch
+contents must not be described as the latest Release. The original unpublished
 verification checkpoint is `5fc5bfbc14a0148bb01f8135a6ebb4e2af9998b4` in the
 isolated publication checkout. Original projects and personal notes are outside
 the write boundary. All dialogue materials in this experiment are synthetic.
@@ -73,6 +77,14 @@ invalid reviews remain immutable; a later review is not another actor trial.
     subsection into the shared Objective loaded at intake. Remove the duplicate
     flow diagram there. This changes instruction availability, not interview
     decisions, question counts or scope/start gates.
+11. R6 follow-up exposed an earlier boundary: a context-loader failure can happen
+    before Objective is available. Put the existing repair-communication rule
+    before the first load, and move conditional-overlay selection alongside that
+    call with its actual parameter. No automatic domain inference is added.
+12. Explicit inspection lists retain each relevant target, distinguishing direct
+    reads from a progress note reporting another artifact. Material summaries
+    preserve original qualifications instead of adding unsupported operating
+    restrictions. The unchanged A03/A09/A12 cases exercise these general owners.
 
 ## Verified Mechanical Evidence
 
