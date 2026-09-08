@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$SkillRoot = (Split-Path -Parent $PSScriptRoot),
   [string]$OutputRoot = (Join-Path ([System.IO.Path]::GetTempPath()) ('allred-runtime-contracts-' + [guid]::NewGuid().ToString('N'))),
   [string]$OnlyScript = ''
@@ -59,6 +59,11 @@ $context = (& (Join-Path $SkillRoot 'scripts/get_route_context.ps1') -Route non-
 Check 'context-preview-is-unvalidated' ($context.Contains('UNVALIDATED CONTEXT ONLY') -and -not $context.Contains('Actual aggregate validation passed') -and -not $context.Contains('ValidatedWriteLayout:')) 'Documentation cannot claim a passed gate or validated layout.'
 $existing = (& (Join-Path $SkillRoot 'scripts/get_route_context.ps1') -Route non-software -WorkKind existing -Stage execution) -join [Environment]::NewLine
 Check 'existing-document-no-fake-pass' (-not $existing.Contains('Actual aggregate validation passed')) 'Existing authorization is not machine-validation evidence.'
+$longTermEvidence = (& (Join-Path $SkillRoot 'scripts/get_route_context.ps1') -Route long-term -Stage evidence) -join [Environment]::NewLine
+$newEvidence = (& (Join-Path $SkillRoot 'scripts/get_route_context.ps1') -Route new-standard -Stage evidence) -join [Environment]::NewLine
+$longTermOwner = '<!-- source: references\长期任务模式.md -->'
+Check 'long-term-evidence-loads-owner' ($longTermEvidence.Contains($longTermOwner)) 'A continuing task may enter evidence directly and must receive its review owner.'
+Check 'new-evidence-excludes-long-term-owner' (-not $newEvidence.Contains($longTermOwner)) 'Long-term review guidance must not leak into ordinary new-project evidence.'
 
 $short = "1. Who will use it?" + [Environment]::NewLine + "2. What outcome matters most?"
 $one = 'What should participants complete during the exercise? This determines the practice task.'

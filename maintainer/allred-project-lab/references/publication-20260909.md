@@ -85,6 +85,11 @@ invalid reviews remain immutable; a later review is not another actor trial.
     reads from a progress note reporting another artifact. Material summaries
     preserve original qualifications instead of adding unsupported operating
     restrictions. The unchanged A03/A09/A12 cases exercise these general owners.
+13. Long-term work can enter evidence directly, but the selector omitted its
+    review owner at that stage. Load the existing long-term owner there and
+    follow bounded local evidence references for current conclusions. Verify
+    owner inclusion, exclusion from new-project context and a bounded route
+    budget. This does not trigger full workspace rescans or external access.
 
 ## Verified Mechanical Evidence
 
