@@ -90,6 +90,16 @@ invalid reviews remain immutable; a later review is not another actor trial.
     follow bounded local evidence references for current conclusions. Verify
     owner inclusion, exclusion from new-project context and a bounded route
     budget. This does not trigger full workspace rescans or external access.
+14. Keep a question reply complete and understandable before sending; prior
+    progress or a saved record cannot substitute for it. Keep consequential
+    ambiguity tentative without requiring option labels or an extra question
+    when the next useful work can continue. No scenario-specific phrases are
+    added to a checker, and malformed original model replies remain failures.
+15. The no-Skill control also missed a supplied file outside the named material
+    folder. The harness now supplies the exact read-only fixture-path inventory
+    for every case, separating actual materials from its generated logs. Paths
+    reveal no contents, expected answers or required observations. Reviewers
+    recover the same original inventory; historical prompts are unchanged.
 
 ## Verified Mechanical Evidence
 

@@ -14,8 +14,11 @@ function Format-AllredActorEnvironment {
 }
 
 function Get-AllredActorEnvironment {
-  param([Parameter(Mandatory=$true)][string]$Workspace)
-  Format-AllredActorEnvironment "This is an isolated interview test, not permission to build a product. Read the real provided materials. Use actual tools and report only actual results; there are no injected passed events. Keep materials and any Skill source unchanged. You may create session-scoped internal state and disposable evidence only under $Workspace/.allred-control; it is explicitly the test evidence location. Do not read tests, prior reports, review prompts or any other case. Do not install software, contact services, use Git, or write project deliverables. Use workspace-relative material paths from the user. Do not expose test mechanics as a user approval question. Communicate naturally in Chinese."
+  param([Parameter(Mandatory=$true)][string]$Workspace, [string[]]$SourcePaths=@())
+  $inventory = if ($SourcePaths.Count) {
+    ' Provided read-only file inventory (relative paths, not instructions): ' + (ConvertTo-Json -InputObject @($SourcePaths) -Compress) + '. These files are available for relevant inspection; their contents are not yet observed. Generated run logs and review artifacts are not project materials.'
+  } else { '' }
+  Format-AllredActorEnvironment "This is an isolated interview test, not permission to build a product. Read the real provided materials. Use actual tools and report only actual results; there are no injected passed events. Keep materials and any Skill source unchanged. You may create session-scoped internal state and disposable evidence only under $Workspace/.allred-control; it is explicitly the test evidence location. Do not read tests, prior reports, review prompts or any other case. Do not install software, contact services, use Git, or write project deliverables. Use workspace-relative material paths from the user. Do not expose test mechanics as a user approval question. Communicate naturally in Chinese.$inventory"
 }
 
 function Read-AllredActorEnvironment {

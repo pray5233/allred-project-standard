@@ -84,7 +84,7 @@ foreach ($case in @($suite.cases | Where-Object { $_.id -in $CaseIds })) {
   $transcript = [Collections.Generic.List[object]]::new()
   $status = 'Evaluated'
   $reason = ''
-  $environment = Get-AllredActorEnvironment -Workspace $workspace
+  $environment = Get-AllredActorEnvironment -Workspace $workspace -SourcePaths @($case.files.PSObject.Properties.Name)
   $environmentPath = Join-Path $caseRoot 'actor-environment.txt'
   Write-AllredEvalUtf8 $environmentPath $environment
   $environmentRecord = [pscustomobject]@{path=$environmentPath;sha256=(Get-FileHash -LiteralPath $environmentPath).Hash}

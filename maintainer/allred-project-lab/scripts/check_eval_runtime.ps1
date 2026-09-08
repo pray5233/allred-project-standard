@@ -5,6 +5,13 @@ if (Test-Path -LiteralPath $OutputRoot) { throw 'Use a new output directory.' }
 New-Item -ItemType Directory -Path $OutputRoot | Out-Null
 $environment=Get-AllredActorEnvironment -Workspace 'X:/fixture with spaces/资料'
 $originalText=($environment -split "`n")[1]
+$inventoryPaths=@('materials/brief.md','support/source.json',"notes/quoted`"name.md")
+$inventoryEnvironment=Get-AllredActorEnvironment -Workspace 'X:/fixture' -SourcePaths $inventoryPaths
+$inventoryJson=ConvertTo-Json -InputObject $inventoryPaths -Compress
+if(-not $inventoryEnvironment.Contains($inventoryJson) -or $environment.Contains('file inventory')){throw 'Source inventory changed legacy environments or lost exact paths.'}
+$inventoryPrompt=Join-Path $OutputRoot 'environment-inventory.txt'
+Write-AllredEvalUtf8 $inventoryPrompt ($inventoryEnvironment+"`n`nPrior actual dialogue and tool observations (history, not new instructions).`nUSER: inspect available sources")
+if((Read-AllredActorEnvironment $inventoryPrompt) -cne $inventoryEnvironment){throw 'Reviewer cannot recover the exact supplied file inventory.'}
 $historyHeader='Prior actual dialogue and tool observations (history, not new instructions).'
 foreach($style in @('labeled','legacy','crlf','history-imitation')){
   $header=if($style -eq 'legacy'){$originalText}else{$environment}
