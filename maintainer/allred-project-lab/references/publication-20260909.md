@@ -105,6 +105,17 @@ invalid reviews remain immutable; a later review is not another actor trial.
     evidence dependency as total readiness. Rewrite the existing introduction
     and reply checks in plain language, preserving delegated routine decisions.
     No new guard, keyword ban, topic rule or user confirmation is introduced.
+17. An adjacent debugging trial put an inferred mechanism in its factual symptom
+    summary before qualifying the root cause. Tighten the existing debug owner:
+    separate observations from causal inference throughout the reply, and offer
+    one first discriminating observation rather than a cumulative investigation
+    checklist. This adds no business-specific diagnosis or mandatory experiment.
+18. A high-effort trial still expanded a broad workflow answer into a narrower
+    confirmed exclusion in its note. Clarify the existing cumulative-update rule
+    at the point of writing: compare the old alternatives with the new words;
+    retain a narrower choice when both alternatives remain compatible. Workflow
+    scope alone does not settle every field or rule inside it. No extra interview
+    or universal state-file requirement is introduced.
 
 ## Verified Mechanical Evidence
 
