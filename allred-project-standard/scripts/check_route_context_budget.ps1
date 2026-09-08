@@ -7,10 +7,12 @@ $selector = Join-Path $PSScriptRoot 'get_route_context.ps1'
 $limits = @(
   @{ route = 'new-standard'; overlays = @('external-source'); externalMode = 'one-time'; interaction = 'beginner'; stage = 'evidence'; maxLines = 475; maxCharacters = 32000 },
   @{ route = 'new-standard'; overlays = @('external-source'); externalMode = 'monitoring'; interaction = 'beginner'; stage = 'decision'; maxLines = 550; maxCharacters = 45000 },
+  @{ route = 'new-standard'; interaction = 'beginner'; stage = 'ready'; maxLines = 280; maxCharacters = 23000 },
   @{ route = 'new-standard'; overlays = @('shared-collaboration'); stage = 'decision'; maxLines = 470; maxCharacters = 40000 },
   @{ route = 'new-standard'; overlays = @('company-office-delivery'); interaction = 'beginner'; stage = 'evidence'; maxLines = 420; maxCharacters = 28800 },
   @{ route = 'new-standard'; interaction = 'standard'; stage = 'intake'; maxLines = 230; maxCharacters = 13500 },
   @{ route = 'existing-debug'; stage = 'intake'; maxLines = 260; maxCharacters = 18000 },
+  @{ route = 'long-term'; stage = 'evidence'; maxLines = 260; maxCharacters = 18000 },
   @{ route = 'non-software'; variant = 'contract'; stage = 'intake'; maxLines = 360; maxCharacters = 26000 },
   @{ route = 'non-software'; variant = 'training'; stage = 'intake'; maxLines = 300; maxCharacters = 20000 },
   @{ route = 'non-software'; variant = 'training'; stage = 'decision'; maxLines = 360; maxCharacters = 32000 },

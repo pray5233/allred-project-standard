@@ -20,6 +20,7 @@ try {
 
 $decisions = @()
 if ($null -ne $state) {
+  foreach ($failure in @(Get-AllredStateParentFailures -State $state -StatePath $Path)) { Add-Failure $failure }
   $decisions = @(Get-AllredArray (Get-AllredProperty $state 'decisions'))
   $userSources = Get-AllredUserSourceMap $state
 } else {
@@ -27,8 +28,12 @@ if ($null -ne $state) {
 }
 $byId = @{}
 $activeAxes = @{}
-$allowedStatuses = @('open', 'proposed', 'confirmed', 'deferred', 'superseded', 'not-applicable')
-$activeStatuses = @('open', 'proposed', 'confirmed')
+$allowedStatuses = @(Get-AllredDecisionStatuses)
+$activeStatuses = @('open', 'waiting', 'investigating', 'proposed', 'confirmed', 'conflict')
+$evidenceIds = @{}
+foreach ($item in @(Get-AllredArray (Get-AllredProperty $state 'evidence'))) {
+  $evidenceIds[[string](Get-AllredProperty $item 'id')] = $true
+}
 
 foreach ($decision in $decisions) {
   $id = [string](Get-AllredProperty $decision 'id')
@@ -57,12 +62,19 @@ foreach ($decision in $decisions) {
   $approvalSource = [string](Get-AllredProperty $decision 'approval_source')
 
   if ($null -eq $exposed -or $exposed -isnot [bool]) { Add-Failure "Decision exposed must be boolean: $id" }
+  if ($status -eq 'waiting' -and $exposed -eq $true) { Add-Failure "Waiting decision cannot be exposed: $id" }
+  if ($status -in @('waiting', 'investigating', 'conflict') -and [string]::IsNullOrWhiteSpace([string](Get-AllredProperty $decision 'reason'))) {
+    Add-Failure "Unresolved decision needs a concrete reason: $id"
+  }
   if ($exposed -eq $true) {
     if ($trigger -notmatch '^(baseline|user:U[0-9A-Za-z._-]+|evidence:E[0-9A-Za-z._-]+|decision:D[0-9A-Za-z._-]+=[^\s]+)$') {
       Add-Failure "Exposed decision has no exact trigger: $id"
     }
     if ($trigger -match '^user:(U[0-9A-Za-z._-]+)$' -and -not $userSources.ContainsKey($Matches[1])) {
       Add-Failure "Exposed decision references missing user trigger: $id -> $($Matches[1])"
+    }
+    if ($trigger -match '^evidence:(E[0-9A-Za-z._-]+)$' -and -not $evidenceIds.ContainsKey($Matches[1])) {
+      Add-Failure "Exposed decision references missing evidence trigger: $id -> $($Matches[1])"
     }
   }
   if ($status -eq 'confirmed') {
@@ -89,7 +101,7 @@ foreach ($decision in $decisions) {
     if ($status -eq 'confirmed' -and -not $dependencySatisfied) {
       Add-Failure "Confirmed decision $id was invalidated by parent $parentId=$parentChoice"
     } elseif ($status -in @('open', 'proposed') -and -not $dependencySatisfied) {
-      Add-Failure "Active decision $id was exposed or retained before dependency $parentId=$($allowedChoices -join '/') was confirmed"
+      Add-Failure "Decision $id must wait for dependency $parentId=$($allowedChoices -join '/'); retain it as waiting and unexposed"
     }
   }
 
@@ -106,6 +118,9 @@ foreach ($decision in $decisions) {
       if ((Get-AllredReferencePrefix $reference) -eq 'U' -and -not $userSources.ContainsKey($reference)) {
         Add-Failure "Recommendation $id references missing user basis: $reference"
       }
+      if ((Get-AllredReferencePrefix $reference) -eq 'E' -and -not $evidenceIds.ContainsKey($reference)) {
+        Add-Failure "Recommendation $id references missing evidence basis: $reference"
+      }
       if ((Get-AllredReferencePrefix $reference) -eq 'D') {
         if (-not $byId.ContainsKey($reference) -or ([string](Get-AllredProperty $byId[$reference] 'status')).ToLowerInvariant() -ne 'confirmed') {
           Add-Failure "Recommendation $id depends on unconfirmed decision basis: $reference"
@@ -114,6 +129,20 @@ foreach ($decision in $decisions) {
     }
   }
 }
+
+# A cycle cannot become a valid frontier, even when every node is still waiting.
+function Visit-Decision([string]$Id, [hashtable]$Visiting, [hashtable]$Visited) {
+  if ($Visiting.ContainsKey($Id)) { Add-Failure "Decision dependency cycle includes: $Id"; return }
+  if ($Visited.ContainsKey($Id) -or -not $byId.ContainsKey($Id)) { return }
+  $Visiting[$Id] = $true
+  foreach ($parent in @(Get-AllredArray (Get-AllredProperty $byId[$Id] 'depends_on'))) {
+    Visit-Decision -Id ([string](Get-AllredProperty $parent 'id')) -Visiting $Visiting -Visited $Visited
+  }
+  $Visiting.Remove($Id)
+  $Visited[$Id] = $true
+}
+$visited = @{}
+foreach ($id in @($byId.Keys)) { Visit-Decision -Id $id -Visiting @{} -Visited $visited }
 
 if ($failures.Count -gt 0) {
   'Decision frontier validation: FAIL'

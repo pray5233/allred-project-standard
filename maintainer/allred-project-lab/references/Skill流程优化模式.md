@@ -2,7 +2,8 @@
 
 Use this reference when a Skill, prompt workflow, project standard, training workflow, release package, or reusable operating method is the product being improved.
 
-Also use `skill-creator` when available and read `references/交互与确认规则.md`.
+Also use `skill-creator` when available. Read `references/交互与确认规则.md`
+from the target `allred-project-standard` Skill root, not the Lab root.
 
 ## Evidence
 
@@ -55,7 +56,8 @@ Do not patch every observed failure into `SKILL.md`. Fix the smallest correct ow
 
 ## Architecture Gate
 
-For substantial restructuring, use `references/开发依据与能力复用.md`. Record:
+For substantial restructuring, use the target `allred-project-standard` Skill's
+`references/开发依据与能力复用.md`. Record:
 
 - current problem and measurable objective
 - benchmark source/version/date

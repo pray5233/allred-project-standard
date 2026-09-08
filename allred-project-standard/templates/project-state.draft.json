@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "state_id": "APS-DRAFT",
+  "route": "",
+  "user_sources": [],
+  "intake": {
+    "outcome": {"status": "open", "source": ""},
+    "materials": {"status": "open", "source": ""},
+    "initial_idea": {"status": "open", "source": ""},
+    "useful_result": {"status": "open", "source": ""}
+  },
+  "complexity": {"assessment": "unknown", "drivers": [], "communicated": false, "user_impact": ""},
+  "evidence": [],
+  "decisions": [],
+  "questions": [],
+  "scope": [],
+  "discovery_coverage": {
+    "status": "open",
+    "review_methods": [],
+    "evidence_ids_reviewed": [],
+    "areas": []
+  },
+  "technical_conclusions": [],
+  "preflight": {"status": "open", "execution_record": {"status": "missing", "reference": "", "path": ""}},
+  "write_boundary": {
+    "project_root": "",
+    "project_root_status": "recommended-pending",
+    "project_root_provenance": [],
+    "project_root_recommendation_prominent": false,
+    "allowed_write_roots": [],
+    "read_only_inputs": [],
+    "planned_paths": [],
+    "rollback_checkpoint": "",
+    "visible_in_ready": false
+  },
+  "change_control": {
+    "mode": "new-baseline",
+    "baseline": {"id": "BASE-DRAFT", "status": "candidate", "scope_ids": []},
+    "change": null,
+    "preserved_scope_ids": [],
+    "later_items": []
+  },
+  "blocking_items": [],
+  "authorization": {"envelope_id": "C1", "scope_ids": [], "state": "pending", "starts_execution": false, "approval_source": null},
+  "interaction": {"natural_language_reply_allowed": true, "id_reply_optional": true},
+  "execution_plan": {
+    "target_environment": "",
+    "scope_steps": [],
+    "files": [],
+    "commands": [],
+    "mutations": [],
+    "effects_review": {"complete": false, "hidden_recommendations": [], "hidden_behaviors": [], "hidden_effects": [], "surfaced": ""}
+  }
+}

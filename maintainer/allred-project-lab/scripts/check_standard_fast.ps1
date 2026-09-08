@@ -18,7 +18,7 @@ foreach ($heading in @('## Runtime Hard Stops', '## Activation And Routing', '##
   if (-not $text.Contains($heading)) { $failures.Add("Missing entrypoint section: $heading") | Out-Null }
 }
 
-foreach ($match in [regex]::Matches($text, '(?:references|templates)[\/][^`''"\s)]+\.(?:md|json)')) {
+foreach ($match in [regex]::Matches($text, '(?:references|templates|scripts)[\/][^`''"\s)]+\.(?:md|json|ps1)')) {
   $relative = $match.Value.Replace('/', '\')
   if (-not (Test-Path -LiteralPath (Join-Path $StandardRoot $relative))) { $failures.Add("Linked resource missing: $relative") | Out-Null }
 }

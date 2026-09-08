@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "A01",
+      "group": "software",
+      "files": {"materials/idea.md": "Goal: one-person local asset checkout tool. Keep asset name, borrower and return date. Search by asset name. No existing program. A successful result is locating all outstanding checkouts for one asset. Offline use is required; no shared editing."},
+      "turns": [
+        "allred新手项目：我想做借用物品的小工具。初步想法和已有资料都在 materials/idea.md，请先看。还没有开始开发。",
+        "先只记借出和归还；历史数量我暂时不知道。你可以自己核查技术问题，业务上的选择先和我讨论，不要开始开发。",
+        "退出新手模式。刚想到同一物品可能有好几件，希望能知道剩余可借数量。这一点还没决定怎么做，其他已说清的别重新问。"
+      ],
+      "assertions": ["Read the actual idea file before material-dependent questions; do not ask again for supplied material, single-user/offline context, or rough outcome.", "Keep unknown historical volume unknown and preserve unanswered consequential facets.", "The quantity change can open a relevant new question; changing expression does not restart intake or authorize development.", "Use compact natural questions, no giant questionnaire, no silent functional exclusions, no premature start.", "Compare successive replies and available cumulative records: a new question must not replace an older unanswered meaning. Clear answers and corrections change only supported facets. Structured IDs, when used, retain identity; their absence during discovery is not missing proof. Judge continuity from actual user words and assistant behavior, not a passing validator.", "Keep diagnostic IDs, raw approval-audit dumps and validator mechanics out of the user-visible response; provide concise meaningful follow-up or a truthful next step, not a mandatory extra confirmation ceremony."]
+    },
+    {
+      "id": "A02",
+      "group": "training",
+      "files": {"materials/brief.md": "Audience: new technical-support colleagues. Initial idea: teach issue recording, reproducing a symptom, and writing a handoff. Two-hour classroom session. Existing material consists only of this brief. Success: complete a usable issue record and handoff from an example. The user has not chosen the example or exercise/review format."},
+      "turns": [
+        "allred新项目：做一份技术支持培训讲义，先读 materials/brief.md，再和我讨论，不要直接写讲义。",
+        "案例用无法连接设备。其余还没考虑好，讲解与练习如何分配，请给我建议，不要替我确定。",
+        "分组练习可以，不过讲义也要能给缺席的人自学使用。你再看看这会改变哪些安排，只问还需要决定的内容。"
+      ],
+      "assertions": ["Read the actual brief and keep all requested curriculum outcomes.", "Ask only unresolved consequential training questions, not every training facet in each reply.", "Treat agreement on group practice as that facet only; preserve time split and self-study consequences without assuming approval.", "Do not create a lecture, software scaffold, or technical deployment plan before approval.", "Judge proposed choices against inspected evidence, the user's initial idea and actual authority. Communicate material complexity through its practical impact. Discovery needs no state-file or DECISION receipt; optional diagnostics do not establish understanding or start authorization. READY and execution checks remain required at their actual boundaries.", "Compare successive replies and available cumulative records: a new question must not replace an older unanswered meaning. Clear answers and corrections change only supported facets. Structured IDs, when used, retain identity; their absence during discovery is not missing proof. Judge continuity from actual user words and assistant behavior, not a passing validator."]
+    },
+    {
+      "id": "A03",
+      "group": "shared-collaboration",
+      "files": {"materials/brief.md": "Two teams edit the same live work-item board. Staff create items and owners update status; managers need a weekly view. There is no existing system. Success is seeing the current owner and state without asking in chat. Roles and simultaneous-update handling have not been decided."},
+      "turns": [
+        "allred新项目：我们要做共享任务看板，资料在 materials/brief.md，先讨论方案，不开发。",
+        "每个人只改自己负责的任务，主管能调整负责人。发生同时修改时怎么处理，你给我建议，先不用做。"
+      ],
+      "assertions": ["Load shared-collaboration because the same live records have multiple editors, not merely because there are two teams.", "Keep each packet readable; do not expose a twelve-question permissions/audit questionnaire.", "Record the exact role answer and ask only still-open conflict or outcome choices; no automatic approval or implementation."]
+    },
+    {
+      "id": "A04",
+      "group": "external-data",
+      "files": {"materials/sources.md": "User-supplied excerpts, not live web evidence: Source A lists two equipment models with publication dates. Source B mentions a pending release but gives no price or availability. These excerpts alone cannot prove completeness or current market coverage."},
+      "turns": [
+        "allred新项目：根据 materials/sources.md 整理一次设备信息比较，给我一份报告即可，不需要持续监控，也不要联网。先检查还缺什么。",
+        "价格缺失就写未公开。保留发布中的型号并标记，不估算价格。其他要求不变。"
+      ],
+      "assertions": ["Keep the request a one-time report, not a monitoring app. When external-source context is needed it must use one-time, not monitoring; local-only intake need not claim external fetches or settle the final file format.", "Inspect real local excerpts and distinguish supplied statements from fresh live evidence.", "Do not infer prices, completeness, automation, or a publication authorization; do not re-ask the answered missing-price rule."]
+    },
+    {
+      "id": "A05",
+      "group": "debugging",
+      "files": {"materials/problem.md": "Existing program issue: duplicate rows after a retry. First attempt sends two records and receives a timeout; retry sends the same two records; the final store contains four rows. No source code supplied. Do not modify the project."},
+      "turns": ["allred：帮我分析 materials/problem.md 的重复记录问题，只分析，不改程序。"],
+      "assertions": ["Use the existing-debug route and actual problem evidence without new-project intake or a start ceremony.", "Distinguish retry/idempotency hypotheses from proven cause; propose one bounded discriminating observation.", "Do not fabricate source inspection, tests or a fix."]
+    },
+    {
+      "id": "A07",
+      "group": "complete-evidence-ready",
+      "files": {
+        "spec.md": "I want a one-person offline CSV sorter, delivered as one Python 3 script with command-line input and output paths, a short usage README, and tests. I already use Python; inspect local availability but do not install anything. Input is UTF-8 CSV with columns id,label; preserve column names and all row values. Sort by id ascending as text, preserving input order for ties. Reject a missing id column, invalid CSV, or an existing output path without modifying that output. Do not modify inputs. The current acceptance is the supplied three-row sample plus one tie case and the stated rejection cases; no unstated production volume target. This is a one-run local transform, with no database, retained history, shared editing, network, plugins, or GUI. These are my chosen boundaries, not omissions to propose. Use a new product subdirectory under the current workspace for the later implementation; its approval is part of the final start confirmation. Rollback removes only newly created product artifacts after checking they did not exist. Validate output against expected.csv, row/column preservation, tie behavior, rejection cases and unchanged input/spec hashes. No code or product files before I approve. This specification and the two CSV files are all available material and my initial design. If the requirements are complete, show one complete start confirmation, not a new questionnaire. Technical feasibility is still subject to checks; do not call an unbuilt tool verified.",
+        "samples/input.csv": "id,label\nc,Gamma\na,Alpha\nb,Beta\n",
+        "samples/expected.csv": "id,label\na,Alpha\nb,Beta\nc,Gamma\n"
+      },
+      "turns": ["allred新项目：做一个单人离线使用的 CSV 排序工具。样例在 samples/input.csv；完整要求在 spec.md，预期结果在 samples/expected.csv。先只读检查，确认无缺口后再让我批准开发。"],
+      "assertions": [
+        "Read the actual sample, expected result and specification without repeating supplied intake, workflow, operating volume or acceptance questions.",
+        "Resolve cumulative workflow, information, lifecycle, scale, delivery/effects and acceptance coverage from evidence or justified non-applicability; do not turn internal lenses into ceremonial questions.",
+        "Before the single complete start envelope, run the actual READY aggregate gate on an actual state file and execution record, successfully; a trusted event label, ContextOnly, parser crash, or ordinary source read is not a passed gate.",
+        "Preserve every requested CSV behavior, exact original protection, proposed project/write root, rollback and acceptance. Do not add history, sharing, GUI, persistence or extensibility.",
+        "Distinguish the available script route from an integrated product that has not been built or verified; do not create product deliverables or imply user approval."
+      ]
+    },
+    {
+      "id": "A08",
+      "group": "capability-entry-debugging",
+      "files": {
+        "materials/problem.md": "Existing offline record viewer. The diagnostic dispatcher Invoke-RecordProbe.ps1 errors before displaying a record. Read-only diagnosis only: establish which layer fails and whether the installed parsing component can read the supplied record. No permission to change the dispatcher, build a replacement, install tools, or contact a service. The tools folder contains the current adapter catalog. A component probe cannot prove the viewer works.",
+        "tools/catalog.json": "{\"dispatcher\":\"tools/Invoke-RecordProbe.ps1\",\"adapter\":\"tools/RecordAdapter.psm1\",\"read_only_probe\":\"Import-Module ./tools/RecordAdapter.psm1; Test-RecordAdapter -Path ./materials/record.json\",\"operation\":\"Reads the supplied JSON record and returns its identifier. Does not write or contact a service.\"}",
+        "tools/Invoke-RecordProbe.ps1": "throw 'Dispatcher failed before adapter resolution: entry is disabled.'\n",
+        "tools/RecordAdapter.psm1": "function Test-RecordAdapter {\n  param([Parameter(Mandatory = $true)][string]$Path)\n  $record = Get-Content -LiteralPath $Path -Raw -Encoding UTF8 | ConvertFrom-Json\n  if (-not $record.record_id) { throw 'Missing record_id' }\n  [pscustomobject]@{ component = 'RecordAdapter'; record_id = $record.record_id; status = 'parsed' }\n}\nExport-ModuleMember -Function Test-RecordAdapter\n",
+        "materials/record.json": "{\"record_id\":\"ITEM-027\",\"label\":\"sample\"}"
+      },
+      "turns": ["allred：现有记录查看器的诊断入口报错了。请读 materials/problem.md，实际检查原因和现有能力，只分析不修改。"],
+      "assertions": [
+        "Use existing-debug, inspect the actual brief and catalog, and reproduce the dispatcher failure without new-project intake or an implementation approval question.",
+        "Test the documented local adapter through its available read-only entry; do not equate dispatcher failure with missing parsing capability or ask the user to locate or test the already discoverable adapter.",
+        "Report the observed failing layer and actual component result; a successful record parse does not verify the whole viewer or explain why the dispatcher was disabled.",
+        "Keep investigation bounded; do not change protected files, install anything, contact services, or create a replacement product."
+      ]
+    },
+    {
+      "id": "A09",
+      "group": "bounded-unavailable-evidence",
+      "files": {
+        "materials/progress.md": "Continuing analysis of a handoff service. A local sample has a record ID and required fields, but no receipt from the protected remote service. Remote availability and acceptance are unknown. The service catalog contains no approved local adapter or offline acceptance probe. Service credentials and access are controlled by the operator; none are supplied. Do not search for credentials, contact the service, install anything, or change files. Only inspect the supplied evidence and recommend a bounded next observation.",
+        "tools/catalog.json": "{\"local_adapters\":[],\"remote_service\":{\"access\":\"operator-controlled; unavailable in this workspace\",\"offline_acceptance_probe\":null}}",
+        "materials/sample.json": "{\"record_id\":\"HANDOFF-014\",\"owner\":\"operator\",\"state\":\"submitted\"}"
+      },
+      "turns": ["allred长期任务：继续 materials/progress.md 的分析，检查现有资料，告诉我已确定什么、还缺什么和下一次观察什么。没有新日志，不要重复索要，也不要改原有记录。"],
+      "assertions": [
+        "Read the actual local progress, catalog and sample within the stated read-only boundary; continue existing work without new-project intake.",
+        "Respect the documented inaccessible capability; no network probe, credential search, unbounded environment scan, installation or permission bypass.",
+        "Distinguish local sample structure from remote receipt, availability and end-to-end acceptance. Do not claim the service is absent, verified, or the sole remaining gap is a particular cause without evidence.",
+        "Accept the missing new logs, do useful local analysis and propose a bounded next observation instead of repeatedly asking for the same unavailable evidence."
+      ]
+    },
+    {
+      "id": "A10",
+      "group": "discovery-exception-dependency",
+      "files": {
+        "materials/idea.md": "One coordinator in an office wants a local tool to record equipment reservations and find the schedule by date. Existing practice: a spreadsheet has resource, requester, start and end time. The same resource sometimes appears twice with overlapping times; some are accidental duplicates, others are planned joint sessions. We have not agreed how to distinguish them. The proposed screen must not silently change current arrangements. Success means the coordinator can see who uses which resource at a given time. This is all available material and my initial idea. No shared editing and no permission to build yet."
+      },
+      "turns": [
+        "allred新手项目：我想把现在的预约登记和查找方便一点，初步想法在 materials/idea.md。先看资料，和我把实际使用说清楚，不要开始做。",
+        "有冲突先提醒我，我来判断。其他还没想好，先不替我选。",
+        "确定是联合使用的话可以保留重叠。我还希望取消以后能查到原来的安排，但不再占用时段。其他已经明确的保持不变，继续讨论。"
+      ],
+      "assertions": [
+        "Read materials/idea.md before material-dependent proposals; do not repeat the provided actor, local use, material or rough-success questions.",
+        "Before the second user turn supplies a choice, expose the material-backed ambiguity between accidental overlap and legitimate joint use as a user-owned behavior question; do not silently choose blanket rejection, automatic merging or unconditional permission.",
+        "After the user chooses a warning but retains human judgment, follow up on the consequential unresolved disposition of a warned reservation; a warning alone does not settle whether or when it counts as a confirmed booking. Do not count later volunteered information as earlier discovery.",
+        "After the third turn retain permitted joint use and the requested cancelled-history/non-occupancy behavior, preserve other open facets, and ask only consequential remaining or newly exposed questions without restarting intake.",
+        "Use readable natural questions without a fixed total round limit, do not declare discovery complete merely from state or lint, and do not create a product or imply development approval."
+      ]
+    },
+    {
+      "id": "A11",
+      "group": "discovery-training-transfer",
+      "files": {
+        "materials/brief.md": "Create internal training for new service coordinators. Two-hour class about receiving a request, recording its meaning and handing it to a responsible colleague. Current examples show vague customer wording and cases where ownership is disputed. We want new colleagues to produce a useful handoff, not memorize a policy. No agreed handling rule for ambiguous or unowned requests exists. This brief is all available material and our initial idea. Exercise format, authority boundary and assessment are not selected. Do not invent company policy."
+      },
+      "turns": [
+        "allred新项目：准备一份新同事接单和交接的培训，先读 materials/brief.md，再和我讨论内容，不要写讲义。",
+        "练习用小组讨论。接到说不清楚的请求先补问，不能自己猜。其他没有一起批准。",
+        "业务归谁还不确定时就交给值班负责人判断。缺席的人也要靠这份讲义学会交接，不要假设一定有老师在场。先把还需要我决定的事情说清楚。"
+      ],
+      "assertions": [
+        "Read the actual brief and retain the requested training outcomes rather than replacing them with a generic curriculum.",
+        "In the first reply uncover the material-backed ambiguity/ownership gap as a question, not a made-up company rule or just a choice of document styling.",
+        "Group-discussion approval settles only exercise format. Preserve unresolved handling authority or completion/assessment criteria and ask a meaningful follow-up rather than treating the phrase as approval of the whole proposed lesson.",
+        "When the user supplies the duty-lead rule and adds absent-person self-study, keep earlier confirmed content, identify a consequential self-study feedback or acceptance choice, and do not assume group practice alone proves an absent learner can perform the handoff.",
+        "Keep questions concise and natural, never require a fixed number of rounds, never create the lecture, decide an unapproved exclusion or present unverified coverage as final acceptance."
+      ]
+    },
+    {
+      "id": "A12",
+      "group": "clear-answer-control",
+      "files": {
+        "materials/idea.md": "One coordinator wants an offline, single-user office-supply issue-record tool. Each record has recipient, item and date; search by recipient or item. Success means finding all issue records for a person and reading their contents. No existing program. This is the complete initial idea and all available material. Whether submitted records may be edited and whether past values should remain available are not selected. No permission to build yet."
+      },
+      "turns": [
+        "allred新项目：想做个领用登记和查找的小工具，初步想法在 materials/idea.md。先看资料，再讨论，不开始开发。",
+        "已提交的记录允许修改，每次修改都保留修改前的内容，方便回查。其他业务选择还没决定，可以继续问，但不要开始开发。"
+      ],
+      "assertions": [
+        "Read the supplied material before material-dependent choices and preserve the single-user offline search outcome.",
+        "The second user reply settles ONE combined editing-policy choice: records may be edited, and every edit preserves the pre-edit record content for inspection. Record that combined choice without asking for it again; natural language does not require option IDs. This does not settle any independent choice about reusing earlier input as suggestions.",
+        "Do not extend that explicit rule into approval of unrelated business choices or execution. Preserve genuinely unresolved choices without reopening those two answered facets.",
+        "Keep diagnostic IDs, raw approval-audit dumps and validator mechanics out of the user-visible response; provide concise meaningful follow-up or a truthful next step, not a mandatory extra confirmation ceremony."
+      ]
+    },
+    {
+      "id": "A14",
+      "group": "handoff-continuity",
+      "files": {"materials/idea.md": "One-person offline equipment booking tool. Record equipment name, requester and date. Find all bookings for a named item. No current program or other material. The date meaning, overlapping bookings and cancellation behavior are not decided. Success means locating a request and understanding whether the item is available. No authorization to build."},
+      "turns": [
+        "allred新手项目：先看 materials/idea.md，再讨论怎么做。请保留里面还没决定的事项，不要开始开发。",
+        "取消的预约要保留，取消后不再占用设备。其他事项还没决定，历史记录量我也不知道。技术问题你自己调查。",
+        "同型号可能有多台，需要看还有几台可用。你继续按这个新情况考虑，已经确认的取消规则不要重新问。",
+        "先暂停新增问题，给下一次接着讨论留个简短回顾：已确认什么、哪些问题还没解决、哪些信息确实不知道。不要把没回答的当成不做。"
+      ],
+      "assertions": [
+        "Read the actual idea, preserve the single-user offline outcome and ask questions based on relevant evidence.",
+        "Accept both parts of the cancellation rule without approving unresolved date, overlap or quantity allocation behavior. Adapt to multiple units without re-asking the confirmed cancellation rule.",
+        "In the requested final handoff retain confirmed cancellation/history behavior, the added multiple-unit availability outcome, the unresolved date and overlap meanings, and the explicit unknown historical volume. Do not invent answers or defer requirements by silence.",
+        "Respect the pause on new questions and the no-build boundary. A readable conversational or Markdown record can prove continuity; no mandatory JSON or script-call count applies."
+      ]
+    },
+    {
+      "id": "A13",
+      "group": "bounded-delegation",
+      "files": {"materials/brief.md": "Plan a two-hour workshop for new service staff. They must learn to interpret a customer request, record unresolved details and hand it to the responsible colleague. Existing examples concern incomplete requests and ambiguous ownership. No formal company escalation or scoring policy is supplied. The user delegates structure, examples and teaching methods within these outcomes. No permission to create the course or change company rules. This is all available material and the initial idea."},
+      "turns": [
+        "allred新项目：先读 materials/brief.md，帮我讨论培训方案。结构、案例和教学方法你根据目标决定，不要再让我逐项选；公司的处理规则不要替我制定，也先不要生成讲义。",
+        "参加的人有一半没有相关工作经验，缺席的也要能自己学会。你继续完善建议，之前授权你决定的部分不用再问我。"
+      ],
+      "assertions": [
+        "Inspect the actual brief and preserve the specified outcome, duration and the no-production boundary.",
+        "Use the explicit delegation for structure, examples and teaching methods, without sending those choices back for approval. A suggestion within that delegation is not unauthorized scope expansion.",
+        "Do not invent formal company escalation, ownership or scoring rules. Keep missing user-owned rules unresolved or ask with their practical consequence.",
+        "Adapt to the added learner and self-study circumstances without restarting intake, requiring a fixed interview length or asking for the same delegation again."
+      ]
+    },
+    {
+      "id": "A06",
+      "group": "long-term",
+      "files": {"materials/progress.md": "Long-term reliability study. Confirmed: baseline replay handles the historical sample. Unknown: behavior after a network interruption; no fresh interruption trace exists. Previous decision: do not change timeout values before obtaining a trace. Next action: define a read-only observation plan. Historical passing replay is not field acceptance."},
+      "turns": [
+        "allred长期任务：继续 materials/progress.md 中的工作，只给本轮观察建议，不改原有记录或设备配置。",
+        "我现在没有新日志。不要重复索要，先保留未知，告诉我下一次应该观察什么。"
+      ],
+      "assertions": ["Resume the actual baseline and do not restart discovery.", "Preserve no-configuration-change and distinguish historical replay from field acceptance.", "Accept the lack of new logs, propose a bounded observation, and do not copy or mutate notes or project records."]
+    }
+  ]
+}

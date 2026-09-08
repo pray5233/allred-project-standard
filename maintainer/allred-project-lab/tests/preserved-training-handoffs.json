@@ -1,0 +1,6 @@
+[
+  {"id":"training-boundary","pass":true,"text":"## 范围边界\n\n- 课程内容暂无已确认暂缓项。\n\n## 当前执行边界\n\n本轮不生成文件；已批准交付不变。"},
+  {"id":"training-plain-boundary","pass":true,"text":"暂缓与排除\n\n暂无已确认的课程内容暂缓项。\n\n【执行边界】\n\n本轮不生成文件；已批准交付不变。"},
+  {"id":"training-false-deferral","pass":false,"text":"## 暂缓与排除\n\n- 已确认暂缓：本轮不生成文件。"},
+  {"id":"training-exercise-not-deferral","pass":false,"text":"## 暂缓与排除\n\n- 已确认暂缓：员工练习需要填写项目暂缓项。\n\n## 当前执行边界\n\n本轮不生成文件。"}
+]

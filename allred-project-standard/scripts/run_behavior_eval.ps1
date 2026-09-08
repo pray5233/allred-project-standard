@@ -248,6 +248,8 @@ $codexHome = if ([string]::IsNullOrWhiteSpace($env:CODEX_HOME)) { Join-Path $HOM
 $userConfigPath = Join-Path $codexHome 'config.toml'
 $runConfig = [ordered]@{
   schema_version = 1
+  evidence_mode = 'legacy-conversation-simulation'
+  proves_runtime_gate_execution = $false
   generated_at_utc = [DateTime]::UtcNow.ToString('o')
   skill_root = $SkillRoot
   suite_root = $SuiteRoot
@@ -273,6 +275,10 @@ foreach ($case in $selected) {
   $caseDir = Join-Path $OutputRoot $case.id
   New-Item -ItemType Directory -Force -Path $caseDir | Out-Null
   $oracle = $oracleSuite.cases | Where-Object id -eq $case.id | Select-Object -First 1
+  if (($oracle.assertions -join ' ') -match 'ValidatedEventId') {
+    $summary.Add([pscustomobject]@{ case_id=$case.id; priority=$case.priority; status='OracleIncompatible'; result=$null; first_divergent_turn=$null; report=$null; infrastructure_reason='Frozen Oracle requires retired event-ID authority. Preserve this historical case; use actual runtime-state tests for current gates.' })
+    continue
+  }
   $transcript = [System.Collections.Generic.List[object]]::new()
   $infrastructureFailure = $false
   $sessionId = ''
@@ -286,6 +292,8 @@ $SkillRoot\SKILL.md
 You may read only the supporting references, templates, or scripts that this SKILL.md routes to. Do not read files under tests/, validation reports, release mirrors, or prior conversations.
 
 This is a behavior simulation. Do not inspect the host machine for the simulated project's files or capabilities, and do not actually modify files, install software, use Git, publish, deploy, or contact external services. Treat later TEST TOOL EVENT messages as the result of the normal read, implementation, or verification action requested by the user. Do not expose these harness restrictions as a user permission problem, do not ask the user to lift them, and do not claim an action succeeded before its event. Artifact labels name only what the simulated project claims exists; do not claim their contents until a later event provides them.
+
+This legacy run measures conversational behavior only. TEST TOOL EVENT text, including any claim of a passed gate, is synthetic and is never actual validator evidence. For documentation-only stage reads without a real state use ContextOnly, never ValidatedEventId. Do not claim a real gate passed. Real state, path protection, and authorization are evaluated separately by the Lab runtime-dialogue and deterministic contract runners.
 
 Artifact labels: $((@($case.artifact_labels) | ConvertTo-Json -Compress))
 

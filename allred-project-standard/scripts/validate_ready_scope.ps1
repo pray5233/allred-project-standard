@@ -49,6 +49,9 @@ foreach ($item in $evidence) {
 
 $decisionById = @{}
 foreach ($decision in $decisions) {
+  if (([string](Get-AllredProperty $decision 'status')).ToLowerInvariant() -in @('open', 'waiting', 'investigating', 'conflict')) {
+    Add-Failure "READY still has an unresolved decision: $(Get-AllredProperty $decision 'id')"
+  }
   $id = [string](Get-AllredProperty $decision 'id')
   if ($id -match '^D[0-9A-Za-z._-]+$') { $decisionById[$id] = $decision }
 }
@@ -142,6 +145,19 @@ foreach ($item in $scope) {
   }
 }
 
+foreach ($decision in $decisions) {
+  if ((Get-AllredProperty $decision 'status') -ne 'proposed') { continue }
+  $linked = @(Get-AllredArray (Get-AllredProperty $decision 'scope_ids'))
+  if ($linked.Count -eq 0) { Add-Failure "Proposed decision has no prominent pending scope item: $(Get-AllredProperty $decision 'id')" }
+  foreach ($scopeId in $linked) {
+    $item = $scopeById[[string]$scopeId]
+    if ($null -eq $item -or (Get-AllredProperty $item 'relation') -ne 'recommended' -or
+        (Get-AllredProperty $item 'visible') -ne $true -or (Get-AllredProperty $item 'recommendation_prominent') -ne $true) {
+      Add-Failure "Proposed decision is not linked to a visible recommendation: $(Get-AllredProperty $decision 'id') -> $scopeId"
+    }
+  }
+}
+
 if ($scope.Count -eq 0) { Add-Failure 'READY scope is empty.' }
 
 $writeBoundary = if ($null -ne $state) { Get-AllredProperty $state 'write_boundary' } else { $null }
@@ -199,6 +215,7 @@ if ($null -eq $writeBoundary) {
 
   foreach ($allowedRoot in $allowedWriteRoots) {
     if (-not (Test-AllredAbsolutePath -Path $allowedRoot)) { Add-Failure "Allowed write root is not absolute: $allowedRoot"; continue }
+    if (-not (Test-AllredNoLinkTraversal -Path $allowedRoot)) { Add-Failure "Allowed write root traverses an unresolved link: $allowedRoot" }
     if (-not (Test-AllredPathWithin -Root $projectRoot -Candidate $allowedRoot)) { Add-Failure "Allowed write root is outside project_root: $allowedRoot" }
   }
   foreach ($inputPath in $readOnlyInputs) {
@@ -206,6 +223,7 @@ if ($null -eq $writeBoundary) {
   }
   foreach ($plannedPath in $plannedPaths) {
     if (-not (Test-AllredAbsolutePath -Path $plannedPath)) { Add-Failure "Planned path is not absolute: $plannedPath"; continue }
+    if (-not (Test-AllredNoLinkTraversal -Path $plannedPath)) { Add-Failure "Planned path traverses an unresolved link: $plannedPath" }
     if ($plannedPath -match '[*?\[]') { Add-Failure "Planned path contains a wildcard: $plannedPath" }
     if (-not (@($allowedWriteRoots | Where-Object { Test-AllredPathWithin -Root $_ -Candidate $plannedPath }).Count -gt 0)) {
       Add-Failure "Planned path is outside allowed_write_roots: $plannedPath"

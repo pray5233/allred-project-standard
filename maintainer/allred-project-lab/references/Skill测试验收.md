@@ -1,5 +1,170 @@
 # Skill 测试验收
 
+## Adaptive Judgment Checks
+
+See `adaptive-judgment-20260908.md`. Run the current packet contracts on PS7/PS5.1:
+size/phrase heuristics are advisory, while recorded prerequisite errors still
+block. Preserve behavioral rubrics; the wide-frontier fixture below continues to
+check its specific high-burden conversation, not a universal numeric quota.
+An advisory or structural pass is not evidence of good interview judgment.
+
+## Actor Environment Context
+
+Normal actor/reviewer prompts share one saved, hashed environment block. Replay
+recovers it from original actor prompts, not current defaults or dialogue claims.
+Missing or differing harness environments require complete source context before
+review. See `review-context-20260908.md`. Run `check_eval_runtime.ps1`,
+`check_runtime_review_pipeline.ps1` and `check_ordered_review.ps1` on PS7/PS5.1
+for this handoff, including multi-turn input, legacy prompt recovery and rejected
+citation judgment changes. Review-only results do not certify interview quality.
+
+## Pending Facet Contracts
+
+`check_state_updates.ps1` covers partial/complete factual replies, explicit
+unknowns, source-linked facet resolutions, Q/D handoff and subsequent updates,
+legacy parents and rejection before writing. See `facet-continuity-20260908.md`.
+Run both PS7/PS5.1 for this shared helper, retain the exact original failure
+replay, and inspect fresh dialogues. A source receipt does not certify meaning.
+
+## Question Result Contracts
+
+`check_runtime_contracts.ps1` includes real-process text/JSON equivalence checks
+for unbound questions, new/existing work, failed intake and ineligible decisions.
+Verify exact packet/state binding and no sendable text or authority on rejection.
+Run PS7 and PS5.1 for output-interface changes. See `result-consumption-20260908.md`
+for fresh baseline/candidate dialogues and independent full-message review.
+The JSON mode is optional. Its script pass does not demonstrate improved tool
+consumption. Preserve pending session metadata when collecting a command. For
+native evidence, decode multipart tool-response text; never cast the array to a
+string or equate completed CLI output with model-visible delivery. Preserve
+invalid reviews and distinguish subsequent review-only results from new trials.
+
+## Decision Blocker Contracts
+
+The state-updater and answer-map checks cover source-linked closure, pending
+siblings, multiple prerequisites, mixed evidence, remaining facets, corrections,
+manual resolutions and immutable parents. See `decision-blockers-20260908.md`.
+Use an unchanged real failure state to compare old/new updater output, then
+inspect the actual READY diagnostics. A closed bookkeeping blocker is not proof
+that the model understood an ambiguous answer or completed discovery.
+
+## Ordered Evidence Adapter
+
+Runtime dialogue reviews now use stable evidence IDs and plain source text by
+default; `-ReviewerFormat Legacy` remains for diagnosis. Outcome assertions and
+strict grounding remain mandatory. Raw and resolved reviews, format, bundle and
+helper/schema hashes are saved separately. The same format is used for a single
+citation-only repair; judgment changes are rejected. Test the actual runner with
+`check_runtime_review_pipeline.ps1` on PS7/PS5.1 (mock model, not behavior proof).
+It is included in Quick. See `review-interface-20260908.md` for live calibration,
+progress coverage and preserved original failures. CLI completion is process
+evidence, not proof of model receipt of a tool response.
+
+`check_ordered_review.ps1 -OutputRoot <new-directory>` verifies event order,
+source matching, stable state identities, exact quote mapping, legacy fallback
+and preservation of existing assertion judgments. It is included in Quick.
+Run on PS7 and PS5.1 for adapter changes. `run_ordered_review.ps1` adds live
+reviewer controls and optional immutable dialogue replay; see
+`ordered-review-20260908.md`. Never treat an adapter contract pass as semantic
+reviewer acceptance or a Skill behavior pass. Supplement a historical first
+turn with a hash-bound event map when its logs live outside the continuation
+workspace; otherwise report the interleaving as unknown.
+
+## Interpretation Isolation Evidence
+
+See `interpretation-isolation-20260908.md` for the completed context-selection
+experiment and its unaccepted claim-audit continuation. Keep expected-ID matches,
+literal quote grounding, semantic fidelity and runtime acceptance separate.
+Selecting the correct ID can still weaken an explicit condition; preserving an
+ambiguous source quote cannot authorize a narrower choice. A malformed audit is
+not a pass, even when its raw verdict says Pass.
+
+Before judging a missing-output or verification claim, inspect the original
+ordered JSONL events. A progress message between command start and completion
+must not be judged using the eventual output as if it already existed. Separate
+message/command arrays cannot establish that chronology. Preserve existing
+reviews and record disagreements separately. Inspect the actual parent chain
+and selected state path too; a new branch from an older root is not continuation
+of the latest state, even when its final answer is correct.
+
+## Answer Mapping Contracts
+
+`check_answer_mapping.ps1 -OutputRoot <new-directory>` runs in Quick alongside
+the older state-updater checks. Cover literal preservation, one/zero/multiple
+selections, pending siblings, corrections, explicit lifecycle changes, input
+hashes and rejected overrides. Run with PS7 and Windows PowerShell 5.1 when
+changing the reader or updater. Structural acceptance cannot certify a correct
+interpretation: use unchanged A01 and A12 dialogues for ambiguous and explicit
+combined replies, and inspect the actual preparation, mapping and stored state.
+See `answer-binding-20260908.md`; keep failed evidence and reviewer disagreements.
+
+## Controlled Simplification Comparison
+
+`run_runtime_comparison.ps1` freezes old/candidate sources, one shared outcome
+contract, cases and harness before running three independent CLI workers. Native
+Codex receives the same inputs and boundaries without the Allred workflow. Its
+outcome review must not require Allred scripts. Frozen original runtime-contract
+cases still verify Allred's machine obligations separately.
+
+Compare complete dialogues, not just final replies. Version-blind comparisons
+hide arm labels but cannot guarantee methods are unrecognizable. Settings and
+input hashes must match; an incomplete run is not a comparable outcome. Preserve
+every raw result and any reviewer disagreement. Equal or worse candidate quality
+is a valid finding, not an invalid experiment. Fixed synthetic turns cannot prove
+unrestricted discovery; acceptance includes a separate maintainer reading.
+
+## Discovery And Evidence Are Separate
+
+For the 2026-09-07 discovery audit, use unchanged A01/A02 for evolving software/training requirements, A10/A11 for consequential gaps exposed by actual materials, and A07 as the complete-specification control. These are bounded synthetic conversations with real tools, not proof of unrestricted interviewing or customer acceptance. A later volunteered answer does not prove the assistant discovered the branch earlier. Record when a needed follow-up first appeared, what answer changed it, which sibling stayed open, and why asking could stop. Do not score round count or elapsed time.
+
+Actual runtime review uses `tests/ordered-review.schema.json` for source IDs and maps them to the existing `runtime-review` contract; Legacy format remains available. Every assertion gets a separate Met/Missing/Violated judgment with exact locatable transcript quotes. `Test-AllredRuntimeReview` rejects omitted/duplicate assertions, invented quotes and contradictory totals. Missing required observations remain Partial; demonstrated hard violations remain Fail. Invalid reviewer output is an evaluation gap, never Skill success. This is a structural grounding check only: an irrelevant but real quote can still be misinterpreted, so read complete transcripts and preserve reviewer disagreements.
+
+Keep three report columns distinct: deterministic contract results, observed discovery behavior, and actual verification evidence. A complete state ledger does not certify customer intent; an interview pass does not certify the product; one successful trial does not establish stable release quality. No extra runtime keyword or external grilling dependency is introduced by the evaluator.
+
+The initial frozen A01 re-review still missed an unsupported scope exclusion despite valid citations. Therefore `Get-AllredRuntimeReviewCase` appends separate, domain-neutral authority and evidence-truth audits to every case. A compound usability assertion is not a substitute. Legacy assertion text remains unchanged; new audits inspect each settled meaning and success claim in context. Reusable migration evidence must pass these current audits and match the frozen/current reviewer harness hashes.
+
+When modifying reviewer criteria, run `scripts/run_review_calibration.ps1 -OutputRoot <new-directory> -UseUserConfig` and specify the model/catalog as needed. Its constructed positive/negative controls in `tests/review-calibration.json` keep expected verdicts hidden from the model. They distinguish routine supporting detail from material user choices, partial answers from consent, conflicting options, and a current packet from global completion. This validates the reviewer, not project behavior. Optional `-ReplayRoot <frozen-runtime-run> -ReplayCaseIds A02,A12` re-reviews unchanged observations with a frozen copy of the new rubric; preserve original verdicts and label these separately as review-only results. Citation-only repair cannot change judgments, and a failed or invalid control blocks accepting the new rubric.
+
+Replay freezes the current case assertions and rejects any change to the original user turns or material contents. Record the justification for an assertion clarification and retain both suite hashes and original findings; this mode cannot establish new behavioral execution. Never revise criteria merely to obtain Pass. For example, the new A12 control's intended pre-edit version history must not be confused with an independent input-suggestion choice.
+
+For a citation-only validation error, the runtime runner permits one independent correction response on the same frozen transcript. Only evidence arrays may change; assertion identities, results, reasons, aggregate findings and notes are immutable and compared mechanically. Preserve both raw review files and the initial error. The repaired review must pass the same grounding check; a citation repair is not a new passing semantic trial and cannot turn Partial/Fail into Pass. Unrepairable or judgment-changing replies remain invalid.
+
+Before and after that correction, a wrong array index may be rebound mechanically only if the unchanged exact quote has one unique match in the same turn and evidence kind. Record the old/new indices separately; do not change the raw review, turn, kind, quote or judgment. Missing/ambiguous quotes and cross-turn/kind substitutions remain rejected. Line-ending normalization is permitted, not paraphrase or semantic matching.
+
+## Quality Is Not Elapsed Time
+
+Per the user's 2026-09-07 direction, elapsed time is diagnostic only, not a Skill usability, regression or release-acceptance criterion. Judge requirement understanding, decision communication, source fidelity, scope preservation, authorization and actual verification. Preserve all original cases and raw timing artifacts; omit timing statistics from the runtime review packet. Necessary sequential questions are not defects merely because they take longer.
+
+For extended diagnosis use `run_runtime_dialogues.ps1 -TimeoutSeconds 1800` with a new output directory. This is a process resource guard, not a completion-speed target. An interrupted run has incomplete evidence, not a semantic Fail based on time; observed safety or scope violations can still fail independently. A complete longer run may pass the unchanged quality assertions. Earlier 240-second observations remain historical evidence, not a continuing quality threshold.
+
+## Actual Runtime Evidence
+
+For the 2026-09-07 repair, separate three evidence levels:
+
+1. `check_runtime_contracts.ps1`: real validators, canonical paths, authentic state snapshots, dependency transitions, question eligibility, READY and EXECUTION approval. Negative cases must reject with the intended diagnostic; a parser crash is not a pass.
+2. `run_runtime_dialogues.ps1`: synthetic multi-turn user cases with actual local material files and commands, immutable Skill/harness snapshots, internal-state snapshots, write-boundary checks, and independent semantic review. Six groups cover software, training, shared records, one-time external evidence, debugging, and long-term work; A07 additionally preserves complete-evidence closure from V143. No injected passed-gate events and no real user project writes. ToolAware replay preserves authentic prior tool observations and visible progress; Compact retains the old answer-only control. Neither is a persistent-session latency benchmark. Timing sidecars distinguish observed tool activity from unattributed startup/model/network time.
+3. `run_behavior_eval.ps1`: preserved legacy conversational simulations. Test tool events remain hypothetical, context-only reads remain unvalidated, and historical Oracles requiring event-ID authority are reported as `OracleIncompatible`. Do not rewrite old expectations just to pass or use these events to certify runtime gates.
+
+`check_state_updates.ps1` runs in Quick alongside the start-record builder tests. It exercises incremental pending-state updates through the unchanged real stage gates: partial/no-op updates, review invalidation, exact source links, proposed roots, original protection, and rejection without writing a snapshot. These are synthetic contracts, not proof that a model uses the interface correctly or completes a conversation faster.
+
+Decision-continuity checks also compare parent and child snapshots. A new question must not overwrite an old axis or detach its unresolved blocker; normal label refinement and source-backed corrections must remain possible. Exercise direct child-file edits, unavailable/tampered parents and identity mismatch through the actual frontier gate, not only the updater. A01/A02 retain their existing user turns and add a cross-state semantic assertion. Review what changed and what remained open after partial answers; a current open coverage state during DECISION alone does not prove a final-completion claim. Unlinked roots remain legacy-compatible, not evidence that all historical decisions survived.
+
+For capability/claim repairs, retain A07 unchanged and also select A08/A09 explicitly with `run_runtime_dialogues.ps1 -CaseIds @('A08','A09')`. A08 uses a failing dispatcher and a documented local adapter; A09 has genuinely inaccessible remote evidence and forbids network/credential probing. The tester receives only ordinary inputs and actual fixtures, never these assertions. Review bounded discovery, component versus outcome evidence, truthful coverage claims and useful continuation without new user gates. These are cross-domain checks, not runtime rules keyed to fixture nouns. Route-context assertions only prove that canonical guidance is loaded; they cannot certify semantic compliance.
+
+Run changed runtime dialogues at low and high effort before promotion. Keep initial failures and every retry, read complete transcripts, and distinguish reviewer judgment from deterministic results. The `ModelCatalogPath` option overrides a catalog for that evaluation process only; it never edits the user's CLI configuration. A current stable-pass release decision still requires the broader candidate matrix, baseline comparison, official validation, install/parity checks, and the user's final acceptance.
+
+The optional state-bound diagnostic retains focused positive/negative controls.
+For the bridge change, A01/A02 continuity is reviewed across replies and available
+records, without requiring per-turn JSON. A02's former mandatory DECISION-call
+assertion is migrated to evidence, authority and meaningful complexity disclosure;
+its frozen pre-change version remains available for historical conformance. A07's
+actual READY requirement is unchanged. This protocol migration cannot excuse
+lost meanings, fabricated evidence or unauthorized action. See the bridge record
+for the old/new outcome comparison and keep those results separate from script
+tests and historical conformance judgments.
+
+`tests/runtime-evidence-migrations.json` explicitly maps legacy coverage to actual-file cases. Candidate removes a migrated legacy case from the simulated batch only after both required efforts independently pass the mapped actual case with current runtime/suite hashes and real stage-gate evidence. Require at least two separate passing trials per effort, or the larger configured InitialTrials/MinimumAgreement count; migration cannot weaken the existing repeated-evidence standard. The original Oracle is retained. Missing, stale, partial, or failed results block migration; skipped synthetic cases are never counted as passes or blind-comparison wins. An inconclusive prerequisite blocks later expensive Candidate batches. `check_eval_runtime.ps1` and `check_runtime_migration_contracts.ps1` exercise the infrastructure without model calls and are not behavioral acceptance.
+
 ## 2026-08-24 Dynamic Contract Regression
 
 The adaptive-alignment refactor must be tested as a generic decision system, not as a fix for one monitoring transcript.
@@ -516,7 +681,13 @@ The structured suite must keep at least one active case for every module below. 
 
 `scripts/check_behavior_manifest.ps1` enforces case-to-module coverage. `scripts/run_behavior_eval.ps1` runs selected cases through an isolated Codex test group and a separate Oracle-aware check group, preserving prompts, JSONL events, stderr, transcripts, and review JSON. Simulated tool events must remain labeled as simulated; they prove decision handling, not real filesystem, browser, API, installation, or device behavior.
 
-Ordinary decision packets additionally pass `scripts/validate_question_packet.ps1 -Profile decision-frontier -PassThrough`. This profile allows at most four active `Q/D` blocks, sixteen option rows, eighteen non-empty lines, 1800 visible characters, and exactly one packet-level reply instruction. It rejects visible `dependency`, `为什么现在问`, separate basis/recommendation fields, and state-changing queue text; recommendations stay inline and queue summaries contain only the remaining count and next step. These are per-response readability limits, not a cap on total discovery depth or rounds. Specialized training, inspection, and shared-collaboration profiles retain their own coverage rules.
+Question-packet diagnostics are optional. Explicit state binding checks declared
+records; its errors do not prohibit ordinary conversation. Test those diagnostics
+separately from the required READY/EXECUTION boundaries. The outcome comparison
+uses `evaluation_scope: outcome-only`; the original runtime suite defaults to
+`contract-and-behavior`. Report these scopes separately. The model judges burden,
+faithful meaning and unanswered scope from actual conversation, never a script
+receipt or an expected call count. See `bridge-workflow-20260908.md`.
 
 The runner ignores user config by default. When the only valid model route is defined in the local Codex config, use `-UseUserConfig`; add `-DisablePlugins` to suppress installed plugin loading while retaining the selected provider/auth route. Every run writes `run-config.json` with model, timeout, flags, and a config hash but no credentials. Use the same config hash for every A/B/C comparison group.
 

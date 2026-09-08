@@ -32,12 +32,13 @@ function Require-ReadinessItem {
   if ($null -eq $item) { Add-Failure "Missing intake readiness item: $Name"; return }
   $status = ([string](Get-AllredProperty $item 'status')).ToLowerInvariant()
   $source = [string](Get-AllredProperty $item 'source')
-  if ($status -notin $AllowedStatuses) { Add-Failure "Intake readiness item $Name is not complete: $status" }
+  if ($status -notin $AllowedStatuses) { Add-Failure "Intake readiness item $Name is not complete: $status. Allowed statuses: $($AllowedStatuses -join ', '). Preserve source evidence when correcting the record." }
   if (-not (Test-AllredReferenceId -Value $source -Prefixes 'UE')) { Add-Failure "Intake readiness item $Name has no U/E source: $source" }
 }
 
 if ($null -ne $state) {
   $userSources = Get-AllredUserSourceMap $state
+  $evidenceIds = @((Get-AllredArray (Get-AllredProperty $state 'evidence')) | ForEach-Object { [string](Get-AllredProperty $_ 'id') })
   $intake = Get-AllredProperty $state 'intake'
   if ($null -eq $intake) {
     Add-Failure 'Intake readiness ledger is missing.'
@@ -60,7 +61,7 @@ if ($null -ne $state) {
     Add-Failure 'Complexity assessment is missing.'
   } else {
     $assessment = ([string](Get-AllredProperty $complexity 'assessment')).ToLowerInvariant()
-    if ($assessment -notin @('simple', 'non-simple', 'unknown')) { Add-Failure "Invalid complexity assessment: $assessment" }
+    if ($assessment -notin @('simple', 'non-simple', 'unknown')) { Add-Failure "Invalid complexity assessment: $assessment. Allowed values: simple, non-simple, unknown. This field is not the workflow lane or product scope." }
     if ($assessment -in @('non-simple', 'unknown')) {
       if (@(Get-AllredArray (Get-AllredProperty $complexity 'drivers')).Count -eq 0) { Add-Failure 'Non-simple or unknown complexity has no evidence-backed drivers.' }
       if ((Get-AllredProperty $complexity 'communicated') -ne $true) { Add-Failure 'Non-simple or unknown complexity was not communicated.' }
@@ -72,6 +73,7 @@ if ($null -ne $state) {
     $item = if ($null -ne $intake) { Get-AllredProperty $intake $name } else { $null }
     $source = if ($null -ne $item) { [string](Get-AllredProperty $item 'source') } else { '' }
     if ($source -match '^U' -and -not $userSources.ContainsKey($source)) { Add-Failure "Intake readiness item $name references missing user source: $source" }
+    if ($source -match '^E' -and $source -notin $evidenceIds) { Add-Failure "Intake readiness item $name references missing evidence source: $source" }
   }
 
   if ($ToStage -in @('READY', 'EXECUTION')) {

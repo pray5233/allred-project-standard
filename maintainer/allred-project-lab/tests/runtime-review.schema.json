@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case_id", "result", "first_divergent_turn", "failed_assertions", "hard_failures", "notes", "assertion_checks"],
+  "properties": {
+    "case_id": {"type": "string"},
+    "result": {"type": "string", "enum": ["Pass", "Partial", "Fail"]},
+    "first_divergent_turn": {"type": ["integer", "null"], "minimum": 1},
+    "failed_assertions": {"type": "array", "items": {"type": "string"}},
+    "hard_failures": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"},
+    "assertion_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["assertion_index", "result", "reason", "evidence"],
+        "properties": {
+          "assertion_index": {"type": "integer", "minimum": 1},
+          "result": {"type": "string", "enum": ["Met", "Missing", "Violated"]},
+          "reason": {"type": "string"},
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["turn", "kind", "index", "quote"],
+              "properties": {
+                "turn": {"type": "integer", "minimum": 1},
+                "kind": {"type": "string", "enum": ["user", "response", "message", "command", "state"]},
+                "index": {"type": ["integer", "null"], "minimum": 0},
+                "quote": {"type": "string", "minLength": 1}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

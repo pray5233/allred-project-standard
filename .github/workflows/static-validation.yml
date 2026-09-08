@@ -83,6 +83,13 @@ jobs:
             throw "Installed version mismatch: $sourceVersion != $installedVersion"
           }
 
+      - name: Verify installation updates and rejected packages
+        shell: pwsh
+        run: |
+          & .\maintainer\allred-project-lab\scripts\check_installation.ps1 `
+            -PackageRoot $PWD -OutputRoot (Join-Path $PWD '_ci\install-contracts')
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - name: Upload static validation report
         if: always()
         uses: actions/upload-artifact@v7
@@ -91,5 +98,7 @@ jobs:
           path: |
             _ci/quick
             _ci/install/.allred-project-standard-installation.json
+            _ci/install-contracts/summary.json
+            _ci/install-contracts/*.log
           if-no-files-found: warn
           retention-days: 14

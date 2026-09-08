@@ -9,6 +9,9 @@ param(
   [string[]]$CaseIds = @(),
   [switch]$ExactCaseSelection,
   [string]$Model = '',
+  [string]$ReviewerModel = '',
+  [string]$ReviewerReasoningEffort = '',
+  [string]$ModelCatalogPath = '',
   [string]$ModelProvider = '',
   [string]$ProviderEnvKey = '',
   [ValidateSet('low', 'medium', 'high', 'xhigh', 'ultra', 'max')]
@@ -279,15 +282,43 @@ $quickSteps = @(
   @{ name = 'standard-route-budget'; script = Join-Path $StandardRoot 'scripts\check_route_context_budget.ps1'; args = @('-SkillRoot', $StandardRoot) },
   @{ name = 'lab-structure'; script = Join-Path $LabRoot 'scripts\check_lab_structure.ps1'; args = @('-LabRoot', $LabRoot, '-StandardRoot', $StandardRoot) },
   @{ name = 'candidate-harness'; script = Join-Path $LabRoot 'scripts\check_candidate_harness.ps1'; args = @('-LabRoot', $LabRoot, '-StandardRoot', $StandardRoot) }
+  @{ name = 'eval-runtime'; script = Join-Path $LabRoot 'scripts\check_eval_runtime.ps1'; args = @('-OutputRoot', (Join-Path $OutputRoot 'eval-runtime')) }
+  @{ name = 'ordered-review-contracts'; script = Join-Path $LabRoot 'scripts\check_ordered_review.ps1'; args = @('-OutputRoot', (Join-Path $OutputRoot 'ordered-review-contracts')) }
+  @{ name = 'runtime-review-pipeline'; script = Join-Path $LabRoot 'scripts\check_runtime_review_pipeline.ps1'; args = @('-OutputRoot', (Join-Path $OutputRoot 'runtime-review-pipeline'), '-SkillRoot', $StandardRoot) }
+  @{ name = 'native-session-contracts'; script = Join-Path $LabRoot 'scripts\check_native_sessions.ps1'; args = @('-OutputRoot', (Join-Path $OutputRoot 'native-session-contracts'), '-SkillRoot', $StandardRoot) }
+  @{ name = 'runtime-comparison-contracts'; script = Join-Path $LabRoot 'scripts\check_runtime_comparison.ps1'; args = @('-OutputRoot', (Join-Path $OutputRoot 'comparison-contracts'), '-StandardRoot', $StandardRoot) }
+  @{ name = 'runtime-migration-contracts'; script = Join-Path $LabRoot 'scripts\check_runtime_migration_contracts.ps1'; args = @('-OutputRoot', (Join-Path $OutputRoot 'migration-contracts')) }
+  @{ name = 'start-record-builder'; script = Join-Path $LabRoot 'scripts\check_start_record_builder.ps1'; args = @('-StandardRoot', $StandardRoot, '-OutputRoot', (Join-Path $OutputRoot 'start-record-builder')) }
+  @{ name = 'state-updates'; script = Join-Path $LabRoot 'scripts\check_state_updates.ps1'; args = @('-StandardRoot', $StandardRoot, '-OutputRoot', (Join-Path $OutputRoot 'state-updates')) }
+  @{ name = 'answer-mapping'; script = Join-Path $LabRoot 'scripts\check_answer_mapping.ps1'; args = @('-StandardRoot', $StandardRoot, '-OutputRoot', (Join-Path $OutputRoot 'answer-mapping')) }
 )
 foreach ($item in $quickSteps) {
   $arguments = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $item.script) + @($item.args)
   [void](Invoke-ValidationStep -Name $item.name -FilePath $hostPowerShell -Arguments $arguments)
 }
 
+$runtimeTrialCount = [Math]::Max(2, [Math]::Max($InitialTrials, $MinimumAgreement))
+$runtimeTrialPlan = @()
 if ($Mode -eq 'Candidate') {
-  $arguments = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $StandardRoot 'scripts\check_skill_structure.ps1'), '-SkillRoot', $StandardRoot)
+  . (Join-Path $LabRoot 'scripts/eval_runtime.ps1')
+  $runtimeTrialPlan = @(Get-AllredRuntimeTrialPlan -Efforts @($LowReasoningEffort,$HighReasoningEffort) -InitialTrials $InitialTrials -MinimumAgreement $MinimumAgreement)
+  $arguments = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $StandardRoot 'scripts\check_skill_structure.ps1'), '-SkillRoot', $StandardRoot, '-OutputRoot', (Join-Path $OutputRoot 'runtime-contracts'))
   [void](Invoke-ValidationStep -Name 'standard-full-structure' -FilePath $hostPowerShell -Arguments $arguments)
+  [void](Invoke-ValidationStep -Name 'preserved-runtime-contracts' -FilePath $hostPowerShell -Arguments @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $LabRoot 'scripts/check_preserved_contracts.ps1'),'-SkillRoot',$StandardRoot,'-OutputRoot',(Join-Path $OutputRoot 'preserved-contracts')))
+  foreach ($runtimeRun in $runtimeTrialPlan) {
+    $runtimeRunName = $runtimeRun.name
+    if (@($steps | Where-Object { $_.status -in @('Fail','Inconclusive') }).Count -gt 0) {
+      Add-StepResult -Name "actual-$runtimeRunName" -Status 'Inconclusive' -ExitCode 3 -DurationMs 0 -Log '' -Reason 'Not run: a prerequisite did not pass; preserve its evidence before starting more model calls.'
+      continue
+    }
+    $runtimeArgs = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $LabRoot 'scripts/run_runtime_dialogues.ps1'), '-LabRoot', $LabRoot, '-SkillRoot', $StandardRoot, '-OutputRoot', (Join-Path $OutputRoot $runtimeRunName), '-ReasoningEffort', $runtimeRun.effort, '-TimeoutSeconds', [string]$TimeoutSeconds)
+    if ($Model) { $runtimeArgs += @('-Model', $Model) }
+    if ($ReviewerModel) { $runtimeArgs += @('-ReviewerModel', $ReviewerModel) }
+    if ($ReviewerReasoningEffort) { $runtimeArgs += @('-ReviewerReasoningEffort', $ReviewerReasoningEffort) }
+    if ($ModelCatalogPath) { $runtimeArgs += @('-ModelCatalogPath', $ModelCatalogPath) }
+    if ($UseUserConfig) { $runtimeArgs += '-UseUserConfig' }
+    [void](Invoke-ValidationStep -Name "actual-$runtimeRunName" -FilePath $hostPowerShell -Arguments $runtimeArgs)
+  }
 }
 
 $selectedStandard = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
@@ -308,6 +339,20 @@ if ($Mode -eq 'Candidate') {
   foreach ($id in @($impactMap.default_lab_case_ids)) { $selectedLab.Add([string]$id) | Out-Null }
   foreach ($id in @($impactMap.default_replay_case_ids)) { $selectedReplay.Add([string]$id) | Out-Null }
 }
+$migrationMap = Get-Content -Raw -Encoding UTF8 (Join-Path $LabRoot 'tests/runtime-evidence-migrations.json') | ConvertFrom-Json
+$runtimeMigrations = [Collections.Generic.List[object]]::new()
+foreach ($migration in $migrationMap.migrations) {
+  if (-not $selectedStandard.Contains($migration.legacy_case_id) -or $Mode -ne 'Candidate') { continue }
+  $accepted = $true
+  foreach ($runtimeRun in $runtimeTrialPlan) {
+    $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $LabRoot 'scripts/check_runtime_evidence_migration.ps1'),'-EvidenceRoot',(Join-Path $OutputRoot $runtimeRun.name),'-LegacyCaseId',$migration.legacy_case_id,'-ReasoningEffort',$runtimeRun.effort,'-LabRoot',$LabRoot,'-StandardRoot',$StandardRoot)
+    if ($Model) { $arguments += @('-Model',$Model) }
+    if (-not (Invoke-ValidationStep -Name "runtime-migration-$($migration.legacy_case_id)-$($runtimeRun.effort)-trial-$($runtimeRun.trial)" -FilePath $hostPowerShell -Arguments $arguments)) { $accepted = $false }
+  }
+  if ($accepted) { [void]$selectedStandard.Remove($migration.legacy_case_id) }
+  $runtimeMigrations.Add([pscustomobject]@{ legacy_case_id=$migration.legacy_case_id; runtime_case_id=$migration.runtime_case_id; accepted=$accepted; required_trials_per_effort=$runtimeTrialCount; baseline_comparison='legacy case retained; not silently counted as a simulated pass or a blind-comparison win' }) | Out-Null
+}
+Write-Utf8File (Join-Path $OutputRoot 'runtime-migrations.json') (ConvertTo-Json -InputObject @($runtimeMigrations) -Depth 5)
 $standardCaseIdsPath = Join-Path $OutputRoot 'selected-standard-cases.json'
 $labCaseIdsPath = Join-Path $OutputRoot 'selected-lab-cases.json'
 $replayCaseIdsPath = Join-Path $OutputRoot 'selected-replay-cases.json'
@@ -316,8 +361,8 @@ Write-Utf8File -Path $labCaseIdsPath -Text (ConvertTo-Json -InputObject @($selec
 Write-Utf8File -Path $replayCaseIdsPath -Text (ConvertTo-Json -InputObject @($selectedReplay | Sort-Object))
 
 $staticFailed = @($steps | Where-Object { $_.status -eq 'Fail' }).Count -gt 0
-$dynamicBlocked = $staticFailed
-if ($Mode -ne 'Quick' -and -not $staticFailed) {
+$dynamicBlocked = $staticFailed -or @($steps | Where-Object { $_.status -eq 'Inconclusive' }).Count -gt 0
+if ($Mode -ne 'Quick' -and -not $dynamicBlocked) {
   if ($selectedReplay.Count -gt 0) {
     $replayRoot = Join-Path $OutputRoot 'replay'
     $arguments = [System.Collections.Generic.List[string]]::new()
@@ -433,7 +478,7 @@ if ($Mode -eq 'Candidate' -and -not $dynamicBlocked) {
 
   $windowsPowerShell = Get-Command 'powershell.exe' -ErrorAction SilentlyContinue
   if ($null -ne $windowsPowerShell) {
-    [void](Invoke-ValidationStep -Name 'powershell-5.1-structure' -FilePath $windowsPowerShell.Source -Arguments @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $StandardRoot 'scripts\check_skill_structure.ps1'), '-SkillRoot', $StandardRoot))
+    [void](Invoke-ValidationStep -Name 'powershell-5.1-structure' -FilePath $windowsPowerShell.Source -Arguments @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $StandardRoot 'scripts\check_skill_structure.ps1'), '-SkillRoot', $StandardRoot, '-OutputRoot', (Join-Path $OutputRoot 'runtime-contracts-ps51')))
   }
 
   $validator = Join-Path $HOME '.codex\skills\.system\skill-creator\scripts\quick_validate.py'
@@ -464,6 +509,7 @@ if ($Mode -eq 'Candidate' -and -not $dynamicBlocked) {
   if (Test-Path -LiteralPath (Join-Path $ReleaseRoot 'install.ps1')) {
     $installRoot = Join-Path $OutputRoot 'isolated-install'
     [void](Invoke-ValidationStep -Name 'isolated-install' -FilePath $hostPowerShell -Arguments @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $ReleaseRoot 'install.ps1'), '-DestinationRoot', $installRoot))
+    [void](Invoke-ValidationStep -Name 'isolated-install-contracts' -FilePath $hostPowerShell -Arguments @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $LabRoot 'scripts/check_installation.ps1'), '-PackageRoot', $ReleaseRoot, '-OutputRoot', (Join-Path $OutputRoot 'install-contracts')))
   }
   }
 }
@@ -487,6 +533,9 @@ $summary = [ordered]@{
   duration_ms = [int64]($finishedAt - $startedAt).TotalMilliseconds
   runtime = [ordered]@{
     model = $Model
+    runtime_reviewer_model = $(if($ReviewerModel){$ReviewerModel}else{$Model})
+    runtime_reviewer_effort = $(if($ReviewerReasoningEffort){$ReviewerReasoningEffort}else{'inherits each actor trial effort'})
+    reviewer_override_scope = 'actual runtime dialogue review and citation repair only; legacy behavior/comparison reviewers retain their recorded settings'
     model_provider = $ModelProvider
     provider_env_key_name = $ProviderEnvKey
     low_reasoning_effort = $LowReasoningEffort

@@ -1,6 +1,16 @@
 {
   "schema_version": 1,
   "skill": "allred-project-standard",
+  "context_contracts": [
+    { "route": "new-standard", "stage": "evidence", "required_sections": ["Phase 2: Inspect Evidence", "Evidence Claim Boundaries"], "forbidden_sources": ["shared-collaboration.md", "external-source.md", "company-office-delivery.md", "非软件项目模式.md"] },
+    { "route": "new-standard", "stage": "ready", "required_sections": ["READY Scope Gate", "Evidence Claim Boundaries", "Discovery Coverage Review", "Approval Envelope", "Start Confirmation Without Duplication"], "forbidden_sources": ["shared-collaboration.md", "external-source.md", "company-office-delivery.md", "非软件项目模式.md"] },
+    { "route": "new-standard", "stage": "decision", "required_sections": ["Internal Frontier Model", "Frontier Round", "Stop And Fallback", "Fact-Finding Queue"], "forbidden_sources": ["shared-collaboration.md", "external-source.md", "company-office-delivery.md", "非软件项目模式.md"] },
+    { "route": "existing-debug", "stage": "evidence", "required_sections": ["Phase 2: Inspect Evidence", "Evidence Claim Boundaries", "Evidence First", "Hypothesis Discipline"], "forbidden_sources": ["shared-collaboration.md", "external-source.md", "company-office-delivery.md", "非软件项目模式.md"] },
+    { "route": "long-term", "stage": "evidence", "required_sections": ["Phase 2: Inspect Evidence", "Evidence Claim Boundaries"], "forbidden_sources": ["shared-collaboration.md", "external-source.md", "company-office-delivery.md", "非软件项目模式.md"] },
+    { "route": "non-software", "variant": "training", "stage": "evidence", "required_sections": ["Phase 2: Inspect Evidence", "Evidence Claim Boundaries"], "forbidden_sources": ["shared-collaboration.md", "external-source.md", "company-office-delivery.md"] },
+    { "route": "long-term", "stage": "decision", "required_sections": ["Frontier Round", "State Model"], "forbidden_sources": ["shared-collaboration.md", "external-source.md", "company-office-delivery.md", "非软件项目模式.md"] },
+    { "route": "non-software", "variant": "training", "stage": "decision", "required_sections": ["Frontier Round", "Training Alignment Gate"], "forbidden_sources": ["shared-collaboration.md", "external-source.md", "company-office-delivery.md"] }
+  ],
   "conditional_overlays": [
     {
       "name": "shared-collaboration",
@@ -41,7 +51,7 @@
       "owner": "SKILL.md",
       "owner_section": "Runtime Hard Stops",
       "behavior_cases": ["V131", "V132", "V133"],
-      "enforcement": ["scripts/invoke_validation_gate.ps1"]
+      "enforcement": ["scripts/invoke_validation_gate.ps1", "scripts/validate_question_packet.ps1"]
     },
     {
       "id": "INV-DECISION-FRONTIER",
@@ -49,7 +59,7 @@
       "owner": "references/决策前沿与Skill交接.md",
       "owner_section": "Internal Frontier Model",
       "behavior_cases": ["V79", "V81", "V120", "V144"],
-      "enforcement": ["scripts/validate_decision_frontier.ps1", "scripts/validate_question_packet.ps1"]
+      "enforcement": ["scripts/validate_decision_frontier.ps1", "scripts/validate_question_packet.ps1", "scripts/update_project_state.ps1", "scripts/state_validation_common.ps1"]
     },
     {
       "id": "INV-DISCOVERY-COVERAGE",
