@@ -261,10 +261,69 @@ summarizing away subparts. Optional ideas do not become mandatory blockers. The
 unchanged-note handoff and this literal pending-source refinement are frozen next
 as R18; no earlier result is relabeled as its acceptance.
 
+## R16-R19 Follow-up
+
+Keep these frozen revisions separate; they are not one aggregate pass rate.
+
+| Frozen run | Case | Original automatic result | Relevant observation |
+| --- | --- | --- | --- |
+| R16 READY low | A07 | Pass | Actual final gate and absolute root worked; manual review still found internal repair narration and an unsupported explanation blaming the builder for reset flags |
+| R17 handoff low | A01 | Partial | Earlier optional question part absent; native supplement disputes only the missing patch-return evidence |
+| R17 handoff low | A02 | Fail | Audience description expanded into confirmed zero prior knowledge; older facets missing |
+| R18 handoff low | A01 | Fail | Earlier unanswered date-field inclusion dropped from handoff |
+| R18 handoff low | A02 | Pass | Bounded interview and handoff assertions met |
+| R18 adjacent low | A03 | Fail | Sole-remaining-question claim while earlier deletion permission had no disposition |
+| R18 adjacent low | A04, A13 | Pass | Bounded source and delegation checks met |
+| R19 handoff low | A01 | Fail | Verbatim source was saved and reread, but an unanswered lending rule still vanished from the current note and recap |
+| R19 handoff xhigh | A01 | Pass | Bounded original assertions met; does not cancel low-effort failure |
+
+R19 is an isolated, unaccepted experiment. Its optional prototype saves exact
+question/reply text without granting stage or execution authority. Six mechanical
+checks passed on both PS7 and PS5.1, and the low actor's first two captured pairs
+match the actual dialogue. Those facts establish capture integrity, not faithful
+semantic reconciliation. The helper and entry rule are NOT in canonical source,
+the release mirror or the development branch. Do not add capture overhead solely
+because its mechanical tests passed.
+
+The source-forward R20 experiment is separately frozen from R18, not from R19.
+It changes only the existing cumulative-note owner's handoff/READY writing
+technique: reconcile original requirements and question parts into the note before
+summarizing it. Evidence/plan: `source-forward-reconciliation-experiment.md` in
+the local evidence root. It adds no runtime helper, question quota, user gate or
+new trigger. R20 A03 low passed, while A01 failed at low and xhigh: low expanded
+an explicitly unknown historical count into unknown future scale; xhigh excluded
+a plausible interpretation of a required field without the user's decision.
+Its full structure check failed only the existing context budgets; runtime
+contracts passed. R21 compressed the same owner below the unchanged budgets
+(13376 intake characters, 358 training-decision lines), but low A01 still failed
+for an unsupported exclusion. R21 A02 low also failed: approval of group practice
+was expanded into settled staged clues and centralized review, while independent
+acceptance meanings were missing at handoff. All five new dialogues finished.
+Neither snapshot is promoted. No further trial or full Candidate pipeline is
+launched on these rejected snapshots.
+
+The local HTML evidence report now shows all user messages and responses, with
+progress messages expandable and raw tool evidence linked. A separate manual-note
+layer preserves the R16 UX discrepancy and native-return supplements alongside
+the original automatic judgments. It changes no actor dialogue or verdict.
+
+The Lab maintenance guide also contained two stale reference roots after Skill
+ownership was split. Both references now explicitly resolve from the target
+Standard Skill, and both actual files exist. This is a maintenance-only reference
+fix; no ordinary runtime stage, workflow, trigger or decision rule changes.
+
+The builder repair passed 64 focused assertions on each PS7/PS5.1. Replay of the
+original malformed state lists four missing `evidence[n].claim` fields, leaves
+that source unchanged and writes no start record. No full Candidate pipeline
+has passed. Neither those checks nor the R16 automatic Pass close the UX gap.
+
 ## GitHub Status
 
 Only `codex/rc15-final` and draft PR #1 are published. No rc15 Release/tag, main
-promotion or completed behavior acceptance is claimed. Commit `9ccd4c5` passed
-GitHub static/install runs `34265857544` and `34265854243`. These check packaging
-and mechanics, not dialogue meaning. Later uncommitted edits and frozen trials
-must be checked and recorded separately before promotion.
+promotion or completed behavior acceptance is claimed. Runtime checkpoint
+`fec303647967b9c301d9d51d69a318cecadc1b84` passed static/install runs
+`34270419585` and `34270415663`. Previous `57dd8dec01a489ee15804ad857ae5ad86a41712d`
+passed `34268638767` / `34268634207`; `9ccd4c5` passed `34265857544` / `34265854243`.
+These check packaging and mechanics, not dialogue meaning. Later maintenance-only
+commits preserve that runtime. Their GitHub workflow results must be read against
+their exact commits; no green CI result closes the recorded semantic failures.
