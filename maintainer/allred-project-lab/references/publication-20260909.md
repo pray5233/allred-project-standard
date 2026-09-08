@@ -100,6 +100,11 @@ invalid reviews remain immutable; a later review is not another actor trial.
     for every case, separating actual materials from its generated logs. Paths
     reveal no contents, expected answers or required observations. Reviewers
     recover the same original inventory; historical prompts are unchanged.
+16. Final adjacent trials retained two communication defects: presenting proposed
+    consequences as settled before offering choices, and describing the next
+    evidence dependency as total readiness. Rewrite the existing introduction
+    and reply checks in plain language, preserving delegated routine decisions.
+    No new guard, keyword ban, topic rule or user confirmation is introduced.
 
 ## Verified Mechanical Evidence
 
