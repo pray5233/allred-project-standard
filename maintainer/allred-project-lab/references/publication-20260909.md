@@ -116,8 +116,33 @@ invalid reviews remain immutable; a later review is not another actor trial.
     retain a narrower choice when both alternatives remain compatible. Workflow
     scope alone does not settle every field or rule inside it. No extra interview
     or universal state-file requirement is introduced.
+19. Stage diagnostics now show the actual accepted intake/complexity values
+    instead of only saying an invalid `complete` value is "not complete".
+    Validation still rejects it and never rewrites source facts. Preserve
+    provenance when repairing a schema error; the earlier date-normalization
+    failure is retained and is not explained away by a successful READY gate.
+
+20. R14 still stated inferred source meanings in progress before the selected
+    owner loaded. Clarify the existing entry communication boundary for all
+    visible output. Replace the material owner's ambiguous instruction to infer
+    factual requirements with explicit extraction versus attributed proposals.
+    The long-term contract now inherits the requested result: proposing an
+    observation does not make acquiring it a new current-round acceptance target.
+    These changes follow the installed skill-creator's intent-preservation
+    benchmark; they add no domain examples, new gate or question quota. Retest
+    A01/A05/A06 and adjacent source/scope cases against unchanged assertions.
 
 ## Verified Mechanical Evidence
+
+The R15 READY trial also reproduced a raw missing-property exception in
+`build_start_record.ps1`. The builder now lists missing required rendering fields
+together and reads optional support/limitation fields without StrictMode crashes.
+It never inserts claims or limitations, preserves the source snapshot, and leaves
+semantic/READY checks unchanged. The benchmark is its existing Need-Text helper
+and the canonical property reader. The original R15 actor is not patched mid-run;
+later trials must use a new frozen source. Contract tests cover omitted optional
+fields, multiple missing required fields, source immutability and continued READY
+rejection of a candidate conclusion without limitations.
 
 - Earlier Quick: 17 steps passed, including 499 incremental-state assertions.
 - Isolated installation: 19 assertions passed across PS7 and PS5.1, including
@@ -146,14 +171,52 @@ invalid reviews remain immutable; a later review is not another actor trial.
 
 ## Behavioral Status
 
-Publication acceptance is pending. R1-R4 retain all original dialogue verdicts,
-per-turn notes, complete responses and fresh consumers of the unchanged note.
-Automatic Pass does not settle a manually observed discrepancy. Invalid
-citations do not establish either Pass or Fail. Disputed interpretations require
-the full original context and a stated consequence, not a preferred aggregate.
+Publication acceptance remains pending. Original dialogue verdicts, per-turn
+notes, complete responses and unchanged-note consumers are retained. Automatic
+Pass does not settle a manually observed discrepancy; invalid citations do not
+establish Pass or Fail. Adjudications are separate artifacts, never edits to the
+original review. The `5fc5bf` full pipeline failed and proves no later candidate.
 
-R4 showed preserved core requirements and no-build boundaries alongside record
-duplication, an incorrect record date, and disputed readings of recommendation
-wording and broad recap headings. Source-bound absence/date changes are frozen
-as `candidate-r5`; its targeted tests and final package review are still running.
-The `5fc5bf` full pipeline is evidence for that exact earlier checkpoint only.
+Observed checkpoints through R14:
+
+| Frozen trial | Result and practical limit |
+| --- | --- |
+| R6 low R01/R02 | Both automatic Pass, with fresh consumers of unchanged notes. |
+| R6 high R01/R02 | Both automatic Fail. Manual native-event inspection disputes specific patch-verification and package-source findings; original verdicts remain. This is not two new actor passes. |
+| Actual rc13 versus R6 low R01 | One blinded conversation comparison favors R6 for useful advice and continuation. It lacks the initial brief and does not prove overall or tool-level superiority. |
+| R7 Quick | 16 Pass, one context-budget Fail; subsequently corrected without raising prior caps. |
+| R8 A09 and no-Skill A09 | Both miss the catalog without the explicit fixture inventory. |
+| R10 A09 | Pass with the inventory. No matched no-Skill inventory trial yet; no causal superiority claim. |
+| R11 low A01/A12 | Both Pass. |
+| R11 high A01/A03 | Fail: unsupported narrower exclusion; premature evidence-dependent overlay confirmation. |
+| R11 high A09/A12 | Both Pass. |
+| R11 adjacent low | A02/A04/A05/A07/A06 Fail; A14 Pass. Training implications, readiness extent, causal claims, record-date changes and current-round acceptance still need resolution. |
+| R12 A02/A04 | Fail/Pass. Training still requires scope and continuity repair. |
+| R14 low A05/A01 | Both Fail: causal claim in progress; an ambiguous source term prematurely given a narrower meaning. Some continuity clauses are Missing, not proven deletion. |
+| R14 high A01/A05 | Both Pass. This does not erase the low-effort failures or establish consistency. |
+| R11 high A13 | Fail: progress restricted the stated learning outcome before the later complete proposal. |
+| R15 low A05/A06 | Both Pass: observed symptoms stay distinct from cause; observation advice retains its current result boundary. |
+| R15 Quick | All 17 steps Pass. Builder field handling was changed afterward and has separate focused regression evidence. |
+
+R15 freezes changes 19-20 for fresh checks. A07 and separate low/high handoff
+trials are still running at this checkpoint. Official validation has passed;
+complete dialogue acceptance is not yet established. The builder-field tests
+pass 64 assertions on each of PS7 and PS5.1. The original malformed-state reproduction
+which now reports all four missing claim fields without changing that source or
+creating a result. A fresh builder actor trial remains pending.
+R15 acceptance is not inferred from earlier snapshots.
+
+For unresolved continuity findings, add a separately labeled neutral handoff
+request to make pending meanings observable, following the existing A14 and
+unchanged-note-consumer benchmark. Keep earlier messages and assertions intact;
+later preservation cannot erase a prior unauthorized decision. This supplemental
+test is not a mandatory runtime file or interview round, and does not overwrite
+the shorter original trial.
+
+## GitHub Status
+
+Only `codex/rc15-final` and draft PR #1 are published. No rc15 Release/tag, main
+promotion or completed behavior acceptance is claimed. Commit `9ccd4c5` passed
+GitHub static/install runs `34265857544` and `34265854243`. These check packaging
+and mechanics, not dialogue meaning. Later uncommitted edits and frozen trials
+must be checked and recorded separately before promotion.

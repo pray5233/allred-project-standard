@@ -31,6 +31,19 @@ function Write-New([string]$Path, [string]$Text) {
 $sourcePath = (Resolve-Path -LiteralPath $StatePath).Path
 $sourceHash = (Get-FileHash -LiteralPath $sourcePath -Algorithm SHA256).Hash
 $state = Read-AllredProjectState -Path $sourcePath
+$missing = [System.Collections.Generic.List[string]]::new()
+foreach ($section in @('evidence', 'technical_conclusions')) {
+  $required = if ($section -eq 'evidence') { @('id', 'method', 'claim_type', 'confidence', 'claim') } else { @('id', 'basis_source', 'version_or_date', 'comparable_because', 'status', 'statement', 'deliberate_differences', 'method') }
+  $index = 0
+  foreach ($item in @(Items $state $section)) {
+    foreach ($name in $required) {
+      $value = Get-AllredProperty $item $name
+      if ($value -isnot [string] -or [string]::IsNullOrWhiteSpace($value)) { $missing.Add("${section}[$index].$name") }
+    }
+    $index++
+  }
+}
+if ($missing.Count) { throw "Missing record text: $($missing -join ', '). Use the observed sources; do not invent values to satisfy the format." }
 $auth = Get-AllredProperty $state 'authorization'
 $change = Get-AllredProperty $state 'change_control'
 if ((Get-AllredProperty $auth 'state') -ne 'pending' -or
@@ -144,7 +157,7 @@ Line ('- Non-goals: ' + (Cell (($scope | Where-Object relation -eq 'excluded' | 
 Line ('- No-touch boundary: ' + (Cell ($protected -join '; ')))
 Line ('- Target environment: ' + (Cell $environment))
 Table 'Evidence Ledger' @('Evidence ID', 'Source/path/version/date', 'Observation', 'Supports', 'Limitation')
-foreach ($e in @(Items $state 'evidence')) { Row @($e.id, $e.method, ($e.claim_type + '/' + $e.confidence + ': ' + $e.claim), ($e.supports -join ', '), $e.limitations) }
+foreach ($e in @(Items $state 'evidence')) { Row @($e.id, $e.method, ($e.claim_type + '/' + $e.confidence + ': ' + $e.claim), ((Items $e 'supports') -join ', '), (Get-AllredProperty $e 'limitations')) }
 Table 'Approved Scope Ledger' @('Scope ID', 'Approved statement', 'Approval source/envelope', 'Lifecycle')
 foreach ($id in $trace.Keys) { Row @($id, $trace[$id].statement, $trace[$id].approval, 'active') }
 Table 'Proposed Envelope Scope' @('Item', 'Statement', 'Relation', 'Provenance', 'Visibility and recommendation', 'Target', 'Proof')
@@ -160,7 +173,7 @@ foreach ($id in @(Items $change.baseline 'scope_ids')) {
 }
 Line ('- Later items: ' + (Cell ((@(Items $change 'later_items') | ConvertTo-Json -Depth 20 -Compress) -join '')))
 Table 'Implementation Basis' @('Benchmark/reference/version/date', 'Why comparable', 'Reuse path', 'Deliberate difference', 'Acceptance metric')
-foreach ($t in @(Items $state 'technical_conclusions')) { Row @(($t.basis_source + '; ' + $t.version_or_date), $t.comparable_because, ($t.status + ': ' + $t.statement + '; ' + $t.limitations), $t.deliberate_differences, $t.method) }
+foreach ($t in @(Items $state 'technical_conclusions')) { Row @(($t.basis_source + '; ' + $t.version_or_date), $t.comparable_because, ($t.status + ': ' + $t.statement + '; ' + (Get-AllredProperty $t 'limitations')), $t.deliberate_differences, $t.method) }
 Table 'Exact Files' @('Path', 'Action', 'Purpose', 'Scope basis U/D/E')
 foreach ($f in $files) { Row @($f.path, $f.action, $f.purpose, ((@($f.scope_ids | ForEach-Object { $scopeMap[$_].provenance }) | Sort-Object -Unique) -join ', ')) }
 Table 'Exact Commands' @('Order', 'Exact command or None', 'Network/dependency/cache/process effect', 'Expected proof')

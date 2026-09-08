@@ -84,6 +84,23 @@ Check 'direct READY includes intake and frontier checks' ($ready.text -match '\[
 $execution = Run $gate @('-Path', $path, '-ToStage', 'EXECUTION')
 Check 'actual EXECUTION refuses pending authorization' ($execution.code -ne 0 -and $execution.text -match 'not been approved')
 
+$s = Fixture
+$s.evidence[0].PSObject.Properties.Remove('claim')
+$s.technical_conclusions[0].PSObject.Properties.Remove('method')
+$r = Build $s 'missing-render-text'
+Check 'missing record text is rejected with all locations' ($r.code -ne 0 -and $r.text.Contains('evidence[0].claim') -and $r.text.Contains('technical_conclusions[0].method') -and $r.text -notmatch "property '.+' cannot be found")
+$s = Fixture
+$s.evidence[0].PSObject.Properties.Remove('supports')
+$s.evidence[0].PSObject.Properties.Remove('limitations')
+$s.technical_conclusions[0].PSObject.Properties.Remove('limitations')
+$r = Build $s 'optional-render-fields'
+Check 'omitted optional render fields do not crash' ($r.code -eq 0)
+$path = [regex]::Match($r.text, '(?m)^StatePath: (.+)$').Groups[1].Value.Trim()
+$g = Get-Content -LiteralPath $path -Raw -Encoding UTF8 | ConvertFrom-Json
+Check 'builder does not fill absent evidence or limitations' ($g.evidence[0].PSObject.Properties.Name -notcontains 'limitations' -and $g.technical_conclusions[0].PSObject.Properties.Name -notcontains 'limitations')
+$r = Run $gate @('-Path', $path, '-ToStage', 'READY')
+Check 'missing candidate limitations remain blocked by READY' ($r.code -ne 0 -and $r.text.Contains('limitation'))
+
 foreach ($name in @('missing-step','unknown-step','duplicate-step','outside-file','relative-plan','protected-file','review-open','review-hidden','review-missing','approved','delta','missing-source','evidence-product','evidence-protected','evidence-wildcard')) {
   $s = Fixture
   switch ($name) {

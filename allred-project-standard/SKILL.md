@@ -40,9 +40,11 @@ Skill maintenance belongs to `allred-project-lab`. Do not run ordinary project i
 
 ## Required Reading
 
-Before loading context, keep routine script/record repairs internal. Report a
-problem when it changes the user's result or blocks useful work, using its
-practical consequence. Continue authorized inspection while repairing mechanics.
+From the first progress message, distinguish source wording from your
+interpretation. Reading a source confirms its contents, not an unstated meaning,
+cause or workflow choice. Keep such interpretations tentative in progress,
+answers and records alike. Keep routine script/record repairs internal; report
+their practical consequence only when useful work or the user's result changes.
 
 Run `scripts/get_route_context.ps1 -Route <route> -Stage <stage> -Interaction standard|beginner` for the current stage. Stages: `intake`, `evidence`, `decision`, `ready`, `external-read`, `execution`, `verification`. Load `ready` only for the complete final scope/start envelope; its delivery and execution-record detail is not needed for each question round.
 

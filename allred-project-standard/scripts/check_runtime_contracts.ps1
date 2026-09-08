@@ -82,6 +82,17 @@ Run 'long-packet-advisory' 'validate_question_packet.ps1' @('-Text',('What chang
 Run 'repeated-reply-instructions-advisory' 'validate_question_packet.ps1' @('-Text',("1. Who uses it?" + [Environment]::NewLine + "Reply: name them." + [Environment]::NewLine + "2. What result?" + [Environment]::NewLine + "Reply: describe it."))
 
 $validPath = Save-State 'valid-ready' (New-State)
+$invalidEnum = New-State
+$invalidEnum.intake.outcome.status = 'complete'
+$invalidEnum.complexity.assessment = 'small-standard'
+$invalidEnumPath = Save-State 'invalid-intake-enum' $invalidEnum
+$invalidEnumHash = (Get-FileHash -LiteralPath $invalidEnumPath).Hash
+Run 'invalid-intake-enum-rejected' 'validate_stage_transition.ps1' @('-Path',$invalidEnumPath,'-ToStage','DECISION') $false 'Allowed statuses: confirmed'
+$enumResult = @($results | Where-Object name -eq 'invalid-intake-enum-rejected')
+if ($enumResult.Count) {
+  Check 'invalid-enum-explains-complexity' ($enumResult[0].evidence.Contains('Allowed values: simple, non-simple, unknown')) 'Invalid vocabulary reports the actual alternatives without choosing one.'
+  Check 'invalid-enum-preserves-source' ((Get-FileHash -LiteralPath $invalidEnumPath).Hash -eq $invalidEnumHash) 'A rejected record is not rewritten or normalized by validation.'
+}
 Run 'ready-context-loads-real-state' 'get_route_context.ps1' @('-Route','new-standard','-Stage','ready','-StatePath',$validPath,'-GuardsOnly')
 $readyContextTest = @($results | Where-Object name -eq 'ready-context-loads-real-state')
 if ($readyContextTest.Count) {
