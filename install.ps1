@@ -9,7 +9,7 @@ $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $source = Join-Path $repoRoot 'allred-project-standard'
 $sourceSkill = Join-Path $source 'SKILL.md'
-$sourceCheck = Join-Path $source 'scripts\check_skill_structure.ps1'
+$sourceCheck = Join-Path $repoRoot 'maintainer\allred-project-lab\scripts\check_standard_fast.ps1'
 $sourceVersionPath = Join-Path $source 'VERSION'
 
 if (-not (Test-Path -LiteralPath $sourceSkill)) {
@@ -35,11 +35,19 @@ if ($null -eq $validatorCommand) {
 }
 $validatorHost = $validatorCommand.Source
 
-& $validatorHost -NoProfile -File $sourceCheck -SkillRoot $source
+& $validatorHost -NoProfile -File $sourceCheck -StandardRoot $source
 if ($LASTEXITCODE -ne 0) {
     throw 'Source Skill validation failed. Installation stopped.'
 }
 
+# Freeze the package inventory before staging; installation does not run the
+# maintainer regression suite or modify the source package.
+$sourceFiles = @(Get-ChildItem -LiteralPath $source -Recurse -File | ForEach-Object {
+    [pscustomobject]@{
+        path = $_.FullName.Substring($source.Length + 1)
+        sha256 = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+    }
+})
 New-Item -ItemType Directory -Force -Path $DestinationRoot | Out-Null
 $resolvedRoot = (Resolve-Path -LiteralPath $DestinationRoot).Path
 $dest = Join-Path $resolvedRoot 'allred-project-standard'
@@ -58,9 +66,19 @@ if (Test-Path -LiteralPath $backup) {
 $installed = $false
 try {
     Copy-Item -LiteralPath $source -Destination $stage -Recurse
-    & $validatorHost -NoProfile -File (Join-Path $stage 'scripts\check_skill_structure.ps1') -SkillRoot $stage
+    & $validatorHost -NoProfile -File $sourceCheck -StandardRoot $stage
     if ($LASTEXITCODE -ne 0) {
         throw 'Staged Skill validation failed.'
+    }
+    if (@(Get-ChildItem -LiteralPath $stage -Recurse -File).Count -ne $sourceFiles.Count) {
+        throw 'Staged Skill file count differs from source.'
+    }
+    foreach ($file in $sourceFiles) {
+        $stagedFile = Join-Path $stage $file.path
+        if (-not (Test-Path -LiteralPath $stagedFile -PathType Leaf) -or
+            (Get-FileHash -LiteralPath $stagedFile -Algorithm SHA256).Hash -ne $file.sha256) {
+            throw "Staged Skill content differs from source: $($file.path)"
+        }
     }
 
     if (Test-Path -LiteralPath $dest) {
@@ -114,6 +132,8 @@ $receipt = [ordered]@{
     destination = $dest
     source_state = $sourceState
     source_commit = $sourceCommit
+    installed_file_count = $sourceFiles.Count
+    validation = 'package-structure-and-copy-integrity; not behavior acceptance'
     skill_md_sha256 = (Get-FileHash -LiteralPath (Join-Path $dest 'SKILL.md') -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 $receiptPath = Join-Path $resolvedRoot '.allred-project-standard-installation.json'

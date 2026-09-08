@@ -58,14 +58,19 @@ function Invoke-AllredValidatorProcess {
   }
 
   $processArguments = @('-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', $ScriptPath) + $Arguments
-  $output = @(& $PowerShellExecutable @processArguments 2>&1 | ForEach-Object { [string]$_ })
-  $exitCode = $LASTEXITCODE
+  $previousErrorAction = $ErrorActionPreference
+  try {
+    $ErrorActionPreference = 'Continue'
+    $output = @(& $PowerShellExecutable @processArguments 2>&1 | ForEach-Object { [string]$_ })
+    $exitCode = $LASTEXITCODE
+  } finally { $ErrorActionPreference = $previousErrorAction }
   return [pscustomobject]@{ Name = $Name; ExitCode = $exitCode; Output = $output }
 }
 
 $results = [System.Collections.Generic.List[object]]::new()
 $powerShellExecutable = Get-AllredPowerShellExecutable
 $statePath = (Resolve-Path -LiteralPath $Path).Path
+$stateHash = (Get-FileHash -LiteralPath $statePath -Algorithm SHA256).Hash
 
 $results.Add((Invoke-AllredValidatorProcess -Name 'stage-transition' -ScriptPath (Join-Path $PSScriptRoot 'validate_stage_transition.ps1') -Arguments @('-Path', $statePath, '-ToStage', $ToStage) -PowerShellExecutable $powerShellExecutable)) | Out-Null
 $results.Add((Invoke-AllredValidatorProcess -Name 'decision-frontier' -ScriptPath (Join-Path $PSScriptRoot 'validate_decision_frontier.ps1') -Arguments @('-Path', $statePath) -PowerShellExecutable $powerShellExecutable)) | Out-Null
@@ -85,6 +90,10 @@ if ($ToStage -in @('READY', 'EXECUTION')) {
 }
 
 $failed = @($results | Where-Object { $_.ExitCode -ne 0 })
+if ((Get-FileHash -LiteralPath $statePath -Algorithm SHA256).Hash -ne $stateHash) {
+  $results.Add([pscustomobject]@{ Name = 'state-snapshot'; ExitCode = 1; Output = @('State changed during validation.') }) | Out-Null
+  $failed = @($results | Where-Object { $_.ExitCode -ne 0 })
+}
 foreach ($result in $results) {
   $status = if ($result.ExitCode -eq 0) { 'PASS' } else { 'FAIL' }
   "[$status] $($result.Name)"

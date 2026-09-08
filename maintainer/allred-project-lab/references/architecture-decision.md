@@ -1,5 +1,242 @@
 # ADR: Allred Runtime And Maintenance Ownership
 
+## Collaboration Bridge, 2026-09-08
+
+See `bridge-workflow-20260908.md` for the user-authorized five-task sequence:
+decision ownership, conversation/state separation, cumulative records, adaptive
+questioning and independent outcome acceptance. Earlier per-question gate notes
+below are historical; the bridge record governs the changed runtime contract.
+
+## Adaptive Judgment, 2026-09-08
+
+See `adaptive-judgment-20260908.md` for the bounded separation of advisory text
+heuristics from actual state guards. AI owns conversational judgment; a schema
+or lint pass does not certify understanding. Preserve mature intake and scope.
+
+## Shared Review Context, 2026-09-08
+
+See `review-context-20260908.md` for the shared actor/reviewer environment block,
+original-prompt recovery, immutable review replay and permission controls. Fix
+the Lab context handoff without adding runtime questions or changing assertions.
+
+## Confirmed Decision Consistency, 2026-09-08
+
+See `confirmed-consistency-20260908.md` for the common current-state check,
+historical repair boundary and complete/partial-answer regression controls.
+Reuse the current reader and updater; do not create another user gate.
+
+## Pending Facet Continuity, 2026-09-08
+
+See `facet-continuity-20260908.md` for source-backed removal/transfer of recorded
+Q/D facets, legacy-history compatibility, exact old-state reproduction and bounded
+model evaluation. Reuse the existing updater and parent checks; no extra user
+approval or domain-specific rule. Structural accounting is not semantic consent.
+
+## Review Interface, 2026-09-08
+
+See `review-interface-20260908.md` for the normal reviewer's ordered evidence
+interface, preserved Legacy diagnostic mode, immutable citation-only repair,
+process-versus-delivery boundary and progress-expression experiment. This changes
+how the existing judge cites evidence, not its authority or outcome standard.
+
+## Question Result Consumption, 2026-09-08
+
+See `result-consumption-20260908.md` for an optional structured question result,
+legacy compatibility and the withdrawn default-JSON experiment. A pending-return
+probe instead supports retaining full tool results and collecting their sessions.
+Keep process output, model-visible output and semantic acceptance distinct;
+bounded dialogue results do not establish release readiness.
+
+## Decision Blocker Reconciliation, 2026-09-08
+
+See `decision-blockers-20260908.md` for the local updater benchmark, bounded
+derived closure/reopening, authority and partial-answer controls, and live
+dialogue evidence. The existing intake and semantic gates retain ownership.
+
+## Ordered Review Evidence, 2026-09-08
+
+See `ordered-review-20260908.md` for the explicit Lab evidence adapter, stable
+source IDs, chronology controls and unchanged-dialogue re-review. Reuse the
+existing assertion/citation validator; do not change outcome assertions, silently
+repair paraphrases or replace historical verdicts. Original event mappings must
+match both hashes and observed transcript contents. This remains opt-in until
+semantic calibration justifies default adoption; Standard runtime is unchanged.
+
+## Interpretation Isolation, 2026-09-08
+
+See `interpretation-isolation-20260908.md` for the completed full/focused replay
+and exploratory claim-audit continuation. Context isolation did not cure the
+actual ambiguity; the audit signal did not meet end-to-end acceptance. Preserve
+the failed/invalid reviews, raw event ordering, weakened-summary observation and
+stale-parent branch. Standard runtime remains unchanged from this experiment's
+frozen tree. Follow up in the Lab with ordered evidence and source-faithful repair,
+not a mandatory extra inference or another ordinary user confirmation.
+
+## Literal Answer Binding, 2026-09-08
+
+See `answer-binding-20260908.md` for the corrected failure diagnosis, focused
+literal-context preparation and exact answer-map application. Reuse the existing
+incremental updater and lifecycle guards, including user deferral/replacement.
+This is an internal authoring path, not another user gate or semantic proof.
+Hashes bind local inputs; actual dialogue review still owns intent fidelity.
+The prototype's required runtime integration was withdrawn after actual dialogue
+failures; ordinary entry/frontier/record instructions match the pre-experiment
+baseline. Optional helpers remain for Lab experiments, not a new user workflow.
+
+## Answer State, 2026-09-08
+
+See `answer-state-20260908.md` for the bounded follow-up to the failed B2
+candidate. Reuse the local incremental updater and D history guard to retain Q
+identity and reject factual closure with explicit unanswered parts. Interpret
+independent meanings before mapping a reply into state; related meanings may
+still share a visible question. This does not add user confirmations, detect
+unrecorded facts or certify consent. Paired evidence/proposal reviewer controls
+remain separate from fresh A01/A02/A12 runtime observations and release approval.
+
+## Core Simplification, 2026-09-07
+
+See `core-simplification-20260907.md` for the pre-change snapshot, PM Skills
+benchmark, bounded Q/D gate change and three-arm outcome comparison. Preserve
+schema-v1, existing project authority and the mature discovery loop; facts need
+not be copied into a second question ledger. Every bound question slice uses the
+same current gate. Initial factual intake remains unbound and cannot clear a
+product-stage failure. Semantic misclassification is still a behavior-review
+obligation, not a property proven by this structural change.
+
+## Reviewer Ownership Calibration, 2026-09-07
+
+- Observed problem: answer-interpretation A02's grounded review failed its self-study examples, exercise steps and self-check support solely for lacking separate user approval. The generic authority assertion did not distinguish material user-owned choices from ordinary means of fulfilling an explicit outcome. Adding more user confirmations to satisfy that interpretation would damage the established workflow.
+- Benchmarks: current runtime's routine-implementation exception in the Frontier Round and Question Packet Contract; installed official skill-creator's proportional specificity and scope preservation, inspected 2026-09-07. Reuse the existing literal-citation checker, immutable review evidence and CLI evaluator. No runtime interview change, dependency or ordinary trigger is needed for this calibration.
+- Decision: have the reviewer identify the concrete user-owned contract difference before demanding authority for a settled choice. Routine implementation/presentation within the stated outcome is Codex-owned. This exception cannot approve a separately offered material alternative, remove a requirement or excuse a promise conflicting with a pending option. Preserve the old assertion and all judgments in the frozen harness; apply the revised rubric only after the original three dialogues and their integrity audit finish.
+- The original A12 review separately treated a current two-choice packet plus a later question as proof of false global completion. Calibrate claimed extent in context: open discussion coverage and subsequent discovery alone are insufficient; explicit unsupported global completion still fails. Add paired controls for both meanings rather than banning a phrase or capping follow-ups.
+- Acceptance: fresh model review of constructed positive/negative controls, with expected verdicts hidden from the model; literal-citation validation for every assertion. Controls cover ordinary supporting detail, partial-answer overreach, contradictory options and an explicit combined answer. Re-review the unchanged A02 transcript under the new rubric separately. These are reviewer-calibration results, not new product conversations or release acceptance. Preserve both versions of the judgment and run the affected deterministic harness checks plus Quick. No publication is authorized.
+
+The first calibration run produced invalid negative reports because the new runner's prompt omitted the required aggregate hard-failure list; keep those raw failures and add the missing reporting instruction, not a relaxed validator. A subsequent complete calibration matched all six expected positive/negative outcomes. A02 re-review passed with grounded citations. A12's new control assertion had said "retention of previous values"; two reviewers incorrectly treated that as input suggestions, even while their reasons acknowledged correct preservation of pre-edit content. Clarify only this new assertion as one combined edit-policy choice, keeping independent input suggestions unresolved. Preserve both old judgments. The replay runner now freezes current assertions, checks exact equality of original turns/materials, and records the old suite hash; changed inputs require a fresh dialogue. This is an oracle-wording correction, not a runtime special case or extra approval requirement.
+
+Final calibration evidence: all six constructed controls matched their expected results in each of two complete runs after the reporting correction; real negative examples remained Fail. The unchanged A02 transcript passed all eight assertions under the calibrated rubric, with one citation-only repair. The unchanged A12 transcript passed all six assertions after the new control's wording was clarified, without citation repair. These are separate review-only results; original A02/A12 Fail judgments and the intervening invalid reviews remain intact. Two synthetic replay-guard checks rejected changed user turns and changed materials before model evaluation; the first test-fixture property-access error is retained separately. The runtime and its original eight observed turns did not change during calibration. No overall release acceptance, higher-effort matrix or full project execution is claimed.
+
+## Answer Interpretation Before Confirmation, 2026-09-07
+
+- Problem/users: frozen decision-continuity A01 promoted a partial workflow answer into unselected date/retention choices. A02 promised reference results while still offering a checklist-only branch. Correct IDs and source references did not establish correct interpretation. This affects ordinary and beginner interviews across software/document routes.
+- Benchmarks inspected: local rc15 Frontier Round and the successful D2-to-D5/D6 split in frozen A02; installed `grilling/SKILL.md` and official `skill-creator/SKILL.md`, read 2026-09-07. Reuse dependency-local recomputation, literal source records, existing pending decisions and progressive disclosure. Do not invoke external grilling or Superpowers, add dependencies, or require another user approval.
+- Decision: replace the vague partial-answer reminder with an actionable alternative-compatibility test before confirmation. A clear selection, explicit custom rule, or scoped acceptance of visible recommendations settles its answered facets without being re-asked. If another material option remains compatible with the literal reply, only that difference stays open. Routine implementation details remain Codex-owned within scope.
+- Implementation: the updater reports only newly authored/changed confirmations alongside their literal U quote and previous choice. This is an internal semantic-review aid, not an intent validator, approval receipt or extra CLI round. It does not mutate choices or fabricate quotes from `meaning`. The existing interaction owner separates shared consequences from option-dependent promises. No new state schema, ordinary trigger or total round limit.
+- Acceptance: unchanged A01/A02 real-tool dialogues, plus a clear-answer control; preserve all original failures and review boundaries. Test exact raw-quote rendering, untouched sibling state, no repeated audit for no-op confirmations, changed choices, missing literal sources and bulk explicit approval on PS5.1/PS7. Run Quick/runtime contracts, source/mirror parity and original protection. Report semantic results separately; a diagnostic printout does not prove correct customer understanding. No commit/publication is authorized.
+
+Observed results: PS7 and PS5.1 each passed 236 state assertions, runtime contracts passed 93, and the corrected Quick pipeline passed all 12 steps. The initial Quick failure is preserved: PS5.1's JSON-array pipeline behavior nested the test parser result, and a routed context exceeded its unchanged 32,000-character limit by 59 characters. Explicit row enumeration corrected the test parser; shortening the Frontier Round brought the context to 31,819 characters without raising the limit.
+
+Three frozen real-tool dialogues completed eight turns. A01 kept the unanswered retention facet open after the partial answer; A12 confirmed both editing and pre-edit content preservation without re-asking, with the literal-quote diagnostic actually observed in the updater output. A02 kept time allocation open after group practice was accepted; its teaching-example wording does not alone establish a contradiction with optional exercise answers. Original grounded reviews remain A01 Pass, A02 Fail and A12 Fail. The latter judgments motivated the separate reviewer calibration above, not extra user approval or rewriting original verdicts. The pre-calibration integrity/export audit passed 272 checks.
+
+Residual findings: A01 recorded a future retention choice as factual Q3 and obtained `Decision packet guard: NOT REQUIRED`; A02 likewise retained a group-work preference as Q2. This is a semantic typing gap, not a source-hash or identifier-continuity failure. Internal validator repair details also reached user-visible progress. These observations prevent overall release acceptance despite improved answer handling. Evidence and complete dialogues are under `F:/AllredInspect/02_Test_Evidence/Future_Runs/2026-09-07_allred-answer-interpretation/`. Runtime remains local rc15; no publication was performed.
+
+## Decision Continuity Across Updates, 2026-09-07
+
+- Problem/users: the frozen packet-guard A02 run reused D2/B2 for time allocation while exercise/review organization was unanswered. Each resulting snapshot passed independently. This affects every project with partial answers or emerging questions, not just training.
+- Benchmarks inspected: current rc15 updater's stable-ID upserts, optimistic SHA256 check, immutable output snapshots and original-preserving merge; current frontier's exact dependency IDs and existing terminal statuses; installed official skill-creator, checked 2026-09-07. Reuse these local PowerShell/.NET patterns and the existing shared validation helper. No package, process Skill, external service or additional user gate is required.
+- Decision: keep a decision's internal `axis` stable once established; optional `label` holds clearer wording without replacing the axis. A different question gets a new ID and preserves unanswered siblings. Retirement records `resolution_source` and `reason`; `superseded` also links `superseded_by` to current replacement decisions. User deferral/rejection needs a U source; evidence or a confirmed parent can establish non-applicability. Source links are not semantic proof of authority.
+- Enforcement: compare parent/current decisions and decision-backed blockers before writing an updater snapshot. Reuse that comparison in the existing frontier gate for states carrying an `authoring` parent path/hash; check the parent file and project identity. Missing decisions, changed axes, unsupported retirement and detaching still-unresolved decision blockers fail without repairing state. Legacy root/manual states without a parent remain compatible but cannot prove earlier history. Only the immediate recorded transition is checked; this is not an authenticated history store or semantic classifier.
+- Acceptance: preserve the original A02 files and prove its D2 overwrite is rejected; verify label refinement, new independent questions, partial answers, explicit corrections, justified retirement, and normal dependency changes. Negative cases must not write snapshots or alter source/patch files. Gate checks must catch direct child-file edits, missing/tampered parent evidence and project mismatch. Retain pending approval, no-op behavior, material-first intake, adaptive depth and beginner wording. Test PS7/PS5.1, Quick, real stage contracts and fresh A01/A02 with independent evidence review. No publication or overall acceptance is implied by local structure checks.
+
+The first frozen dialogue run exposed an adjacent field-shape gap: A01 wrote blocker links as `basis`, and A02 used `source`, both without `kind`. An in-memory variant of A01 removed B3 while D3 remained open without triggering the original checker. A suspected B4 replacement in A02 was disproved by comparing the actual parent: B4 was newly added, not overwritten. Preserve the failed initial replay expectation and do not label that dialogue as a blocker-replacement failure. Reuse the existing structured property/array readers to collect explicit `source_ids`, `basis`, and `source` links for decision or untyped blockers. Preserve all links when fields coexist; do not infer references from free text. Document one canonical authoring shape, retain older representations without requiring another user confirmation, and add shape-neutral positive/negative update tests. Original snapshot/dialogue hashes remain frozen; this follow-up requires fresh deterministic checks and read-only transition replay and must not be presented as a fresh model-dialogue pass.
+
+Results: final PS7 and PS5.1 each passed 210 state assertions; full runtime contracts passed 93 and Quick passed 12 steps. Ten read-only/synthetic transition expectations matched, including rejection of the retained original D2 overwrite and the explicitly synthetic missing-blocker child; an empty updater could not advance the broken synthetic input. The first 166-check snapshot's A01/A02 each completed three real-tool turns. A01 is grounded Fail for unsupported retention confirmation and a sole-gap claim. A02 is ReviewerOutputInvalid after its one permitted citation-only repair; no accepted automated verdict exists. Maintainer review found a reference-result promise conflicting with an offered checklist-only option, but does not require user approval for every reasonable implementation detail. Both real conversations retained decision identities. No whole-interview acceptance, stable release, or new model-dialogue pass after the field-shape repair is claimed.
+
+Preserve initial fixture/replay failures, both original reviewer outputs and the disconfirmed B4 hypothesis. Next priorities are raw-answer-to-confirmation semantics, consistent option-dependent promises, and grounded reviewer citation reliability, not another round cap or mandatory user gate. Evidence: `F:/AllredInspect/02_Test_Evidence/Future_Runs/2026-09-07_allred-decision-continuity/report.md`. No commit or publication was performed.
+
+## State-Bound Decision Packet Guard, 2026-09-07
+
+- Problem/users: frozen A02 has an actual failed DECISION gate followed by a successful packet lint and emitted product choices. Reproduced read-only on the unchanged state: complexity communication fails while the selected D3 passes lint. This affects new software and document users equally.
+- Benchmarks: local rc15 `get_route_context.ps1` invokes `invoke_validation_gate.ps1` in an isolated process and rejects a changed state hash; the aggregate composes stage-transition and decision-frontier. Inspected 2026-09-07 alongside the installed official skill-creator's narrow-script guidance. Reuse those validators, PowerShell/.NET and existing tests; no external tools, dependencies or process Skills are needed.
+- Decision: state-bound packets selecting any product D, including mixed Q/D packets, must pass the actual DECISION aggregate for new work before pass-through. Pure factual Q packets remain available during intake. Existing-work decisions check the frontier without new-project intake. Reuse the context command's explicit WorkKind convention for established document work, default new-standard/non-software to new, reject an existing override for a new-project route, and reject unknown routes/incorrect ledger prefixes. Do not infer question semantics from domain words or prose.
+- Deliberate limits: this guards the helper's output, not arbitrary host text. Missing StatePath, misclassified factual questions, invented state values or a skipped helper still require behavioral review. No new ordinary-user keyword, approval, total round cap or discovery-complete claim. A passed guard does not authorize implementation or prove enough questions were asked.
+- Acceptance: reproduce failure on the retained A02 state without modifying it; reject each incomplete intake facet, uncommunicated complexity, invalid provenance/frontier and mixed-packet bypass; retain factual intake, waiting children, valid software/document decisions and exact existing work. Verify failed guards emit no linted draft, preserve state hashes, and recover after genuinely corrected state. Run focused PS7/PS5.1 contracts, broader runtime contracts for shared behavior, and fresh actual A02 plus an adjacent control with frozen snapshots. Preserve first failures and review the full dialogue. No Git commit/publication is authorized.
+
+Observed results: focused PS7 and PS5.1 each passed 65 checks (53 target-script executions); full PS7 runtime contracts passed 93; Quick passed 12 steps. Official validation, 72/43-file source/mirror parity and 70 frozen-file/input hash checks passed. Fresh `gpt-5.6-sol/low` A02 completed three turns, and all product packets followed actual DECISION success; A05 completed one existing-debug turn without a startup ceremony. No skipped-stage regression was observed, but full behavior acceptance remains incomplete.
+
+The grounded independent A02 review remains Fail (five Met, two Violated); A05 remains Pass. Citation-only repairs preserved both judgments. The A02 judge's sole-gap/exclusion interpretation of "two current questions" is disputed: open coverage during DECISION alone does not prove final completion was claimed. Do not rewrite the review into Pass or force READY coverage before every packet. Maintainer state comparison found a separate concrete defect the judge missed: D2/B2 changed from exercise/review organization to time allocation while the former question remained unanswered. Follow up with cross-state decision-identity/preservation checks, plus reviewer controls for current-slice versus complete-discovery claims. Both cases also exposed unnecessary user-facing lint mechanics; do not treat their formal assertion results as full UX acceptance. Report and complete dialogues: `F:/AllredInspect/02_Test_Evidence/Future_Runs/2026-09-07_allred-packet-guard/report.md`. No publication or overall release pass is claimed.
+
+## Discovery Depth And Grounded Review, 2026-09-07
+
+- Problem/users: maintainers received a Pass even though a named required tool observation was missing (A09). Existing A01/A02 exercise evolving requirements, but most assertions describe allowed behavior rather than prove discovery of a consequential unstated branch. Ordinary project users need meaningful follow-up, not more ceremonies or a smaller question count.
+- Local benchmarks checked on 2026-09-07: installed `C:/Users/Administrator/.agents/skills/grilling/SKILL.md` (dependency-ready design tree and recomputation after answers); current Allred frontier/coverage owners and A01/A02/A07; installed official `skill-creator` (narrow, reusable, progressive instructions); retained actual A09 review disagreements. These match the current Windows/local-tool path. No external dependency is required.
+- Reuse: keep Allred's single interview owner, material-first intake, current per-reply readability bound, and the complete-specification bypass. Add assertion-by-assertion grounded review to the existing actual-dialogue evaluator. Its source quotes must resolve to the frozen transcript; structural coverage of a review is not semantic proof.
+- Deliberate differences: no compulsory external grilling, subagent, round limit, fixed business questionnaire, or new user keyword. Synthetic turns cannot prove that an unprompted discovery occurred unless it was observed before the user supplied the answer. All original failures and pre-change cases remain immutable.
+- Acceptance: run A01/A02 before runtime edits; test ordinary/beginner and non-software branch expansion with partial replies and changed requirements; retain A07's complete-evidence control. Reject omitted/duplicate assertion reviews, invented quotes and inconsistent verdicts deterministically. Report structural, interview and actual-operation evidence separately; missing observations are not Pass and reviewer disagreement remains visible.
+- Runtime changes must be justified by observed transcripts or an existing shared contradiction, then made in the smallest owner. No commit, publication, installation, global CLI edit or original project/note modification is part of this work. Elapsed time remains diagnostic only.
+
+Observed baseline A01 turn 2: the user said only to record borrowing/returning and left technical checks to Codex. The assistant converted this into an unapproved exclusion of a planned return date, although its own preceding question had left the date meaning open. Repair the frontier owner only: partial meaning stays open; use/exception walks may discover new consequential nodes even when no newly volunteered fact exists. This resolves the old "only when new information" restriction without another gate or compulsory question list. Preserve this baseline transcript, including any later reviewer judgment.
+
+Observed A10 turn 2: "undecided; do not choose for me" caused the assistant to wait for more ideas instead of helping resolve the material-exposed consequence. Clarify undecided versus paused in the same frontier owner; do not reopen unavailable factual inputs. Frozen A01 reviewers disagreed with the maintainer's exclusion finding even after atomic audits, and one reviewer produced inconsistent failure metadata. Grounded citations reduce unverifiable Pass claims but do not eliminate semantic judge error; retain the disagreement and do not represent this work as stable release acceptance.
+
+Observed baseline A02 turn 1: DECISION correctly rejected an uncommunicated complexity assessment, but a later packet lint passed and the assistant emitted product choices anyway. The lint's `APPROVED QUESTION PACKET` wrapper overstated its authority. Rename it to `LINTED QUESTION PACKET` and print the narrow validation scope. This removes a misleading local result, not the host's ability to emit text without calling a gate; actual gate compliance still needs behavioral review. No consumers of the old wrapper were found in the two local Skills.
+
+Strict reference grounding rejected real reviewer mistakes (wrong state-array index, source material cited as a user utterance, or nonliteral shell syntax). To avoid requiring manual reruns for these mechanical mistakes, permit one citation-only repair against the same frozen transcript. The result, assertion identities, reasons and all other judgment fields cannot change. Preserve the first review, diagnostic and repair output; a repair is not another semantic trial. Six negative fixtures reject judgment changes, alongside the fourteen grounding rejection fixtures. Semantic disagreement remains unresolved rather than being retried until Pass.
+
+## Bounded Capability And Claim Repair, 2026-09-07
+
+- Problem/users: extended actual-file A07 stopped after a launcher failure and delegated discoverable environment work to the user. Its visible sole-gap/completeness claim contradicted open, unreviewed coverage. This affects ordinary and beginner users across routes, not just that fixture's file format or runtime.
+- Benchmarks inspected: local rc15 Phase 2 evidence inspection, cumulative Discovery Coverage Review and actual READY validators at `2ade4dc` plus preserved local authoring changes; installed OpenAI skill-creator, checked 2026-09-07. Reuse bounded local-first investigation, provenance, progressive disclosure and existing gates. Existing PowerShell/.NET and CLI evaluation are sufficient; no dependency or external search is needed.
+- Implementation: clarify failed-entry-point versus missing-capability evidence in the shared inspection owner. Own completeness wording in the dynamic contract and load it during evidence; also load the real coverage method when entering READY directly without decisions. Clarify the question helper's existing default without changing its parser. No new questionnaire, keyword, state schema, approval or business rule.
+- Deliberate limits: do not require a complete ledger for every progress message; narrow the claim instead. No exhaustive search, unauthorized installation, permission bypass, or product writes. Retain meaningful adaptive interviews and exact start approval. Elapsed time remains diagnostic only.
+- Acceptance: unchanged A07 must locate a compatible available path, preserve exact scope and reach real READY before the start envelope. Additional actual-file debugging cases exercise a failed dispatcher with a documented local adapter, and a genuinely inaccessible service with usable local evidence. Inspect full replies and tool evidence independently; never edit old cases or outputs to obtain a pass. Route-context contracts verify loading, not semantic obedience. Run focused contracts and Quick; preserve every failed/retried run and source/release parity. No commit or publication is authorized.
+- First live retry resolved both original defects but independent review rejected a hidden duplicated product-directory segment. Follow the existing normalized-path API: reject ambiguous relative plans unless their base is explicit, retain unambiguous legacy inputs and deliberate nested layouts, and return the validated write layout for the visible start envelope. This is a general path-base ambiguity repair, not a fixture-name check. Test project-root/workspace/absolute paths, rejection without writes, and unchanged authorization before a fresh A07 retry.
+- Review audit: the first A09 reviewer awarded Pass despite a required catalog read lacking a tool observation. Preserve that review but treat the case as Partial in the maintenance audit. Clarify the general reviewer evidence contract: indirect source claims do not substitute for explicitly required operations, and missing proof cannot be waived to award Pass. Re-run A09 without changing its user inputs, assertions or runtime snapshot; do not treat retries as proof of stable acceptance.
+- Results: final Quick 12/12; runtime contracts 58/58 on PS7, route/layout contracts 15/15 on PS5.1, and state/path contracts 112/112 on both. Official validation and 72/42-file mirror parity passed. Fresh A07 and A08 passed independent review; both A09 trials remain audit-Partial for an unobserved required catalog read. A frozen second review correctly distinguishes missing evidence from a false-positive lint accusation. No complete cross-model or release acceptance is claimed. Evidence: `F:/AllredInspect/02_Test_Evidence/Future_Runs/2026-09-07_allred-evidence-repair/report.md`.
+
+## Extended Quality Diagnosis, 2026-09-07
+
+- User direction supersedes the earlier fixed-window comparison: extend diagnosis and do not use elapsed time to judge Skill quality or usability.
+- Local benchmark: the existing runner already separates raw timing, infrastructure interruption and independent semantic review. Reuse that separation and its actual-file cases, unchanged runtime snapshot, assertions and source/approval gates. No runtime design change, dependency, external search or user keyword is needed.
+- Implementation: retain timing in raw transcripts/sidecars, project it out of quality-review input, and explicitly exclude time from the reviewer rubric. Run the original A07 with a 1800-second process guard; do not overwrite earlier observations or pass an incomplete run.
+- Acceptance: changing only duration leaves quality input identical; substantive observations survive and raw evidence stays intact. Judge the extended complete conversation against the existing scope, evidence and authorization assertions. A resource interruption alone does not prove a Skill failure.
+- Observed result: extended A07 completed its reply and independent review, with `Evaluated / Fail` for unsupported completeness/environment claims, not elapsed time. The reviewer saw no timing statistics; raw timing remains available. No product write or premature approval was observed. The main runtime and case hashes match the preceding trial; configuration drift prevents strict controlled-comparison claims. Helper checks passed on PS5.1/PS7, candidate-harness checks passed, and all 13 migration fixtures passed.
+- Evidence and generic follow-up boundaries: `F:/AllredInspect/02_Test_Evidence/Future_Runs/2026-09-07_allred-extended-diagnosis/report.md`. Preserve bounded capability inspection, exact evidence limits and truthful completeness language; do not introduce per-scenario fixes or a speed-based quality threshold. No runtime workflow or publication change was authorized by the diagnostic request.
+
+## Incremental State Authoring, 2026-09-07
+
+- Problem: fresh A07 runs spent time recreating a full state and introduced relative-plan paths and S-to-root-authority references. Users should not answer questions to repair this internal bookkeeping.
+- Benchmarks inspected: local schema-v1 validators and rc15 draft/record builder, the unedited run-2 state, and installed OpenAI skill-creator on 2026-09-07. Reuse typed ledgers, SHA256 snapshot checks, temporary immutable output, deterministic transformations and progressive disclosure. PowerShell/.NET are already installed; no dependency or external search is required for this local change.
+- Implementation: an optional pre-approval new-baseline patch API. Merge only supplied object fields; upsert ledger rows by stable ID. Prepare a proposed start envelope from one explicit scope selection and a typed root choice. Derive repeated baseline/authorization IDs, file paths and scope-to-proof links; never derive business choices, source claims, coverage review, preflight completion or approval. Relative file plans resolve against the declared product root; protected originals are cumulative. Reject wrong reference namespaces, stale input hashes, unsafe paths and forbidden authorization edits together before saving.
+- Deliberate limits: not a second runtime state schema or a new user workflow; output is the existing schema v1 and all stage gates remain authoritative. Approved/delta work keeps its current path. Changed substantive state invalidates cached execution records and requires renewed coverage/preflight unless explicitly reviewed in the same patch. The API preserves old snapshots and records the parent hash; it is not global multi-writer coordination.
+- Acceptance: unchanged decisions/unknowns survive partial updates; no dropped protected inputs or implicit approval; root recommendations have R authority, confirmed roots require exact U/D; invalid IDs cannot be silently repaired; partial drafts remain blocked. Run positive/negative tests in PS7/5.1, preserved contracts and Quick. Re-run unchanged raw A07 at 240s; measure authored input, correction loops and actual READY completion separately. Only a fresh complete dialogue and independent review count toward experience acceptance; no release authorization is inferred.
+- Observed results: fixed false no-op invalidation caused by property reordering and stale complete coverage retained by a partial review update. Incremental contracts passed 91/91 on PS5.1 and PS7; Quick 12/12; preserved runtime contracts 57/57; Standard/Lab mirror parity 72/42 files. These are deterministic results, not experience acceptance.
+- Two fresh A07 low-effort trials successfully called the updater but timed out at 240s without a complete reply, actual READY or independent review. Their runtime/suite hashes match; user-config hashes drifted, preventing strict same-configuration performance claims. Run 2 also read an unnecessary question-validator implementation. No case, Oracle, time limit or source state was corrected to claim acceptance.
+- The unedited run-1 state rendered offline and passed all seven READY validators, isolating remaining end-to-end completion work from that state's mechanical compatibility. Semantic review still found an overly broad meaning attached to a short U2 quote; typed references do not prove source entailment. Next priorities are reduced authoring/round trips, semantic source review and configuration-drift detection, with the mature intake/start flow preserved.
+- Evidence: `F:/AllredInspect/02_Test_Evidence/Future_Runs/2026-09-07_allred-state-updates/handoff.md`. Keep this local candidate unpromoted; no commit or publication was authorized.
+
+## Start Record Construction, 2026-09-07
+
+- Problem/users: new-project users wait while the model reconstructs state fields and repeats scope/proof data across Markdown tables. Real A07 at frozen `2ade4dc` timed out at 240.595s with 16 tools; validator-source inspection is observed, but not established as the only latency cause.
+- Benchmark: local schema v1, `project-state.valid-ready.json`, `Codex执行记录.md`, `validate_execution_record.ps1`, `validate_decision_coverage.ps1`, inspected 2026-09-07 at rc15. Their formats and actual stage validators are the compatibility target. The installed OpenAI skill-creator supports deterministic scripts plus on-demand field references. PowerShell/.NET and the real CLI runner are already available; no dependency or external search is needed.
+- Reuse path: a neutral invalid draft and concise field guide; a pending-new-baseline renderer derives repeated statements/provenance/Promise rows from state and explicit scope steps. Existing schema and seven READY validators remain unchanged.
+- Deliberate limits: no automatic evidence, complexity, coverage or preflight completion; no user choice, deferral, hidden-effect review or approval is inferred. No existing delta/approved record conversion. Only unique temporary snapshots are created, never project products or original overwrites. The Markdown renderer escapes table/newline content instead of treating supplied values as layout.
+- Acceptance: original input unchanged; unresolved drafts/coverage/decisions still fail; valid synthetic input produces a record accepted by existing validators but EXECUTION remains blocked pending approval; source statements, recommendations, scope, unknowns and technical certainty survive rendering. Exercise PS7 and PS5.1, Quick and original negative runtime contracts. Re-run unchanged raw A07 at the same 240s limit; observe READY completion, validator-source reads, format repairs and timing. A single pass is not stable release evidence; no publication is authorized.
+- Follow-up interface fixes: command-line evidence paths now accept normal relative paths and normalize before protection checks; state write-boundary paths remain absolute. No-decision cases can use READY directly because its existing aggregate includes intake and frontier checks. No component validator was changed.
+- Observed outcome: builder contracts 58/58 on PS7 and PS5.1; Quick 11/11; preserved runtime contracts 57/57. Main/Lab mirrors are identical (71/41 files). Three fresh low-effort A07 runs still timed out at 240s without a final reply or successful READY receipt. No validator-source reads were observed; that alone is not proof of an end-to-end speed gain. Run 1 had relative state-plan paths; run 2 exposed the overly strict CLI evidence argument; run 3 stalled during preflight and contained a failed component probe. The runner timeout category does not identify a network cause.
+- Offline diagnosis, not behavioral acceptance: the unedited model state from run 2 rendered in 2.149s using the repaired builder. Record validators passed, but READY rejected a scope ID used as project-root authority. The source was not corrected or counted as an accepted live run. Remaining work is a less error-prone incremental state-authoring interface, not more interview questions or weakened provenance. Keep this local candidate unpromoted; broad model/release acceptance remains incomplete.
+- Evidence: `F:/AllredInspect/02_Test_Evidence/Future_Runs/2026-09-07_allred-start-record/handoff.md` contains the run directories, distinctions, and next acceptance boundary.
+
+## Runtime Acceptance Follow-Up, 2026-09-07
+
+Local candidate frozen at `2ade4dc`. See `runtime-acceptance-20260907.md` for timing/replay repair, explicit historical Oracle migration, benchmarks and acceptance gaps. These are maintainer-owned changes, not new runtime interview rules or ordinary-user triggers.
+
+## Incremental Runtime Repair, 2026-09-07
+
+- Status: implemented as local rc15; deterministic acceptance passed, behavioral/release acceptance incomplete. See `runtime-repair-20260907.md`. No publication authorized.
+- Reproducible baseline: `9e666a9` (`0.8.0-rc14`), branch `codex/allred-rc14-baseline-20260907`. This snapshot preserves defects as well as working behavior; it is not blanket acceptance.
+- Users: ordinary and beginner Allred users, including software, training, documents, debugging, and continuing projects.
+- Problem: fixed domain questionnaires conflict with bounded adaptive packets; context selection omits frontier updates; text-only event IDs bypass validation; path-prefix checks accept traversal; states and prose checks diverge.
+- Benchmarks inspected locally: accepted intake/frontier implementation at `eeb2f04` (rc9); rc14 readable packets and existing READY/traceability validators; installed OpenAI `skill-creator/SKILL.md`, inspected 2026-09-07. Reuse material-first discovery, exact scope ownership, progressive disclosure, and deterministic checks for actual data rather than wording.
+- Available implementation path: existing PowerShell/.NET, Codex CLI, Lab runner, source/release mirrors. No new runtime dependency, user trigger, process Skill, or installation is needed.
+- Deliberate differences: retain rc14 packet-size safeguards while applying them to every profile; distinguish cumulative coverage from one reply; allow waiting/conflict states without treating them as user deferral; replace event-name authority with actual state validation. Simulation context is explicitly unvalidated and cannot authorize execution.
+- Ownership: entrypoint routes; frontier reference defines the conversation loop; shared state helpers define decision statuses; validators check dependencies, provenance, coverage, and canonical paths; conditional references supply applicable domain lenses; Lab owns simulated and real-state acceptance.
+- Acceptance: reject nonexistent event authority and normalized out-of-root paths; no unvalidated route claims PASS; no unrelated domain content in base context; natural numbered questions and a single remaining follow-up pass all profiles; oversized packets fail every profile; waiting children remain recorded and never become visible/approved prematurely; answer changes preserve unrelated decisions; READY/EXECUTION reject incomplete coverage or absent exact authorization.
+- Experience acceptance: material-first intake, natural replies, current scope versus future scope, beginner style switching, and one clear start approval retain their meaning. No total interview-round cap. Measure repeat questions, dropped requirements, unauthorized decisions, context volume, and real state transitions separately.
+- Test policy: preserve old cases/Oracles as historical evidence. Add narrowly scoped regression contracts and real-state multi-turn cases; do not rewrite semantic expectations merely to obtain PASS. Simulated conversations do not certify filesystem effects or actual stage validation.
+
+
+## Original Ownership Decision
+
 - Status: accepted for `0.8.0-rc10`
 - Date: 2026-08-29
 - Baseline: `0.8.0-rc9`, Git commit `eeb2f04`

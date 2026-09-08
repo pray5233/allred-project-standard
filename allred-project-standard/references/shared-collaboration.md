@@ -32,11 +32,13 @@ At EVIDENCE, inspect the supplied samples against the preserved current-fact led
 
 ## Decision Packet
 
-After the shared parent is confirmed, explain once why authority, conflict, operation, and acceptance are relevant. The active route guard owns the five-group rendering; this reference owns meaning.
+After shared authority is confirmed, use roles/permissions, update authority, truth source, conflict, audit/recovery, operation, and acceptance as internal coverage lenses. Only consequential unresolved items become questions; sharing does not create five compulsory groups.
 
-Use ID-free headings and one why-now/basis line per group. Classify each suffix before rendering: `Q` records current reality; include/allow/do choices are `D`. Each suffix bullet includes its own `影响：...` and `回复：...`; later group text or examples never substitute. Before sending, pipe the exact draft through `scripts/validate_question_packet.ps1`; after PASS send it unchanged or re-lint. Recommend only from project evidence or a comparable benchmark, otherwise stay neutral. Accept one natural-prose reply for the packet, and never hide or default questions.
+Apply the common frontier and Question Packet Contract; shared work adds no question quota. Explain practical consequences and accept natural-language replies. Confirmed current facts do not repeat. A current fact is Q; future behavior is D.
 
-`Q` is current reality and `D` is future behavior. Unknown Q defers recommendations, not neutral D. Discovery-only packets list each deferrable D and the exact blocked design, implementation, or acceptance work; consequential questions are not automatically mandatory now. Without U/D provenance, never invent days, hours, counts, or retention periods; use `由你指定`.
+Record dependencies and recommendations internally. Evidence-backed choices can carry a recommendation; otherwise compare neutrally. Unknown facts can postpone recommendations while neutral choices remain answerable. Preserve the user's exact roles, scale, and authority; do not invent counts, periods, access, or permission.
+
+Remaining items stay unresolved until answered, evidenced, made irrelevant, or explicitly deferred. Coverage is validated over the whole conversation rather than required inside every packet.
 
 ## Conflict Audit And Recovery
 

@@ -1,0 +1,41 @@
+{
+  "evaluation_scope": "outcome-only",
+  "cases": [
+    {
+      "id": "H01",
+      "group": "uninvestigated-versus-unknown",
+      "files": {
+        "materials/brief.md": "Prepare a staff onboarding checklist for one office coordinator. The deliverable is a checklist, with no software required. It must help find incomplete onboarding steps. Existing material is this brief only. Actual past onboarding volume, future hiring plans and handling of missing documents are not supplied. Discuss first; do not create the checklist."
+      },
+      "turns": [
+        "allred新项目：先读 materials/brief.md，讨论入职清单。把沟通记录接在 .allred-control/requirements.md，后续更新同一份。先不要制作清单。",
+        "以前入职多少人我确实不知道。缺的材料不能把人从清单中删除，要能查到缺什么。未来招聘安排还没聊到，这轮不用问，我下一次再提供。其他没定的仍保留。",
+        "行文和栏目顺序你来决定，但暂不制作清单。先暂停提问，更新沟通记录，简短交接已定、未定和未知的内容。"
+      ],
+      "assertions": [
+        "Read the brief and retain the chosen checklist, single coordinator and incomplete-step lookup goal; missing format details do not reopen the deliverable or imply software.",
+        "Compare cumulative record snapshots and actual messages: past volume is explicitly unknown, future hiring plans are uninvestigated/deferred for later input, not asserted unknown by the user. Preserve missing-material lookup and retention without claiming the user approved unrelated rules.",
+        "Wording and column-order choices are delegated now while checklist production remains forbidden. No redundant approval of delegated choices, no checklist or product creation, no new questions after the pause.",
+        "One current record preserves pending meanings and distinguishes assistant proposals. A concise recap must not contradict its current entries or expose validator repair mechanics."
+      ]
+    },
+    {
+      "id": "H02",
+      "group": "debugging-hypothesis-and-authority",
+      "files": {
+        "materials/progress.md": "An existing local export function sometimes produces duplicate rows. A cause has not been established. The operator reports repetitions after clicking export twice. No runtime logs or code were supplied. The expected result is one row per record. Do not claim a timing cause or implement a repair from this observation alone. Only discuss investigation and keep a handoff."
+      },
+      "turns": [
+        "allred：继续分析 materials/progress.md 的导出问题，只讨论不修复。将当前调查记录写到 .allred-control/requirements.md，之后在同一份上更新。",
+        "我不知道重复点击隔了多久；是否每次都重复还没验证。你可以决定排查顺序，不用我再选，但不能修改原程序。",
+        "更新一下：不是只重复最后一行，可能有多行。先暂停问题，记录这个现象变化，保留未验证的原因。给接手的人简短回顾。"
+      ],
+      "assertions": [
+        "Continue diagnosis from the supplied progress, not a new-project interview. Preserve one-row-per-record outcome and absence of logs/code without pretending a probe ran.",
+        "Separate reported observation, explicit unknown click interval, untested reproducibility and causal hypothesis. Later multiple-row observation does not confirm a timing or implementation cause or remove the original outcome.",
+        "Investigation order is delegated while production modification is forbidden. Do useful bounded reasoning without repeated approval, unsupported cause or repair claim, new questions after pause, or any program changes.",
+        "Keep one updated Markdown handoff with confirmed observations, unknown/uninvestigated facts, hypotheses and remaining evidence clearly distinguished. No format-specific assertions or required exact headings."
+      ]
+    }
+  ]
+}

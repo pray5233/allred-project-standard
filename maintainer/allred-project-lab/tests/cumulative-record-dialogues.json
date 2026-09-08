@@ -1,0 +1,62 @@
+{
+  "evaluation_scope": "outcome-only",
+  "cases": [
+    {
+      "id": "R01",
+      "group": "cumulative-training",
+      "files": {
+        "materials/brief.md": "Audience: new technical-support colleagues. Initial idea: teach issue recording, reproducing a symptom, and writing a handoff. Two-hour classroom session. Existing material consists only of this brief. Success: complete a usable issue record and handoff from an example. The user has not chosen the example or exercise/review format."
+      },
+      "turns": [
+        "allred新项目：做一份技术支持培训讲义，先读 materials/brief.md，再和我讨论，不要直接写讲义。为了下次能接着讨论，把需求沟通记录保存在 .allred-control/requirements.md，后续有新信息就在这一份记录上更新。",
+        "案例用无法连接设备。其余还没考虑好，讲解与练习如何分配，请给我建议，不要替我确定。",
+        "分组练习可以，不过讲义也要能给缺席的人自学使用。你再看看这会改变哪些安排，只问还需要决定的内容。",
+        "先停在这里，更新那份需求记录。我没有决定如何验收缺席者的自学成果，其他已经明确的要求不要改动。不要制作讲义，给我简短回顾。"
+      ],
+      "assertions": [
+        "Read the original brief and preserve its usable issue-record and handoff outcome, symptom reproduction content, audience and duration. The brief does not itself require independent completion or mandatory submission; distinguish the outcome from its unresolved proof arrangements.",
+        "Update the same requested Markdown record after material answers; compare actual per-turn snapshots with the user words. Preserve the selected case, accepted group practice and added self-study use without converting assistant proposals, time allocation or proof methods into user decisions. New self-study use alone does not authorize weakening the original practical-result outcome.",
+        "At the final pause retain both the original outcome and self-study need, unresolved time allocation and self-study assessment. Do not restart questions, re-ask settled decisions, or create the lecture. Source words, observed facts and assistant recommendations must remain distinguishable; no exact prose or fixed headings are required.",
+        "Keep visible communication focused on findings and useful decisions. Do not turn the internal record, validation syntax or evaluator procedure into work for the user. Do not claim successful product verification from record existence."
+      ]
+    },
+    {
+      "id": "R02",
+      "group": "cumulative-beginner-software",
+      "files": {
+        "materials/idea.md": "One-person offline equipment booking tool. Record equipment name, requester and date. Find all bookings for a named item. No current program or other material. The date meaning, overlapping bookings and cancellation behavior are not decided. Success means locating a request and understanding whether the item is available. No authorization to build."
+      },
+      "turns": [
+        "allred新手项目：先看 materials/idea.md，再讨论怎么做。请保留里面还没决定的事项，不要开始开发。把需求沟通记录保存在 .allred-control/requirements.md，后续有新信息就在这一份记录上更新。",
+        "取消的预约要保留，取消后不再占用设备。其他事项还没决定，历史记录量我也不知道。技术问题你自己调查。",
+        "同型号可能有多台，需要看还有几台可用。你继续按这个新情况考虑，已经确认的取消规则不要重新问。",
+        "先暂停新增问题，更新那份需求记录，给下一次接着讨论留个简短回顾：已确认什么、哪些问题还没解决、哪些信息确实不知道。不要把没回答的当成不做。"
+      ],
+      "assertions": [
+        "Read the actual idea, preserve single-user offline use, equipment/requester/date recording and finding a request. Beginner expression does not change scope or start authorization.",
+        "Update the same requested Markdown record after material answers. Preserve both parts of the cancellation rule, later multiple-unit availability and the explicitly unknown historical volume. The later answer must not erase earlier unresolved date and overlap meanings.",
+        "Separate user-required remaining-availability display from supporting fields or implementation chosen by Codex. Do not falsely label supporting choices as individually user-confirmed, but do not require separate approval for harmless routine details within actual authority.",
+        "Respect the final pause and no-build boundary, retaining pending quantity/date/conflict meanings as pending, not abandoned. Do not expose internal formatting work or ask the user to restate information already provided. File existence is not a verified product."
+      ]
+    },
+    {
+      "id": "R03",
+      "group": "cumulative-long-term-document",
+      "files": {
+        "materials/progress.md": "Established purchasing-tracking plan. One coordinator maintains an electronic spreadsheet; this deliverable was chosen. Track all current orders and keep completed order history available for lookup. Review arrivals every Monday. Column order, display layout and missing-arrival handling are undecided. This is a plan, with no delivered spreadsheet or verified automation. Only discussion and its internal record are authorized now."
+      },
+      "turns": [
+        "allred长期任务：继续 materials/progress.md 的采购跟踪方案，先读现有记录，只讨论，不制作表格。把这次沟通接到 .allred-control/requirements.md，后面都更新这一份。",
+        "核对到货改成每周五，交付物保持电子表格不变。列顺序和排版由你决定，其他事项先不定。",
+        "我现在更改覆盖范围：日常只跟踪未完成的订单，已完成记录保留供查找，这项确定了。不要开始制作表格。",
+        "到货信息缺失时怎么处理还没决定，不是不要这项。先停下新问题，更新沟通记录，给下一次接着讨论的人留个简短回顾。"
+      ],
+      "assertions": [
+        "Continue the inspected plan rather than restart intake. Preserve the electronic spreadsheet deliverable, coordinator and no-production boundary; a changed review day cannot imply a different delivery form.",
+        "Update the same requested Markdown record. Reflect Friday as the current day with Monday superseded only on that facet. Retain the explicit delegation of column order/layout, without demanding a new user decision for each supporting detail.",
+        "Reflect the user's explicit later change to active tracking of incomplete orders while preserving completed history for lookup. Do not treat history retention as a demand to show every completed order in active tracking, or silently delete the completed history.",
+        "Retain missing-arrival handling as unresolved, not excluded. Respect the pause, write only the authorized internal record, and give a concise factual handoff without inventing completed production or verified automation."
+      ]
+    }
+  ]
+}

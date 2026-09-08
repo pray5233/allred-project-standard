@@ -70,21 +70,21 @@ foreach ($file in $files) {
   }
 }
 
-$requiredContracts = @(
-  @{ file = 'SKILL.md'; text = 'Keep runtime policy domain-neutral.' },
-  @{ file = 'references\external-source.md'; text = 'required semantic dimensions from the active project contract' },
-  @{ file = 'references\非软件项目模式.md'; text = 'No empty heading' },
-  @{ file = 'scripts\get_route_context.ps1'; text = 'derive the required semantic dimensions from the active project contract' }
-)
-foreach ($contract in $requiredContracts) {
-  $path = Join-Path $SkillRoot $contract.file
-  if (-not (Test-Path -LiteralPath $path)) {
-    $failures.Add("Generality owner missing: $($contract.file)") | Out-Null
-    continue
+$manifest = Get-Content -LiteralPath (Join-Path $SkillRoot 'tests/invariants.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+foreach ($contract in $manifest.context_contracts) {
+  $variant = if ($contract.PSObject.Properties['variant']) { $contract.variant } else { 'none' }
+  $context = (& (Join-Path $PSScriptRoot 'get_route_context.ps1') -SkillRoot $SkillRoot -Route $contract.route -Stage $contract.stage -Variant $variant -ContextOnly) -join [Environment]::NewLine
+  foreach ($heading in $contract.required_sections) {
+    if (-not $context.Contains("## $heading")) { $failures.Add("Missing routed section: $($contract.route)/$($contract.stage) -> $heading") | Out-Null }
   }
-  $text = Get-Content -LiteralPath $path -Raw -Encoding UTF8
-  if (-not $text.Contains($contract.text)) {
-    $failures.Add("Generality contract missing: $($contract.file) -> $($contract.text)") | Out-Null
+  foreach ($source in $contract.forbidden_sources) {
+    if ($context.Contains($source)) { $failures.Add("Unselected domain source loaded: $($contract.route)/$($contract.stage) -> $source") | Out-Null }
+  }
+  if ($contract.route -ne 'non-software') {
+    $guard = (& (Join-Path $PSScriptRoot 'get_route_context.ps1') -SkillRoot $SkillRoot -Route $contract.route -Stage $contract.stage -ContextOnly -GuardsOnly) -join [Environment]::NewLine
+    if ($guard -match '(?i)print acceptance|curriculum|first.release.*templates|render five groups') {
+      $failures.Add("Domain questionnaire leaked into base guard: $($contract.route)/$($contract.stage)") | Out-Null
+    }
   }
 }
 

@@ -35,7 +35,16 @@ pwsh -NoProfile -File scripts\invoke_candidate_validation.ps1 -Mode Candidate -B
 - `Changed` resolves affected cases from Git changes, then runs fixed-record replay and only the selected behavior cases. A non-pass is automatically retried and reported as stable, variable, or infrastructure-inconclusive evidence.
 - `Candidate` adds the release matrix, low/high multi-trial consistency runs, old/new blind comparison, write-boundary probe, official validation, isolated installation, and source/release parity.
 - Treat infrastructure failures as inconclusive. Do not convert a missing login, invalid key, timeout, or unavailable validator into a Skill pass or fail, and do not treat one stochastic pass as stable release evidence.
+- Runtime-state changes also require `scripts/run_runtime_dialogues.ps1 -OutputRoot <new-evidence-directory>` and the deterministic `check_runtime_contracts.ps1` suite. These use actual files and validator output. The old tool-event simulation measures conversation only; an `OracleIncompatible` result is a migration gap, never a pass or a product regression.
 - The generated `report.html` is the default review artifact. Ask the user for one final real-machine pilot only after the candidate pipeline passes.
+
+For a simplification hypothesis, use `scripts/run_runtime_comparison.ps1 -BaselineSkillRoot <frozen-source> -OutputRoot <new-directory> -UseUserConfig`. It freezes a common outcome rubric and compares old Skill, candidate and native Codex on actual dialogues. Original Skill-conformance checks stay separate. A tie or native win is valid evidence; do not change the rubric to require a candidate win. See `references/core-simplification-20260907.md` for scope and limitations.
+
+For the collaboration-bridge change, follow `references/bridge-workflow-20260908.md`.
+Reports label `contract-and-behavior` and `outcome-only` separately. Optional
+question diagnostics are not per-turn runtime obligations. Preserve original
+assertions and failures in frozen evidence; judge source fidelity, useful
+discovery and actual authorization independently of the script-call schedule.
 
 For the Lab's own maintenance scenario, run the target Skill's evaluator with separate suite ownership:
 
@@ -47,6 +56,37 @@ pwsh -NoProfile -File <allred-project-standard>\scripts\run_behavior_eval.ps1 `
 ```
 
 ## Maintenance Loop
+
+Normal runtime dialogues use the ordered evidence-ID interface with the existing
+reviewer assertions; `-ReviewerFormat Legacy` preserves the prior diagnostic
+format. See `references/review-interface-20260908.md` for verification and limits.
+For review-evidence calibration, use `scripts/run_ordered_review.ps1 -OutputRoot
+<new-directory> -UseUserConfig`. Optional `-ReplayRoot`, `-SuitePath` and
+hash-bound `-EventMapPath` re-review unchanged dialogues with their original
+event order. See `references/ordered-review-20260908.md`. This opt-in Lab path
+does not replace normal dialogue evaluation or certify a release.
+
+For dialogue-continuity diagnosis, `run_runtime_dialogues.ps1 -SessionMode Native`
+uses an exact per-case CLI session; the default `Replay` keeps historical replay
+as a control. `-ReviewMethod Counterevidence` is an optional review method on the
+dialogue, ordered-review and calibration runners. It does not change assertions,
+guarantee semantic correctness or authorize runtime promotion. See
+`references/native-dialogue-review-20260908.md` for commands, original-context
+binding, retained disagreements and the measured limits.
+
+For goal-inheritance calibration, see
+`references/goal-inheritance-review-20260908.md` and controls C17-C26. The source
+comparison experiment remains isolated because some supporting judgments were
+incorrect or disputed. Preserve the distinction between outcome, proof method
+and actual authority; do not promote a runtime change from an aggregate verdict.
+
+For the subsequent per-assertion experiment and source-attribution correction,
+see `references/assertion-isolation-review-20260908.md`. Both tested combinations
+remain isolated; the default reviewer and runtime workflow are unchanged.
+
+For selective source-attribution findings and the unaccepted record-correction
+experiment, see `references/source-attribution-review-20260908.md`. Its helpers
+remain isolated; valid citations alone do not establish faithful record updates.
 
 ```text
 freeze baseline -> classify owner -> change smallest owner -> static validation

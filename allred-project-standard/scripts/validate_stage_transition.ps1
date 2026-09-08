@@ -38,6 +38,7 @@ function Require-ReadinessItem {
 
 if ($null -ne $state) {
   $userSources = Get-AllredUserSourceMap $state
+  $evidenceIds = @((Get-AllredArray (Get-AllredProperty $state 'evidence')) | ForEach-Object { [string](Get-AllredProperty $_ 'id') })
   $intake = Get-AllredProperty $state 'intake'
   if ($null -eq $intake) {
     Add-Failure 'Intake readiness ledger is missing.'
@@ -72,6 +73,7 @@ if ($null -ne $state) {
     $item = if ($null -ne $intake) { Get-AllredProperty $intake $name } else { $null }
     $source = if ($null -ne $item) { [string](Get-AllredProperty $item 'source') } else { '' }
     if ($source -match '^U' -and -not $userSources.ContainsKey($source)) { Add-Failure "Intake readiness item $name references missing user source: $source" }
+    if ($source -match '^E' -and $source -notin $evidenceIds) { Add-Failure "Intake readiness item $name references missing evidence source: $source" }
   }
 
   if ($ToStage -in @('READY', 'EXECUTION')) {
