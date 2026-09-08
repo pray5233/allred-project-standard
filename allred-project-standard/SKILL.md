@@ -48,21 +48,24 @@ their practical consequence only when useful work or the user's result changes.
 
 Run `scripts/get_route_context.ps1 -Route <route> -Stage <stage> -Interaction standard|beginner` for the current stage. Stages: `intake`, `evidence`, `decision`, `ready`, `external-read`, `execution`, `verification`. Load `ready` only for the complete final scope/start envelope; its delivery and execution-record detail is not needed for each question round.
 
-- Pass named PowerShell parameters directly. Select applicable overlays from the evidence using the mapping below and include `-Overlays` in the same stage call, for example `-Overlays shared-collaboration`. Inspecting general context does not load an overlay. Revisit that selection only when new evidence changes applicability.
+- Pass named PowerShell parameters directly. For `non-software`, pass the matching `-Variant training|policy|knowledge|bid|contract|inspection` when the actual work establishes one. Select applicable overlays from evidence using the mapping below and include `-Overlays` in the same stage call, for example `-Overlays shared-collaboration`. General context does not load a variant or overlay. Revisit selection when new evidence changes applicability.
 - Conditional overlays add no user triggers: `external-source` for actual external sourcing (`-ExternalMode one-time` or `monitoring`); `shared-collaboration` for shared authority over the same live state; `company-office-delivery` for evidenced office-computer constraints. Multiple readers, files, departments, or beginner wording alone do not select them. Unselected domains remain silent.
 - Read the selected context once per route/stage/variant/overlay combination. Reuse unchanged references after tool results; update project state instead of rereading instructions.
 - Keep discovery in a cumulative conversational record as described in `references/内部记录生成.md`. Preserve source words, answered meanings and unresolved facets after material changes; asking a question does not require a state file. Before the final start envelope, materialize the existing schema with `scripts/update_project_state.ps1`; `scripts/build_start_record.ps1` derives the execution record. Reuse an existing state incrementally. Neither helper grants approval; do not copy passing fixtures.
 - Load newly relevant stages or capabilities before using them. `-GuardsOnly` refreshes a stage already read; it does not substitute for first reading.
 - New-project READY and EXECUTION require the actual `-StatePath`. Decision context is guidance and loads without state. Supplying state at DECISION opts into record diagnostics, not permission to converse. Software and new non-software projects use the same action gates. For an established document/change only, select `-WorkKind existing`.
-- If all consequential choices are already settled and no decision packet is needed, go directly to the actual READY gate, which includes intake and frontier checks; a separate DECISION call adds no validation. Missing evidence, coverage, preflight, scope authority or start approval still blocks its stage. Render the start envelope's root and file layout from the gate's `ValidatedWriteLayout`, preserving subdirectories instead of reconstructing paths.
+- If all consequential choices are already settled and no decision packet is needed, go directly to the actual READY gate, which includes intake and frontier checks; a separate DECISION call adds no validation. Missing evidence, coverage, preflight, scope authority or start approval still blocks its stage. Render the start envelope's absolute root from the gate's `ValidatedWriteLayout`; file paths may be relative to that explicitly named root. Preserve subdirectories instead of reconstructing or abbreviating the root path.
 - `-ContextOnly` and `-MetricsOnly` inspect instructions only. They never validate a project or authorize READY or execution. Conversation uses actual evidence and user authority, not a tool receipt. An event ID or a sentence saying "passed" is not validation.
 - If scripts are unavailable, read the applicable references for authorized evidence collection; do not claim machine validation. Existing exact safe work can continue under its actual authorization.
 
-When wrapping commands with `functions.exec`, emit the whole awaited tool result
-with `text(result)` so the process handle and exit status survive. A returned
-`session_id` requires collecting that command with `write_stdin`; empty output
-while it runs is pending. Preserve the full collection result too. Use the
-completed exit status and output before deciding whether a retry is needed.
+When wrapping context reads with `functions.exec`, emit `text(result.output)`
+and the remaining result metadata separately, preserving the process handle and
+exit status. Avoid one oversized escaped JSON line. Budget both the inner command
+and outer wrapper for the selected context; if either reports truncation, read
+the missing relevant sections before relying on them. Command success does not
+prove complete reading. A returned `session_id` requires collection with
+`write_stdin`; empty output while it runs is pending. Preserve the collected
+output and metadata too, and use the completed result before deciding to retry.
 
 | Topic | Canonical owner |
 | --- | --- |

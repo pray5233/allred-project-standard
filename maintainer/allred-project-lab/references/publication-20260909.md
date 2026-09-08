@@ -213,6 +213,54 @@ later preservation cannot erase a prior unauthorized decision. This supplemental
 test is not a mandatory runtime file or interview round, and does not overwrite
 the shorter original trial.
 
+R15 low A01's added handoff exposed an unanswered earlier factual question
+missing from the first note. The record owner now explicitly initializes from
+earlier assistant questions as well as user/material sources, following A14's
+handoff benchmark. It does not require another answer, per-question file or
+validation. R15 A07 reached the actual READY gate, but its final root abbreviation
+was ambiguous (Partial). The existing layout instruction now requires the actual
+absolute root and allows relative files only under that named base. These changes
+and the builder repair require a separate R16 snapshot; original R15 results stay.
+
+Native tool-return inspection of R15 low A01 found that a combined intake/evidence
+read exceeded the outer wrapper output budget despite an inner limit of 30000
+tokens. The returned text was truncated; the evidence-claim-boundary section was
+absent while the cumulative-record section remained present. Thus truncation does
+not by itself explain the lost question. Entry guidance now separates plain
+context output from metadata and requires recovery of missing relevant sections
+when truncation is reported. Both process status and model-visible receipt remain
+important, with no mandatory receipt script or new interview round.
+
+The same native session contains actual unavailable-question-tool returns and a
+failed patch-format return omitted by the CLI review stream. Those observations
+dispute that part of the automatic Missing finding, not the separate lost-question
+Fail. Original CLI and native sources remain unchanged. This correction is not a
+new successful actor trial or a blanket endorsement of repair narration.
+
+R15 low A02 still mixed proposed consequences into its introduction before
+asking about their alternatives. Replace the existing abstract presentation
+instruction with a short reusable rendering sequence: confirmed answer, labeled
+advice, remaining choice. No fixed wording checker or user round is added. Its
+trace also omitted the existing non-software Variant argument and later searched
+the whole Skill for domain guidance. Expose that existing parameter beside the
+overlay parameter rather than adding another domain workflow. R17 freezes these
+changes with the receipt and initial-record fixes for renewed evaluation.
+
+R15 high A01 preserved the date-meaning question through turn 3, then lost it
+when rewriting the whole note for a short handoff. This differs from initial-note
+omission. The existing handoff owner now reuses an up-to-date note unchanged and
+patches only actual new facts or pause/authority changes; the short view belongs
+in the user reply. This follows its existing incremental-edit benchmark and
+reduces unnecessary writes. No content-copying fallback or new record is added.
+
+R17 low A01 no longer makes a demonstrated scope violation, but retains Partial:
+an optional subpart of an earlier question is not present in the record and the
+CLI stream omits another patch failure. Initialization therefore retains the
+original wording of pending questions and annotates answered parts, instead of
+summarizing away subparts. Optional ideas do not become mandatory blockers. The
+unchanged-note handoff and this literal pending-source refinement are frozen next
+as R18; no earlier result is relabeled as its acceptance.
+
 ## GitHub Status
 
 Only `codex/rc15-final` and draft PR #1 are published. No rc15 Release/tag, main
