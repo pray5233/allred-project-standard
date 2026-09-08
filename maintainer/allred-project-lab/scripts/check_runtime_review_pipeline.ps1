@@ -27,6 +27,12 @@ $mock=@'
 $prompt=[Console]::In.ReadToEnd()
 $output=$args[[Array]::IndexOf($args,'-o')+1]
 $schemaIndex=[Array]::IndexOf($args,'--output-schema')
+$modelIndex=[Array]::IndexOf($args,'-m')
+$observedModel=if($modelIndex -ge 0){$args[$modelIndex+1]}else{''}
+$observedEffort=@($args|Where-Object {$_ -match '^model_reasoning_effort='}) -join ''
+$settingsRoot=Join-Path (Split-Path -Parent (Split-Path -Parent $output)) 'model-settings'
+[void][IO.Directory]::CreateDirectory($settingsRoot)
+[IO.File]::WriteAllText((Join-Path $settingsRoot ([IO.Path]::GetFileName($output)+'.json')),(ConvertTo-Json @{model=$observedModel;effort=$observedEffort}),[Text.UTF8Encoding]::new($false))
 if($schemaIndex -lt 0){$final='Still discussing.'}
 else{
   $ordered=$args[$schemaIndex+1] -match 'ordered-review.schema.json$'
@@ -40,7 +46,8 @@ else{
       $ref=if($ordered){@{evidence_id='T01-R';quote=$quote}}else{@{turn=1;kind='response';index=$null;quote=$quote}}
       @{assertion_index=$id;result='Met';reason='Observed statement.';evidence=@($ref)}
     })
-    $review=@{case_id='I';result='Pass';first_divergent_turn=$null;failed_assertions=@();hard_failures=@();notes='Pipeline fixture only.';assertion_checks=$checks}
+    $reviewCaseId=if($prompt -match '(?m)^CASE: ([A-Za-z0-9]+)'){$Matches[1]}else{'I'}
+    $review=@{case_id=$reviewCaseId;result='Pass';first_divergent_turn=$null;failed_assertions=@();hard_failures=@();notes='Pipeline fixture only.';assertion_checks=$checks}
   }
   $final=$review|ConvertTo-Json -Depth 12 -Compress
 }
@@ -132,4 +139,53 @@ foreach($negative in @('missing-prompt','different-turn-context')){
   $rows+=@{mode=$negative;status='RejectedBeforeReview';result=$null;expected=$true}
 }
 Write-AllredEvalUtf8 (Join-Path $OutputRoot 'summary.json') (ConvertTo-Json -InputObject $rows -Depth 8)
-'Runtime review pipeline: PASS (Markdown/JSON record continuity and 7 review modes; mocked model only).'
+$selectionLab=Join-Path $OutputRoot 'selection-lab'
+[void][IO.Directory]::CreateDirectory((Join-Path $selectionLab 'tests'))
+foreach($schema in @('ordered-review.schema.json','runtime-review.schema.json')){
+  Copy-Item -LiteralPath (Join-Path (Split-Path -Parent $PSScriptRoot) ('tests/'+$schema)) -Destination (Join-Path $selectionLab ('tests/'+$schema))
+}
+$defaultIds=@('A01','A02','A03','A04','A05','A06','A07','A12','A13','A14')
+$selectionSuite=Join-Path $selectionLab 'tests/runtime-dialogues.json'
+$selectionCases=@(foreach($id in ($defaultIds+@('X'))){@{id=$id;group='selection-fixture';files=@{};turns=@('Discuss only.');assertions=@('Continue discussion.')}})
+Write-AllredEvalUtf8 $selectionSuite (ConvertTo-Json -Depth 8 @{cases=$selectionCases})
+$selectionSkill=if($SkillRoot){$SkillRoot}else{Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) 'allred-project-standard'}
+foreach($mode in @('default-selection','custom-suite','explicit-selection')){
+  $selectionRoot=Join-Path $OutputRoot $mode
+  $parameters=@('-OutputRoot',$selectionRoot,'-LabRoot',$selectionLab,'-SkillRoot',$selectionSkill,'-CodexCommand',(Join-Path $OutputRoot 'codex-ordered.ps1'),'-TimeoutSeconds','30')
+  if($mode -eq 'custom-suite'){$parameters+=@('-SuitePath',$selectionSuite)}
+  if($mode -eq 'explicit-selection'){$parameters+=@('-CaseIds','X')}
+  $log=@(& (Get-Process -Id $PID).Path -NoProfile -File (Join-Path $PSScriptRoot 'run_runtime_dialogues.ps1') @parameters 2>&1)
+  Write-AllredEvalUtf8 (Join-Path $OutputRoot ($mode+'.log')) ($log -join "`n")
+  if($LASTEXITCODE -ne 0){throw "Selection runner failed: $mode"}
+  $expected=if($mode -eq 'default-selection'){$defaultIds}elseif($mode -eq 'custom-suite'){$defaultIds+@('X')}else{@('X')}
+  $selectionResult=@(Get-Content (Join-Path $selectionRoot 'summary.json') -Raw|ConvertFrom-Json)
+  $selectionManifest=Get-Content (Join-Path $selectionRoot 'manifest.json') -Raw|ConvertFrom-Json
+  foreach($actual in @(@{ids=@($selectionResult.case_id)},@{ids=@($selectionManifest.case_ids)})){
+    if(@(Compare-Object @($expected|Sort-Object) @($actual.ids|Sort-Object)).Count){throw "Requested, recorded and executed cases differ: $mode"}
+  }
+  $rows+=@{mode=$mode;status='Evaluated';result='Pass';expected=$true;case_count=$selectionResult.Count}
+}
+Write-AllredEvalUtf8 (Join-Path $OutputRoot 'summary.json') (ConvertTo-Json -InputObject $rows -Depth 8)
+foreach($override in @($false,$true)){
+  $name=if($override){'separate-reviewer'}else{'inherited-reviewer'}
+  $runRoot=Join-Path $OutputRoot $name
+  $parameters=@('-OutputRoot',$runRoot,'-SuitePath',$suite,'-CodexCommand',(Join-Path $OutputRoot 'codex-repair.ps1'),'-Model','actor-model','-ReasoningEffort','low','-TimeoutSeconds','30')
+  if($SkillRoot){$parameters+=@('-SkillRoot',$SkillRoot)}
+  if($override){$parameters+=@('-ReviewerModel','review-model','-ReviewerReasoningEffort','high')}
+  $log=@(& (Get-Process -Id $PID).Path -NoProfile -File (Join-Path $PSScriptRoot 'run_runtime_dialogues.ps1') @parameters 2>&1)
+  Write-AllredEvalUtf8 (Join-Path $OutputRoot ($name+'.log')) ($log -join "`n")
+  if($LASTEXITCODE -ne 0){throw "Reviewer role dispatch failed: $name"}
+  foreach($role in @('I/workspace/turn-01.final.txt','I/review/review.final.txt','I/review/review-citation-repair.final.txt')){
+    $settingsPath=Join-Path $runRoot ('I/model-settings/'+[IO.Path]::GetFileName($role)+'.json')
+    $observed=Get-Content $settingsPath -Raw|ConvertFrom-Json
+    $isReviewer=$role -match '/review/'
+    $expectedModel=if($override -and $isReviewer){'review-model'}else{'actor-model'}
+    $expectedEffort=if($override -and $isReviewer){'high'}else{'low'}
+    if($observed.model -ne $expectedModel -or $observed.effort -ne ('model_reasoning_effort="'+$expectedEffort+'"')){throw "Wrong model/effort reached $role in $name"}
+  }
+  $manifest=Get-Content (Join-Path $runRoot 'manifest.json') -Raw|ConvertFrom-Json
+  if($manifest.model -ne 'actor-model' -or $manifest.effort -ne 'low' -or $manifest.reviewer_model -ne $expectedModel -or $manifest.reviewer_effort -ne $expectedEffort){throw 'Model role manifest differs from dispatch.'}
+  $rows+=@{mode=$name;status='Evaluated';result='Pass';expected=$true}
+}
+Write-AllredEvalUtf8 (Join-Path $OutputRoot 'summary.json') (ConvertTo-Json -InputObject $rows -Depth 8)
+'Runtime review pipeline: PASS (record continuity, 7 review modes, 3 suite selections and independent reviewer dispatch; mocked model only).'

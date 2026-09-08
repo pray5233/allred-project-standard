@@ -7,6 +7,8 @@ param(
   [string]$Model = '',
   [string]$ModelCatalogPath = '',
   [string]$ReasoningEffort = 'low',
+  [string]$ReviewerModel = '',
+  [string]$ReviewerReasoningEffort = '',
   [string]$SuitePath = '',
   [ValidateSet('Skill','Native')][string]$InstructionMode = 'Skill',
   [ValidateSet('ToolAware','Compact')][string]$HistoryMode = 'ToolAware',
@@ -24,8 +26,8 @@ $SkillRoot = (Resolve-Path -LiteralPath $SkillRoot).Path
 $OutputRoot = [IO.Path]::GetFullPath($OutputRoot)
 if (Test-Path -LiteralPath $OutputRoot) { throw 'Use a new OutputRoot; test evidence is immutable.' }
 . (Join-Path $PSScriptRoot 'eval_runtime.ps1')
-$suitePath = if ($SuitePath) { (Resolve-Path -LiteralPath $SuitePath).Path } else { Join-Path $LabRoot 'tests/runtime-dialogues.json' }
-$suite = Get-Content -LiteralPath $suitePath -Raw -Encoding UTF8 | ConvertFrom-Json
+$resolvedSuitePath = if ($SuitePath) { (Resolve-Path -LiteralPath $SuitePath).Path } else { Join-Path $LabRoot 'tests/runtime-dialogues.json' }
+$suite = Get-Content -LiteralPath $resolvedSuitePath -Raw -Encoding UTF8 | ConvertFrom-Json
 $evaluationScope = if ($suite.PSObject.Properties.Name -contains 'evaluation_scope') { [string]$suite.evaluation_scope } else { 'contract-and-behavior' }
 if ($evaluationScope -notin @('contract-and-behavior','outcome-only')) { throw 'Unknown evaluation_scope.' }
 if ($SuitePath -and -not $PSBoundParameters.ContainsKey('CaseIds')) { $CaseIds = @($suite.cases.id) }
@@ -33,7 +35,7 @@ foreach ($id in $CaseIds) { if ($id -notin @($suite.cases.id)) { throw "Unknown 
 New-Item -ItemType Directory -Path $OutputRoot | Out-Null
 $harnessSnapshot = Join-Path $OutputRoot 'harness-snapshot'
 New-Item -ItemType Directory -Path $harnessSnapshot | Out-Null
-foreach ($path in @($suitePath, (Join-Path $PSScriptRoot 'run_runtime_dialogues.ps1'), (Join-Path $PSScriptRoot 'eval_runtime.ps1'), (Join-Path $PSScriptRoot 'ordered_review.ps1'), (Join-Path $LabRoot 'tests/ordered-review.schema.json'), (Join-Path $LabRoot 'tests/runtime-review.schema.json'))) {
+foreach ($path in @($resolvedSuitePath, (Join-Path $PSScriptRoot 'run_runtime_dialogues.ps1'), (Join-Path $PSScriptRoot 'eval_runtime.ps1'), (Join-Path $PSScriptRoot 'ordered_review.ps1'), (Join-Path $LabRoot 'tests/ordered-review.schema.json'), (Join-Path $LabRoot 'tests/runtime-review.schema.json'))) {
   Copy-Item -LiteralPath $path -Destination $harnessSnapshot
 }
 . (Join-Path $harnessSnapshot 'ordered_review.ps1')
@@ -47,7 +49,10 @@ $hashes = @(Get-ChildItem -LiteralPath $snapshot -File -Recurse | Sort-Object Fu
 })
 Write-AllredEvalUtf8 (Join-Path $OutputRoot 'manifest.json') (([ordered]@{
   version=(Get-Content -LiteralPath (Join-Path $snapshot 'VERSION') -Raw).Trim(); generated_at=[DateTime]::UtcNow.ToString('o')
-  model=$Model; effort=$ReasoningEffort; suite_sha256=(Get-FileHash -LiteralPath $suitePath).Hash
+  model=$Model; effort=$ReasoningEffort; suite_sha256=(Get-FileHash -LiteralPath $resolvedSuitePath).Hash
+  reviewer_model=$(if($ReviewerModel){$ReviewerModel}else{$Model})
+  reviewer_effort=$(if($ReviewerReasoningEffort){$ReviewerReasoningEffort}else{$ReasoningEffort})
+  case_ids=@($suite.cases | Where-Object { $_.id -in $CaseIds } | ForEach-Object id)
   catalog_sha256=$(if ($ModelCatalogPath) { (Get-FileHash -LiteralPath $ModelCatalogPath).Hash } else { $null })
   evidence_kind='actual-local-files-and-tools; synthetic-user-dialogue; independent-semantic-review'; files=$hashes
   history_mode=$HistoryMode; timeout_seconds=$TimeoutSeconds; use_user_config=[bool]$UseUserConfig
@@ -61,6 +66,9 @@ Write-AllredEvalUtf8 (Join-Path $OutputRoot 'manifest.json') (([ordered]@{
   user_config_sha256=$(if ($UseUserConfig) { $config = Join-Path $(if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME '.codex' }) 'config.toml'; if (Test-Path -LiteralPath $config) { (Get-FileHash -LiteralPath $config).Hash } else { $null } } else { $null })
 }) | ConvertTo-Json -Depth 6)
 $settings = @{ CodexCommand=$CodexCommand; Model=$Model; ModelCatalogPath=$ModelCatalogPath; ReasoningEffort=$ReasoningEffort; UseUserConfig=[bool]$UseUserConfig; DisablePlugins=$true; TimeoutSeconds=$TimeoutSeconds }
+$reviewSettings=$settings.Clone()
+if($ReviewerModel){$reviewSettings.Model=$ReviewerModel}
+if($ReviewerReasoningEffort){$reviewSettings.ReasoningEffort=$ReviewerReasoningEffort}
 $results = [Collections.Generic.List[object]]::new()
 foreach ($case in @($suite.cases | Where-Object { $_.id -in $CaseIds })) {
   $caseRoot = Join-Path $OutputRoot $case.id
@@ -158,7 +166,7 @@ ASSERTIONS: $($reviewCase.assertions | ConvertTo-Json)
 DETERMINISTIC VIOLATIONS: $($violations | ConvertTo-Json)
 TRANSCRIPT: $reviewEvidence
 "@
-    $review = Invoke-AllredCodexEval -Prompt $reviewPrompt -RunDirectory (Join-Path $caseRoot 'review') -Prefix 'review' -SchemaPath (Join-Path $harnessSnapshot $reviewSchema) @settings
+    $review = Invoke-AllredCodexEval -Prompt $reviewPrompt -RunDirectory (Join-Path $caseRoot 'review') -Prefix 'review' -SchemaPath (Join-Path $harnessSnapshot $reviewSchema) @reviewSettings
     if (Test-AllredEvalInfrastructureFailure $review) { $status='InfrastructureFailure'; $reason=Get-AllredEvalInfrastructureReason $review $TimeoutSeconds }
     else {
       try {
@@ -179,7 +187,7 @@ FROZEN JUDGMENT: $($rawReview | ConvertTo-Json -Depth 12)
 Citation validation failed: $diagnostic
 Repair ONLY the evidence arrays in assertion_checks, using the observed transcript above. Keep every other field, every assertion result and every reason exactly unchanged. Fix all citation locations and quotes, not just the first diagnostic. Do not improve the verdict, reinterpret the dialogue or add assertions. Remove a redundant invalid citation only when remaining citations substantiate the same whole assertion. This is citation repair, not another semantic trial. Exact short output/response quotes avoid shell escaping; user text and read material output are different sources. If the judgment cannot be supported, do not invent support.
 "@
-          $repair = Invoke-AllredCodexEval -Prompt $repairPrompt -RunDirectory (Join-Path $caseRoot 'review') -Prefix 'review-citation-repair' -SchemaPath (Join-Path $harnessSnapshot $reviewSchema) @settings
+          $repair = Invoke-AllredCodexEval -Prompt $repairPrompt -RunDirectory (Join-Path $caseRoot 'review') -Prefix 'review-citation-repair' -SchemaPath (Join-Path $harnessSnapshot $reviewSchema) @reviewSettings
           if (Test-AllredEvalInfrastructureFailure $repair) {
             $citationRepair.status = 'InfrastructureFailure'
             throw ('Citation repair unavailable: ' + (Get-AllredEvalInfrastructureReason $repair $TimeoutSeconds))

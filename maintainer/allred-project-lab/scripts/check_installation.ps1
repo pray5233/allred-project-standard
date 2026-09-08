@@ -66,3 +66,4 @@ foreach($shell in $shells) {
 Check 'package source unchanged' ((Inventory $source) -ceq $sourceInventory)
 [IO.File]::WriteAllText((Join-Path $OutputRoot 'summary.json'),(ConvertTo-Json -InputObject @($results.ToArray())),[Text.UTF8Encoding]::new($false))
 "Installation contracts: PASS ($($results.Count) assertions; actual isolated installs, no model calls)"
+exit 0

@@ -1,5 +1,12 @@
 # ADR: Allred Runtime And Maintenance Ownership
 
+## Publication Verification, 2026-09-09
+
+See `publication-20260909.md` for cumulative-record and package fixes, the
+observed command-metadata citation defect, frozen verification checkpoints,
+and retained behavioral failures. Installation and citation validity remain
+separate from semantic acceptance and GitHub publication status.
+
 ## Collaboration Bridge, 2026-09-08
 
 See `bridge-workflow-20260908.md` for the user-authorized five-task sequence:

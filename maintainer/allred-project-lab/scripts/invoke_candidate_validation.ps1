@@ -9,6 +9,8 @@ param(
   [string[]]$CaseIds = @(),
   [switch]$ExactCaseSelection,
   [string]$Model = '',
+  [string]$ReviewerModel = '',
+  [string]$ReviewerReasoningEffort = '',
   [string]$ModelCatalogPath = '',
   [string]$ModelProvider = '',
   [string]$ProviderEnvKey = '',
@@ -311,6 +313,8 @@ if ($Mode -eq 'Candidate') {
     }
     $runtimeArgs = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $LabRoot 'scripts/run_runtime_dialogues.ps1'), '-LabRoot', $LabRoot, '-SkillRoot', $StandardRoot, '-OutputRoot', (Join-Path $OutputRoot $runtimeRunName), '-ReasoningEffort', $runtimeRun.effort, '-TimeoutSeconds', [string]$TimeoutSeconds)
     if ($Model) { $runtimeArgs += @('-Model', $Model) }
+    if ($ReviewerModel) { $runtimeArgs += @('-ReviewerModel', $ReviewerModel) }
+    if ($ReviewerReasoningEffort) { $runtimeArgs += @('-ReviewerReasoningEffort', $ReviewerReasoningEffort) }
     if ($ModelCatalogPath) { $runtimeArgs += @('-ModelCatalogPath', $ModelCatalogPath) }
     if ($UseUserConfig) { $runtimeArgs += '-UseUserConfig' }
     [void](Invoke-ValidationStep -Name "actual-$runtimeRunName" -FilePath $hostPowerShell -Arguments $runtimeArgs)
@@ -529,6 +533,9 @@ $summary = [ordered]@{
   duration_ms = [int64]($finishedAt - $startedAt).TotalMilliseconds
   runtime = [ordered]@{
     model = $Model
+    runtime_reviewer_model = $(if($ReviewerModel){$ReviewerModel}else{$Model})
+    runtime_reviewer_effort = $(if($ReviewerReasoningEffort){$ReviewerReasoningEffort}else{'inherits each actor trial effort'})
+    reviewer_override_scope = 'actual runtime dialogue review and citation repair only; legacy behavior/comparison reviewers retain their recorded settings'
     model_provider = $ModelProvider
     provider_env_key_name = $ProviderEnvKey
     low_reasoning_effort = $LowReasoningEffort

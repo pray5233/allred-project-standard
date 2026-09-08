@@ -50,6 +50,13 @@ function New-AllredOrderedReviewEvidence {
             if ($value.type -eq 'item.started') { [string]$item.command }
             else { Get-AllredCitationText 'command' $item }
           } else { ConvertTo-Json -InputObject $value -Depth 40 -Compress }
+        if ($item.type -eq 'command_execution') {
+          # Status was visible in the catalog header but unavailable to exact citations.
+          $metadata = @()
+          if ($item.PSObject.Properties['status']) { $metadata += "status=$($item.status)" }
+          if ($item.PSObject.Properties['exit_code'] -and $null -ne $item.exit_code) { $metadata += "exit_code=$($item.exit_code)" }
+          if ($metadata.Count) { $text = "Observed command metadata: $($metadata -join ', ')`n$text" }
+        }
         $id = '{0}-E{1:D6}' -f $prefix, $event.line
         $index = $turnEvents.Count
         $turnEvents.Add([pscustomobject]@{text=$text;line=$event.line;event_type=$value.type;item_id=$item.id;item_type=$item.type})

@@ -1,10 +1,10 @@
 # Allred Project Standard Skill
 
-当前本地候选版本：`0.8.0-rc15`，尚未发布。安装目录中的 `VERSION` 和安装回执用于确认实验机实际加载的版本、提交与哈希；本地候选不代表 GitHub 已更新。
+当前开发候选版本：`0.8.0-rc15`，候选分支为 `codex/rc15-final`，尚未更新正式 Release。安装目录中的 `VERSION` 和安装回执用于确认实验机实际加载的版本、提交与哈希；候选分支与默认分支可能不是同一版本。
 
 本次是增量整理，不重做需求收集：保留资料优先、动态追问、用户决定范围、一次明确开工确认和新手表达切换。用户决定目标和重要业务取舍，Codex 调查、提出建议并在已有授权内作出选择，Skill 引导沟通和保留记录。普通讨论不要求先生成结构化状态或运行提问校验；实际执行前仍校验范围、依据和授权，不接受“通过事件”代替真实校验。
 
-讨论按新回答和证据继续深入，不设总轮次或固定问题数量；简单任务使用对话记录，多项已确认、未接受建议和部分回答并存时保留简短 Markdown，临近执行再整理结构化状态。自动化检查分别报告客观约束与实际对话表现，不用脚本通过代替体验验收。本地改造的客观检查已通过，对话仍有重复提问和证据表述方面的待验收项，详见[五项改造任务记录](maintainer/allred-project-lab/references/bridge-workflow-20260908.md)。
+讨论按新回答和证据继续深入，不设总轮次或固定问题数量；简单任务使用对话记录，多项已确认、未接受建议和部分回答并存时保留简短 Markdown，临近执行再整理结构化状态。自动化检查分别报告客观约束与实际对话表现，不用脚本通过代替体验验收。最新修复、真实对话结果和保留的失败记录见[候选验证记录](maintainer/allred-project-lab/references/publication-20260909.md)；[五项改造任务记录](maintainer/allred-project-lab/references/bridge-workflow-20260908.md)保留此前设计依据。
 
 `allred-project-standard` 是一个 Codex 项目推进 Skill。它帮助用户把粗略想法变成可验证的本轮工作，同时避免两个极端：
 
@@ -55,7 +55,7 @@ Allred 借鉴 Superpowers 中“先看上下文、先找根因、遇到真实阻
 ## 安装
 
 ```powershell
-git clone https://github.com/pray5233/allred-project-standard.git
+git clone --branch codex/rc15-final https://github.com/pray5233/allred-project-standard.git
 cd allred-project-standard
 .\install.ps1
 ```

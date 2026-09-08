@@ -54,6 +54,23 @@ Check ((ConvertTo-Json $legacy.review -Depth 20 -Compress) -ceq (ConvertTo-Json 
 Check ((ConvertTo-Json $review -Depth 20 -Compress) -ceq $reviewBefore) 'Raw review mutated.'
 $case=[pscustomobject]@{id='R';assertions=@('Respect actual order.')}
 Check ((Test-AllredRuntimeReview $resolved $case $bundle.transcript).semantic_verdict -eq 'Pass') 'Valid review rejected.'
+$metadataReview=$reviewBefore|ConvertFrom-Json
+$metadataReview.assertion_checks[0].evidence=@([pscustomobject]@{evidence_id='T01-E000003';quote='exit_code=0'})
+$metadataResolved=ConvertFrom-AllredOrderedReview $metadataReview $bundle
+Check ((Test-AllredRuntimeReview $metadataResolved $case $bundle.transcript).semantic_verdict -eq 'Pass') 'Observed exit metadata cannot be cited through both validators.'
+$metadataReview.assertion_checks[0].evidence[0].evidence_id='T01-E000001'
+Reject {ConvertFrom-AllredOrderedReview $metadataReview $bundle} 'Pending command inherited a future exit code.'
+$failedPath=Join-Path $OutputRoot 'failed-command.jsonl'
+Write-AllredEvalUtf8 $failedPath '{"type":"item.completed","item":{"id":"c1","type":"command_execution","command":"check","status":"failed","aggregated_output":"","exit_code":1}}'
+$failedTurn=$turn|ConvertTo-Json -Depth 20|ConvertFrom-Json
+$failedTurn.messages=@();$failedTurn.commands[0].aggregated_output='';$failedTurn.commands[0].exit_code=1
+$failedBundle=New-AllredOrderedReviewEvidence @($failedTurn) @{1=$failedPath}
+$metadataReview.assertion_checks[0].evidence[0].quote='status=failed, exit_code=1'
+$failedResolved=ConvertFrom-AllredOrderedReview $metadataReview $failedBundle
+Check ((Test-AllredRuntimeReview $failedResolved $case $failedBundle.transcript).status -eq 'Grounded') 'Failed command with empty output has uncitable observed metadata.'
+Check ($failedBundle.entries.Where({$_.kind -eq 'event'})[0].visibility -eq 'internal tool observation') 'Command metadata became user narration.'
+$metadataReview.assertion_checks[0].evidence[0].quote='exit_code=0'
+Reject {ConvertFrom-AllredOrderedReview $metadataReview $failedBundle} 'Invented successful exit accepted for a failed command.'
 foreach($mode in @('id','quote','empty','later-source')){
   $bad=$reviewBefore|ConvertFrom-Json
   switch($mode){
